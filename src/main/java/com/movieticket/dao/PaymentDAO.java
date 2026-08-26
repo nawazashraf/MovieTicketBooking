@@ -66,4 +66,33 @@ public class PaymentDAO {
 		}
 		return null;
 	}
+
+	public boolean markPaymentSuccess(String bookingId, String paymentMethod, String transactionId) {
+		String sql = """
+				UPDATE payments
+				SET payment_status = 'SUCCESS',
+					payment_method = ?,
+					transaction_id = ?,
+					paid_at = CURRENT_TIMESTAMP
+				WHERE booking_id = ?
+
+				""";
+
+		try {
+			Connection conn = DBConnection.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sql);
+
+			ps.setString(1, paymentMethod);
+			ps.setString(2, transactionId);
+			ps.setString(3, bookingId);
+
+			return ps.executeUpdate() > 0;
+		}
+
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
 }

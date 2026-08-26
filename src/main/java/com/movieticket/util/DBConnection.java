@@ -1,25 +1,41 @@
 package com.movieticket.util;
 
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.Properties;
 
 public class DBConnection {
-	public static Connection getConnection() {
-		try {
-			String URL = "jdbc:mysql://localhost:3306/movie_ticket_booking";
 
-			String USER = "root";
+    public static Connection getConnection() {
 
-			String PASSWORD = "your_mysql_password";
+        try {
 
-			String DRIVER = "com.mysql.cj.jdbc.Driver";
+            Properties properties = new Properties();
 
-			Class.forName(DRIVER);
+            InputStream input = DBConnection.class
+                    .getClassLoader()
+                    .getResourceAsStream("db.properties");
 
-			return DriverManager.getConnection(URL, USER, PASSWORD);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
+            properties.load(input);
+
+            String URL = properties.getProperty("DB_URL");
+
+            String USER = properties.getProperty("DB_USER");
+
+            String PASSWORD = properties.getProperty("DB_PASSWORD");
+
+            String DRIVER = "com.mysql.cj.jdbc.Driver";
+
+            Class.forName(DRIVER);
+
+            return DriverManager.getConnection(URL, USER, PASSWORD);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            return null;
+        }
+    }
 }

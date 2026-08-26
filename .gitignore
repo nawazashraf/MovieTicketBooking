@@ -24,4 +24,6 @@ hs_err_pid*
 replay_pid*
 
 # env
-/src/db.properties
+/src/main/resources/db.properties
+/build/
+/bin/

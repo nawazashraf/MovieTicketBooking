@@ -13,25 +13,10 @@ import com.movieticket.dao.PaymentDAO;
 import com.movieticket.model.BookingBean;
 import com.movieticket.model.PaymentBean;
 
-/**
- * Servlet implementation class PaymentServlet
- */
 @WebServlet("/payment")
 public class PaymentServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public PaymentServlet() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
@@ -69,6 +54,25 @@ public class PaymentServlet extends HttpServlet {
 		request.setAttribute("booking", booking);
 
 		request.getRequestDispatcher("/payment/payment.jsp").forward(request, response);
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		String bookingId = request.getParameter("bookingId");
+		String paymentMethod = request.getParameter("paymentMethod");
+
+		String transactionId = "TXN-" + UUID.randomUUID().toString();
+
+		PaymentDAO paymentDAO = new PaymentDAO();
+
+		boolean paymentSuccess = paymentDAO.markPaymentSuccess(bookingId, paymentMethod, transactionId);
+
+		if (paymentSuccess) {
+			response.sendRedirect(request.getContextPath() + "/payment?bookingId=" + bookingId);
+		} else {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Payment Failed");
+		}
+
 	}
 
 }

@@ -42,7 +42,7 @@ public class PaymentServlet extends HttpServlet {
 			return;
 		}
 		
-		request.setAttribute("bookingId", bookingId);
+		request.setAttribute("booking", booking);
 		
 		request.getRequestDispatcher("/payment/payment.jsp").forward(request, response);
 	}

@@ -46,4 +46,28 @@ public class BookingDAO {
 
 		return null;
 	}
+	
+	public boolean confirmBooking(String bookingId) {
+		String sql = """
+				UPDATE bookings
+				SET booking_status = 'CONFIRMED'
+				WHERE id = ?
+				""";
+		
+		try {
+			Connection conn = DBConnection.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sql);
+			
+			ps.setString(1, bookingId);
+			
+			return ps.executeUpdate() > 0;
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+		
+	}
+	
 }

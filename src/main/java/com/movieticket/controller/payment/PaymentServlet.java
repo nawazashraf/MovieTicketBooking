@@ -77,7 +77,7 @@ public class PaymentServlet extends HttpServlet {
 				response.sendRedirect(request.getContextPath() + "/payment?bookingId=" + bookingId);
 
 			} else {
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Payment Failed");
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Payment Successfull but booking failed");
 			}
 		}
 

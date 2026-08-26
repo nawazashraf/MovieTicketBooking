@@ -7,6 +7,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import com.movieticket.dao.BookingDAO;
+import com.movieticket.model.BookingBean;
+
 /**
  * Servlet implementation class PaymentServlet
  */
@@ -28,6 +31,16 @@ public class PaymentServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		String bookingId =  request.getParameter("bookingId");
+		
+		BookingDAO bookingDAO = new BookingDAO();
+		
+		BookingBean booking = bookingDAO.getBookingById(bookingId);
+		
+		
+		if(booking == null) {
+			response.sendError(HttpServletResponse.SC_NOT_FOUND,"Booking not found");
+			return;
+		}
 		
 		request.setAttribute("bookingId", bookingId);
 		

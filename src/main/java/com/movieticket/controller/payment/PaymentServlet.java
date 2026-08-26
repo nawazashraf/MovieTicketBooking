@@ -74,7 +74,7 @@ public class PaymentServlet extends HttpServlet {
 			boolean bookingConfirmed = bookingDAO.confirmBooking(bookingId);
 
 			if (bookingConfirmed) {
-				response.sendRedirect(request.getContextPath() + "/payment?bookingId=" + bookingId);
+				response.sendRedirect(request.getContextPath() + "/ticket?bookingId=" + bookingId);
 
 			} else {
 				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Payment Successfull but booking failed");

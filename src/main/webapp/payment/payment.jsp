@@ -17,5 +17,18 @@
 	<p>Total Amount: ₹${booking.totalAmount}</p>
 
 	<p>Status: ${booking.bookingStatus}</p>
+
+	<form action="${pageContext.request.contextPath}/payment" method="post">
+		<input type="hidden" name="bookingId" value="${booking.id}"> <label
+			for="paymentMethod">Payment Method:</label> <select
+			name="paymentMethod" id="paymentMethod" required>
+			<option value="">-- Select Payment Method --</option>
+			<option value="UPI">UPI</option>
+			<option value="CARD">Credit / Debit Card</option>
+		</select> <br>
+		<br>
+
+		<button type="submit">Pay ₹${booking.totalAmount}</button>
+	</form>
 </body>
 </html>

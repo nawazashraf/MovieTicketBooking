@@ -9,92 +9,82 @@ import com.movieticket.util.DBConnection;
 
 public class TicketDAO {
 
-    public TicketBean getTicketByBookingId(String bookingId) {
+	public TicketBean getTicketByBookingId(String bookingId) {
 
-        String sql = """
-                SELECT
-                    b.id AS booking_id,
-                    b.booking_reference,
-                    b.total_amount,
+		String sql = """
+				SELECT
+				    b.id AS booking_id,
+				    b.booking_reference,
+				    b.total_amount,
 
-                    m.title AS movie_title,
+				    m.title AS movie_title,
 
-                    ma.name AS mall_name,
+				    ma.name AS mall_name,
 
-                    s.show_date,
-                    s.start_time,
+				    s.show_date,
+				    s.start_time,
 
-                    p.payment_method,
-                    p.transaction_id,
-                    p.payment_status
+				    p.payment_method,
+				    p.transaction_id,
+				    p.payment_status
 
-                FROM bookings b
+				FROM bookings b
 
-                JOIN shows s
-                    ON b.show_id = s.id
+				JOIN shows s
+				    ON b.show_id = s.id
 
-                JOIN movies m
-                    ON s.movie_id = m.id
+				JOIN movies m
+				    ON s.movie_id = m.id
 
-                JOIN malls ma
-                    ON s.mall_id = ma.id
+				JOIN malls ma
+				    ON s.mall_id = ma.id
 
-                JOIN payments p
-                    ON p.booking_id = b.id
+				JOIN payments p
+				    ON p.booking_id = b.id
 
-                WHERE b.id = ?
-                """;
+				WHERE b.id = ?
+				""";
 
-        try {
+		try {
 
-            Connection conn = DBConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
+			Connection conn = DBConnection.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sql);
 
-            ps.setString(1, bookingId);
+			ps.setString(1, bookingId);
 
-            ResultSet rs = ps.executeQuery();
+			ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
+			if (rs.next()) {
 
-                TicketBean ticket = new TicketBean();
+				TicketBean ticket = new TicketBean();
 
-                ticket.setBookingId(
-                        rs.getString("booking_id"));
+				ticket.setBookingId(rs.getString("booking_id"));
 
-                ticket.setBookingReference(
-                        rs.getString("booking_reference"));
+				ticket.setBookingReference(rs.getString("booking_reference"));
 
-                ticket.setTotalAmount(
-                        rs.getBigDecimal("total_amount"));
+				ticket.setTotalAmount(rs.getBigDecimal("total_amount"));
 
-                ticket.setMovieTitle(
-                        rs.getString("movie_title"));
+				ticket.setMovieTitle(rs.getString("movie_title"));
 
-                ticket.setMallName(
-                        rs.getString("mall_name"));
+				ticket.setMallName(rs.getString("mall_name"));
 
-                ticket.setShowDate(
-                        rs.getDate("show_date"));
+				ticket.setShowDate(rs.getDate("show_date"));
 
-                ticket.setStartTime(
-                        rs.getTime("start_time"));
+				ticket.setStartTime(rs.getTime("start_time"));
 
-                ticket.setPaymentMethod(
-                        rs.getString("payment_method"));
+				ticket.setPaymentMethod(rs.getString("payment_method"));
 
-                ticket.setTransactionId(
-                        rs.getString("transaction_id"));
+				ticket.setTransactionId(rs.getString("transaction_id"));
 
-                ticket.setPaymentStatus(
-                        rs.getString("payment_status"));
+				ticket.setPaymentStatus(rs.getString("payment_status"));
 
-                return ticket;
-            }
+				return ticket;
+			}
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-        return null;
-    }
+		return null;
+	}
 }

@@ -68,9 +68,17 @@ public class PaymentServlet extends HttpServlet {
 		boolean paymentSuccess = paymentDAO.markPaymentSuccess(bookingId, paymentMethod, transactionId);
 
 		if (paymentSuccess) {
-			response.sendRedirect(request.getContextPath() + "/payment?bookingId=" + bookingId);
-		} else {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Payment Failed");
+
+			BookingDAO bookingDAO = new BookingDAO();
+
+			boolean bookingConfirmed = bookingDAO.confirmBooking(bookingId);
+
+			if (bookingConfirmed) {
+				response.sendRedirect(request.getContextPath() + "/payment?bookingId=" + bookingId);
+
+			} else {
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Payment Failed");
+			}
 		}
 
 	}

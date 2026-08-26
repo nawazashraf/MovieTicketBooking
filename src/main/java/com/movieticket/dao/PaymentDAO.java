@@ -95,4 +95,24 @@ public class PaymentDAO {
 
 		return false;
 	}
+
+	public boolean markPaymentFailed(String bookingId) {
+		String sql = """
+				UPDATE payments
+				SET payment_status = 'FAILED'
+				WHERE booking_id = ?
+				""";
+
+		try {
+			Connection conn = DBConnection.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sql);
+
+			ps.setString(1, bookingId);
+
+			return ps.executeUpdate() > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 }

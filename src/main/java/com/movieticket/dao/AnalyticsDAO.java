@@ -54,6 +54,8 @@ public class AnalyticsDAO {
 				analytics.setConfirmedBookings(rs.getInt("confirmed_bookings"));
 				analytics.setTotalTicketsSold(rs.getInt("total_tickets_sold"));
 
+				// Will add more analytics if my teamate starts working
+				
 				return analytics;
 			}
 

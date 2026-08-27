@@ -5,6 +5,9 @@
 <head>
 <meta charset="UTF-8">
 <title>Home Page</title>
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/assets/css/common.css">
+
 </head>
 <body>
 	<%@ include file="/common/navbar.jsp"%>

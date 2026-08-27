@@ -52,5 +52,9 @@
 		<strong>Payment Status:</strong> ${ticket.paymentStatus}
 	</p>
 
+	<p>
+		<strong>Seats </strong> ${ticket.seats}
+	</p>
+
 </body>
 </html>

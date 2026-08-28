@@ -1,1 +1,63 @@
 @charset "UTF-8";
+
+.payment-page {
+	padding: 0 40px;
+	background-color: #1f1f1f;
+	color: white;
+	min-height: 95vh;
+}
+
+.checkout-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	margin: 20px 0;
+	gap: 40px;
+}
+
+.payment-options {
+	flex: 1;
+}
+
+.payment-method {
+	margin-top: 20px;
+	display: flex;
+	align-items: center;
+	gap: 15px;
+	padding: 20px;
+	margin-bottom: 15px;
+	border: 1px solid #444;
+	border-radius: 8px;
+}
+
+.booking-summary {
+	width: 350px;
+	padding: 25px;
+	background-color: #292929;
+	border-radius: 10px;
+}
+
+.summary-row {
+	display: flex;
+	justify-content: space-between;
+	padding: 12px 0;
+	border-bottom: 1px solid #444;
+}
+
+.summary-total {
+	display: flex;
+	justify-content: space-between;
+	padding: 20px 0;
+	font-size: 20px;
+}
+
+.booking-summary button {
+	width: 100%;
+	padding: 14px;
+	border: none;
+	border-radius: 6px;
+	background-color: #f5c518;
+	cursor: pointer;
+	font-size: 16px;
+	font-weight: bold;
+}

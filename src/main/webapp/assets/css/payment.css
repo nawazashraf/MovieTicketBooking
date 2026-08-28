@@ -36,17 +36,17 @@
 }
 
 .payment-method {
-	margin-top: 15px;
+	margin: 0;
 	display: flex;
 	align-items: center;
 	gap: 15px;
 	padding: 18px 20px;
-	margin-bottom: 15px;
 	border: 1px solid #444;
-	border-radius: 8px;
+	border-radius: 8px 8px 0 0;
 	cursor: pointer;
 	background-color: #262626;
-	transition: border-color 0.2s ease, background-color 0.2s ease;
+	transition: border-color 0.2s ease, background-color 0.2s ease,
+		border-radius 0.2s ease;
 }
 
 .payment-method:hover {
@@ -125,6 +125,115 @@
 	margin: 0;
 	color: #aaa;
 	font-size: 13px;
+}
+
+/* ===== Payment Option Block (radio card + its inline inputs) ===== */
+.payment-option-block {
+	margin-top: 15px;
+}
+
+/* Square off bottom corners of the card when its inputs are expanded */
+.payment-option-block:has(.payment-inputs.active) .payment-method {
+	border-radius: 8px 8px 0 0;
+}
+
+.payment-option-block:not(:has(.payment-inputs.active)) .payment-method
+	{
+	border-radius: 8px;
+}
+
+/* ===== Payment Inputs (attached under its own radio option) ===== */
+.payment-inputs {
+	display: grid;
+	grid-template-rows: 0fr;
+	opacity: 0;
+	padding: 0 20px;
+	background-color: #262626;
+	border: 1px solid #444;
+	border-top: none;
+	border-radius: 0 0 8px 8px;
+	transition: grid-template-rows 0.3s ease, opacity 0.25s ease, padding
+		0.3s ease;
+}
+
+.payment-inputs>* {
+	overflow: hidden;
+	min-height: 0;
+}
+
+.payment-inputs.active {
+	grid-template-rows: 1fr;
+	opacity: 1;
+	padding: 20px;
+}
+
+.payment-inputs>div {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.payment-inputs label {
+	font-size: 13px;
+	color: #ccc;
+	margin-top: 10px;
+}
+
+.payment-inputs label:first-child {
+	margin-top: 0;
+}
+
+.payment-inputs input {
+	padding: 12px 14px !important;
+	border: 1px solid #444 !important;
+	border-radius: 6px !important;
+	background-color: #1f1f1f !important;
+	color: white !important;
+	font-size: 14px;
+	outline: none;
+	width: 100%;
+	box-sizing: border-box;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.payment-inputs input:focus {
+	border-color: #FFB4A6 !important;
+	box-shadow: 0 0 0 3px rgba(255, 180, 166, 0.15);
+}
+
+.payment-inputs input::placeholder {
+	color: #777;
+}
+
+.card-row {
+	display: flex;
+	gap: 15px;
+	margin-top: 10px;
+}
+
+.card-field {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.card-field label {
+	margin-top: 0;
+}
+
+.secure-note {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin: 14px 0 0;
+	font-size: 12px;
+	color: #888;
+}
+
+.secure-note i {
+	color: #666;
+	font-size: 11px;
 }
 
 /* ===== Booking Summary ===== */
@@ -245,7 +354,7 @@
 }
 
 /* ===== Responsive ===== */
-@media (max-width: 768px) {
+@media ( max-width : 768px) {
 	.payment-page {
 		padding: 20px;
 	}

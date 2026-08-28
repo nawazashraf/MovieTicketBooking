@@ -34,29 +34,72 @@
 
 				<h2>Payment Options</h2>
 
-				<label class="payment-method"> <input type="radio"
-					name="paymentMethod" value="UPI" checked>
+				<!-- UPI OPTION -->
+				<div class="payment-option-block">
+					<label class="payment-method"> <input type="radio"
+						name="paymentMethod" value="UPI" checked>
 
-					<div class="payment-icon">
-						<i class="fa-solid fa-mobile-screen-button"></i>
-					</div>
+						<div class="payment-icon">
+							<i class="fa-solid fa-mobile-screen-button"></i>
+						</div>
 
-					<div>
-						<h3>UPI</h3>
-						<p>Pay using GPay, PhonePe or Paytm</p>
-					</div>
-				</label> <label class="payment-method"> <input type="radio"
-					name="paymentMethod" value="CARD">
+						<div>
+							<h3>UPI</h3>
+							<p>Pay using GPay, PhonePe or Paytm</p>
+						</div>
+					</label>
 
-					<div class="payment-icon">
-						<i class="fa-regular fa-credit-card"></i>
+					<div class="payment-inputs upi-details">
+						<label for="upiId">UPI ID</label> <input type="text" id="upiId"
+							name="upiId" placeholder="example@upi" autocomplete="off"
+							inputmode="email">
 					</div>
+				</div>
 
-					<div>
-						<h3>Credit / Debit Card</h3>
-						<p>Visa, Mastercard, RuPay and more</p>
+				<!-- CARD OPTION -->
+				<div class="payment-option-block">
+					<label class="payment-method"> <input type="radio"
+						name="paymentMethod" value="CARD">
+
+						<div class="payment-icon">
+							<i class="fa-regular fa-credit-card"></i>
+						</div>
+
+						<div>
+							<h3>Credit / Debit Card</h3>
+							<p>Visa, Mastercard, RuPay and more</p>
+						</div>
+					</label>
+
+					<div class="payment-inputs card-details">
+						<label for="cardNumber">Card Number</label> <input type="text"
+							id="cardNumber" name="cardNumber"
+							placeholder="1234 5678 9012 3456" maxlength="19"
+							autocomplete="cc-number" inputmode="numeric"> <label
+							for="cardHolder">Card Holder Name</label> <input type="text"
+							id="cardHolder" name="cardHolder" placeholder="Name as on card"
+							autocomplete="cc-name">
+
+						<div class="card-row">
+							<div class="card-field">
+								<label for="expiryDate">Expiry Date</label> <input type="text"
+									id="expiryDate" name="expiryDate" placeholder="MM/YY"
+									maxlength="5" autocomplete="cc-exp" inputmode="numeric">
+							</div>
+
+							<div class="card-field">
+								<label for="cvv">CVV</label> <input type="password" id="cvv"
+									name="cvv" placeholder="•••" maxlength="4"
+									autocomplete="cc-csc" inputmode="numeric">
+							</div>
+						</div>
+
+						<p class="secure-note">
+							<i class="fa-solid fa-lock"></i> Your card details are encrypted
+							and never stored
+						</p>
 					</div>
-				</label>
+				</div>
 
 			</section>
 
@@ -109,6 +152,8 @@
 		</form>
 
 	</main>
+
+
 
 </body>
 </html>

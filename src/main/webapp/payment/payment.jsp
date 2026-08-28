@@ -153,7 +153,8 @@
 
 	</main>
 
-
+	<script type="text/javascript"
+		src="${pageContext.request.contextPath}/assets/js/payment.js"></script>
 
 </body>
 </html>

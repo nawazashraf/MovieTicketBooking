@@ -16,17 +16,15 @@ public class TicketDAO {
 				    b.id AS booking_id,
 				    b.booking_reference,
 				    b.total_amount,
-
 				    m.title AS movie_title,
-
 				    ma.name AS mall_name,
-
 				    s.show_date,
 				    s.start_time,
-
 				    p.payment_method,
 				    p.transaction_id,
-				    p.payment_status
+				    p.payment_status,
+				    se.row_name,
+				    se.seat_number
 
 				FROM bookings b
 
@@ -42,46 +40,77 @@ public class TicketDAO {
 				JOIN payments p
 				    ON p.booking_id = b.id
 
+				JOIN booking_seats bs
+				    ON b.id = bs.booking_id
+
+				JOIN show_seats ss
+				    ON ss.id = bs.show_seat_id
+
+				JOIN seats se
+				    ON se.id = ss.seat_id
+
 				WHERE b.id = ?
 				""";
 
 		try {
 
 			Connection conn = DBConnection.getConnection();
+
 			PreparedStatement ps = conn.prepareStatement(sql);
 
 			ps.setString(1, bookingId);
 
 			ResultSet rs = ps.executeQuery();
 
-			if (rs.next()) {
+			TicketBean ticket = null;
 
-				TicketBean ticket = new TicketBean();
+			StringBuilder seats = new StringBuilder();
 
-				ticket.setBookingId(rs.getString("booking_id"));
+			while (rs.next()) {
 
-				ticket.setBookingReference(rs.getString("booking_reference"));
+				if (ticket == null) {
 
-				ticket.setTotalAmount(rs.getBigDecimal("total_amount"));
+					ticket = new TicketBean();
 
-				ticket.setMovieTitle(rs.getString("movie_title"));
+					ticket.setBookingId(rs.getString("booking_id"));
 
-				ticket.setMallName(rs.getString("mall_name"));
+					ticket.setBookingReference(rs.getString("booking_reference"));
 
-				ticket.setShowDate(rs.getDate("show_date"));
+					ticket.setTotalAmount(rs.getBigDecimal("total_amount"));
 
-				ticket.setStartTime(rs.getTime("start_time"));
+					ticket.setMovieTitle(rs.getString("movie_title"));
 
-				ticket.setPaymentMethod(rs.getString("payment_method"));
+					ticket.setMallName(rs.getString("mall_name"));
 
-				ticket.setTransactionId(rs.getString("transaction_id"));
+					ticket.setShowDate(rs.getDate("show_date"));
 
-				ticket.setPaymentStatus(rs.getString("payment_status"));
+					ticket.setStartTime(rs.getTime("start_time"));
+
+					ticket.setPaymentMethod(rs.getString("payment_method"));
+
+					ticket.setTransactionId(rs.getString("transaction_id"));
+
+					ticket.setPaymentStatus(rs.getString("payment_status"));
+				}
+
+				if (seats.length() > 0) {
+					seats.append(", ");
+				}
+
+				seats.append(rs.getString("row_name"));
+
+				seats.append(rs.getInt("seat_number"));
+			}
+
+			if (ticket != null) {
+
+				ticket.setSeats(seats.toString());
 
 				return ticket;
 			}
 
 		} catch (Exception e) {
+
 			e.printStackTrace();
 		}
 

@@ -10,9 +10,36 @@ import com.movieticket.util.DBConnection;
 public class BookingDAO {
 	public BookingBean getBookingById(String id) {
 		String sql = """
-					SELECT *
-					FROM bookings
-					WHERE id = ?
+				SELECT
+				    b.id,
+				    b.booking_reference,
+				    b.user_id,
+				    b.show_id,
+				    b.total_amount,
+				    b.booking_status,
+				    b.created_at,
+				    b.expires_at,
+
+				    m.title AS movie_title,
+				    m.poster_url AS poster_url,
+
+				    ma.name AS mall_name,
+
+				    s.show_date,
+				    s.start_time
+
+				FROM bookings b
+
+				JOIN shows s
+				    ON s.id = b.show_id
+
+				JOIN movies m
+				    ON m.id = s.movie_id
+
+				JOIN malls ma
+				    ON ma.id = s.mall_id
+
+				WHERE b.id = ?
 				""";
 
 		try {
@@ -33,6 +60,13 @@ public class BookingDAO {
 				booking.setShowId(rs.getString("show_id"));
 				booking.setTotalAmount(rs.getBigDecimal("total_amount"));
 				booking.setBookingStatus(rs.getString("booking_status"));
+
+				booking.setMovieTitle(rs.getString("movie_title"));
+				booking.setPosterUrl(rs.getString("poster_url"));
+				booking.setMallName(rs.getString("mall_name"));
+				booking.setShowDate(rs.getDate("show_date"));
+				booking.setStartTime(rs.getTime("start_time"));
+
 				booking.setCreatedAt(rs.getTimestamp("created_at"));
 				booking.setExpiresAt(rs.getTimestamp("expires_at"));
 

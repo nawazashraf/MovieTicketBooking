@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import com.movieticket.model.ShowBean;
 import com.movieticket.model.SeatBean;
-import com.movieticket.dao.SeatSelection;
+import com.movieticket.dao.SeatSelectionDAO;
 
 @WebServlet("/SeatSelectionServlet")
 public class SeatSelectionServlet extends HttpServlet {
@@ -27,6 +27,8 @@ public class SeatSelectionServlet extends HttpServlet {
 		
 		String showId = "show-001";
 		
+		
+		
 
 		// Check showId
 		if (showId == null || showId.trim().isEmpty()) {
@@ -38,7 +40,7 @@ public class SeatSelectionServlet extends HttpServlet {
 
 		try {
 
-			SeatSelection dao = new SeatSelection();
+			SeatSelectionDAO dao = new SeatSelectionDAO();
 
 			// =============================================
 			// GET SHOW INFORMATION

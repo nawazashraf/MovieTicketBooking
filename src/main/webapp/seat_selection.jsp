@@ -378,8 +378,8 @@
 		<div class="bottom-right">
 
 
-			<form action="booking-summary" method="post"
-				onsubmit="return checkSeats();">
+			<form action="${pageContext.request.contextPath}/booking"
+				method="post" onsubmit="return checkSeats();">
 
 
 				<input type="hidden" name="showId" value="<%=showId%>"> <input

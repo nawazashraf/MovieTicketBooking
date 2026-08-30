@@ -9,7 +9,7 @@ import com.movieticket.model.ShowBean;
 import com.movieticket.model.SeatBean;
 import com.movieticket.util.DBConnection;
 
-public class SeatSelection {
+public class SeatSelectionDAO {
 
 	// =========================================================
 	// GET SHOW DETAILS
@@ -22,7 +22,9 @@ public class SeatSelection {
 		String sql = "SELECT sh.id, m.title, ma.name, " + "sh.show_date, sh.start_time " + "FROM shows sh "
 				+ "JOIN movies m ON sh.movie_id = m.id " + "JOIN malls ma ON sh.mall_id = ma.id " + "WHERE sh.id = ?";
 
-		try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+		try {
+			Connection con = DBConnection.getConnection();
+			PreparedStatement ps = con.prepareStatement(sql);
 
 			ps.setString(1, showId);
 
@@ -39,6 +41,8 @@ public class SeatSelection {
 					show.setStartTime(rs.getString("start_time"));
 				}
 			}
+		} catch (Exception ex) {
+			System.out.print(ex.getMessage());
 		}
 
 		return show;

@@ -27,3 +27,11 @@ replay_pid*
 /src/main/java/db.properties
 /build/
 /bin/
+
+
+# settings
+
+.classpath
+.project
+
+.settings/

@@ -12,7 +12,7 @@
 <body>
 	<%@ include file="/common/navbar.jsp"%>
 
-	<form action="SeatSelectionServlet" method="post">
+	<form action="${pageContext.request.contextPath}/booking/seats" method="post">
 		<input type="submit" value="Submit">
 	</form>
 

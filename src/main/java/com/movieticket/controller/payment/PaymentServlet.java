@@ -71,7 +71,7 @@ public class PaymentServlet extends HttpServlet {
 
 			BookingDAO bookingDAO = new BookingDAO();
 
-			boolean bookingConfirmed = bookingDAO.confirmBooking(bookingId);
+			boolean bookingConfirmed = bookingDAO.confirmBookingAndSeats(bookingId);
 
 			if (bookingConfirmed) {
 				response.sendRedirect(request.getContextPath() + "/ticket?bookingId=" + bookingId);

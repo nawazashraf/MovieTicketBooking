@@ -178,29 +178,56 @@ public class BookingDAO {
 	}
 
 	// CONFIRM BOOKING
-	public boolean confirmBooking(String bookingId) {
+	
+	
+	public boolean confirmBookingAndSeats(String bookingId) {
 
-		String sql = """
-				UPDATE bookings
-				SET booking_status = 'CONFIRMED'
-				WHERE id = ?
-				""";
+	    String bookingSql = """
+	            UPDATE bookings
+	            SET booking_status = 'CONFIRMED'
+	            WHERE id = ?
+	            """;
 
-		try {
+	    String seatSql = """
+	            UPDATE show_seats ss
+	            JOIN booking_seats bs
+	                ON ss.id = bs.show_seat_id
+	            SET ss.status = 'BOOKED'
+	            WHERE bs.booking_id = ?
+	            """;
 
-			Connection conn = DBConnection.getConnection();
+	    try {
 
-			PreparedStatement ps = conn.prepareStatement(sql);
+	        Connection conn = DBConnection.getConnection();
 
-			ps.setString(1, bookingId);
+	        // Update booking
+	        PreparedStatement ps1 =
+	                conn.prepareStatement(bookingSql);
 
-			return ps.executeUpdate() > 0;
+	        ps1.setString(1, bookingId);
 
-		} catch (Exception e) {
+	        int bookingResult =
+	                ps1.executeUpdate();
 
-			e.printStackTrace();
-		}
+	        if (bookingResult == 0) {
+	            return false;
+	        }
 
-		return false;
+	        // Update seats
+	        PreparedStatement ps2 =
+	                conn.prepareStatement(seatSql);
+
+	        ps2.setString(1, bookingId);
+
+	        ps2.executeUpdate();
+
+	        return true;
+
+	    } catch (Exception e) {
+
+	        e.printStackTrace();
+	    }
+
+	    return false;
 	}
 }

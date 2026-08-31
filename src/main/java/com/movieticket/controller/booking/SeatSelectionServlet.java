@@ -14,7 +14,7 @@ import com.movieticket.model.ShowBean;
 import com.movieticket.model.SeatBean;
 import com.movieticket.dao.SeatSelectionDAO;
 
-@WebServlet("/SeatSelectionServlet")
+@WebServlet("/booking/seats")
 public class SeatSelectionServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;

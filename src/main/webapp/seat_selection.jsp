@@ -19,7 +19,9 @@
 
 <title>Select Seats</title>
 
-<link rel="stylesheet" href="assets/css/seat.css">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/assets/css/seat.css">
+
 
 </head>
 
@@ -404,7 +406,7 @@
 
 
 
-	<script src="assets/js/seat.js"></script>
+	<script src="${pageContext.request.contextPath}/assets/js/seat.js"></script>
 
 
 </body>

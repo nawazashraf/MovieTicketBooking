@@ -71,7 +71,7 @@ public class SeatSelectionServlet extends HttpServlet {
 			// OPEN SEAT SELECTION JSP
 			// =============================================
 
-			RequestDispatcher rd = request.getRequestDispatcher("seat_selection.jsp");
+			RequestDispatcher rd = request.getRequestDispatcher("/seat_selection.jsp");
 
 			rd.forward(request, response);
 

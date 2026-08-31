@@ -1,0 +1,389 @@
+@charset "UTF-8";
+
+/* =====================================================
+   PAGE
+===================================================== */
+* {
+	box-sizing: border-box;
+}
+
+html, body {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	font-family: Arial, Helvetica, sans-serif;
+	background: #ffffff;
+	color: #333;
+}
+
+/* =====================================================
+   HEADER
+===================================================== */
+.header {
+	height: 50px;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 16px;
+	background: #ffffff;
+	border-bottom: 1px solid #eeeeee;
+}
+
+/* LOGO */
+.logo {
+	width: 200px;
+	display: flex;
+	align-items: center;
+	gap: 7px;
+}
+
+.logo-icon {
+	width: 21px;
+	height: 21px;
+	background: #f84464;
+	border-radius: 4px;
+	position: relative;
+}
+
+.logo-icon:after {
+	content: "▶";
+	position: absolute;
+	color: white;
+	font-size: 9px;
+	left: 6px;
+	top: 6px;
+}
+
+.logo-text {
+	font-size: 13px;
+	font-weight: bold;
+	color: #222;
+}
+
+/* MOVIE */
+.movie-info {
+	flex: 1;
+	text-align: center;
+}
+
+.movie-info h2 {
+	margin: 0;
+	font-size: 13px;
+	font-weight: bold;
+}
+
+.movie-info p {
+	margin: 2px 0 0;
+	font-size: 8px;
+	color: #777;
+}
+
+/* SIGN IN */
+.sign-in {
+	width: 48px;
+	height: 24px;
+	border: 1px solid #f84464;
+	background: white;
+	color: #f84464;
+	border-radius: 4px;
+	font-size: 8px;
+}
+
+/* =====================================================
+   SHOW BAR
+===================================================== */
+.show-bar {
+	height: 42px;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 16px;
+	background: #fafafa;
+	border-bottom: 1px solid #eeeeee;
+}
+
+.show-left {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.calendar {
+	color: #6a35c9;
+	font-size: 11px;
+}
+
+.date {
+	font-size: 9px;
+	font-weight: bold;
+	color: #555;
+}
+
+.time {
+	height: 23px;
+	padding: 0 12px;
+	display: flex;
+	align-items: center;
+	border: 1px solid #f84464;
+	border-radius: 4px;
+	color: #f84464;
+	font-size: 9px;
+	font-weight: bold;
+}
+
+
+/* =====================================================
+   MAIN SEAT AREA
+===================================================== */
+.container {
+	width: 100%;
+	padding: 16px 40px 90px 40px;
+}
+
+/* =====================================================
+   SEAT SECTION
+===================================================== */
+.seat-section {
+	width: 100%;
+	margin-bottom: 20px;
+}
+
+/* =====================================================
+   TYPE TITLE
+===================================================== */
+.type-title {
+	text-align: center;
+	margin-bottom: 8px;
+	font-size: 9px;
+	font-weight: bold;
+	color: #32185f;
+	text-transform: uppercase;
+}
+
+/* =====================================================
+   ROW
+===================================================== */
+.row {
+	width: 100%;
+	height: 24px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 6px 0;
+}
+
+/* =====================================================
+   ROW LETTER
+===================================================== */
+.row-name {
+	width: 25px;
+	margin-right: 5px;
+	text-align: center;
+	font-size: 8px;
+	color: #777;
+}
+
+/* =====================================================
+   SEAT
+===================================================== */
+.seat {
+	width: 23px;
+	height: 24px;
+	margin: 0 3px;
+	padding: 0;
+	border-radius: 5px;
+	font-size: 8px;
+	font-family: Arial, sans-serif;
+}
+
+/* AVAILABLE */
+.seat.available {
+	border: 1px solid #987bd4;
+	color: #55339f;
+	background: #ffffff;
+	cursor: pointer;
+}
+
+.seat.available:hover {
+	background: #f2edff;
+}
+
+/* BOOKED */
+.seat.booked {
+	border: 1px solid #c0c0c0;
+	background: #d1d1d1;
+	color: white;
+	cursor: not-allowed;
+}
+
+/* SELECTED */
+.seat.selected {
+	border: 1px solid #6a35c9;
+	background: #6a35c9;
+	color: white;
+	cursor: pointer;
+}
+
+/* =====================================================
+   SCREEN
+===================================================== */
+.screen-area {
+	width: 100%;
+	margin-top: 24px;
+	text-align: center;
+}
+
+.screen {
+	width: 345px;
+	height: 25px;
+	margin: auto;
+	background: #c9b8f5;
+	border-radius: 50% 50% 10% 10%;
+	transform: perspective(150px) rotateX(7deg);
+	box-shadow: 0 5px 0 #b19bea, 0 7px 8px rgba(106, 53, 201, 0.12);
+}
+
+.screen-text {
+	margin-top: 14px;
+	color: #7452b5;
+	font-size: 9px;
+	font-weight: bold;
+}
+
+/* =====================================================
+   LEGEND
+===================================================== */
+.legend {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 22px;
+	margin-top: 18px;
+	font-size: 8px;
+	color: #555;
+}
+
+.legend-item {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+}
+
+.legend-box {
+	width: 12px;
+	height: 12px;
+	border-radius: 3px;
+}
+
+.legend-available {
+	background: white;
+	border: 1px solid #987bd4;
+}
+
+.legend-occupied {
+	background: #d1d1d1;
+	border: 1px solid #c0c0c0;
+}
+
+.legend-selected {
+	background: #6a35c9;
+}
+
+/* =====================================================
+   BOTTOM BAR
+===================================================== */
+.bottom {
+	position: fixed;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 74px;
+	background: white;
+	border-top: 1px solid #dddddd;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 25px;
+	z-index: 100;
+}
+
+/* LEFT */
+.bottom-left {
+	width: 220px;
+}
+
+.count {
+	color: #6a35c9;
+	font-size: 9px;
+	margin-bottom: 7px;
+}
+
+.total {
+	font-size: 10px;
+	font-weight: bold;
+}
+
+/* CENTER */
+.bottom-center {
+	flex: 1;
+	text-align: center;
+}
+
+.selected-list {
+	font-size: 8px;
+	color: #555;
+}
+
+/* RIGHT */
+.bottom-right {
+	width: 220px;
+	text-align: center;
+}
+
+.continue {
+	width: 170px;
+	height: 30px;
+	border: none;
+	border-radius: 5px;
+	background: #cfd0d8;
+	color: white;
+	font-size: 9px;
+	font-weight: bold;
+	cursor: not-allowed;
+}
+
+.continue.active {
+	background: #6a35c9;
+	cursor: pointer;
+}
+
+.continue-message {
+	margin-top: 5px;
+	font-size: 7px;
+	color: #999;
+}
+
+/* =====================================================
+   LANDSCAPE SCREEN
+===================================================== */
+@media screen and (min-width: 1000px) {
+	.seat {
+		width: 23px;
+		height: 24px;
+		margin-left: 3px;
+		margin-right: 3px;
+	}
+}
+
+/* =====================================================
+   SMALL SCREEN
+===================================================== */
+@media screen and (max-width: 800px) {
+	body {
+		min-width: 900px;
+		overflow-x: auto;
+	}
+}

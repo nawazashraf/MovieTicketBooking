@@ -6,6 +6,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 
 public class BookingBean {
+
 	private String id;
 	private String bookingReference;
 	private String userId;
@@ -13,19 +14,18 @@ public class BookingBean {
 	private BigDecimal totalAmount;
 	private String bookingStatus;
 
-	private String movieTitle;
-	private String posterUrl;
-
-	private String mallName;
-
 	private Date showDate;
 	private Time startTime;
+	private Time endTime;
+
+	private String movieTitle;
+	private String posterUrl;
+	private String mallName;
 
 	private Timestamp createdAt;
 	private Timestamp expiresAt;
 
 	public BookingBean() {
-
 	}
 
 	public String getId() {
@@ -76,6 +76,30 @@ public class BookingBean {
 		this.bookingStatus = bookingStatus;
 	}
 
+	public Date getShowDate() {
+		return showDate;
+	}
+
+	public void setShowDate(Date showDate) {
+		this.showDate = showDate;
+	}
+
+	public Time getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Time startTime) {
+		this.startTime = startTime;
+	}
+
+	public Time getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Time endTime) {
+		this.endTime = endTime;
+	}
+
 	public String getMovieTitle() {
 		return movieTitle;
 	}
@@ -100,22 +124,6 @@ public class BookingBean {
 		this.mallName = mallName;
 	}
 
-	public Date getShowDate() {
-		return showDate;
-	}
-
-	public void setShowDate(Date showDate) {
-		this.showDate = showDate;
-	}
-
-	public Time getStartTime() {
-		return startTime;
-	}
-
-	public void setStartTime(Time startTime) {
-		this.startTime = startTime;
-	}
-
 	public Timestamp getCreatedAt() {
 		return createdAt;
 	}
@@ -131,5 +139,4 @@ public class BookingBean {
 	public void setExpiresAt(Timestamp expiresAt) {
 		this.expiresAt = expiresAt;
 	}
-
 }

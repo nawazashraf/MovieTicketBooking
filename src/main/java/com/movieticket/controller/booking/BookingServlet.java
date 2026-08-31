@@ -11,8 +11,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import com.movieticket.dao.BookingDAO;
+import com.movieticket.dao.PaymentDAO;
 import com.movieticket.model.BookingBean;
 import com.movieticket.model.BookingSeatBean;
+import com.movieticket.model.PaymentBean;
 
 @WebServlet("/booking")
 public class BookingServlet extends HttpServlet {
@@ -29,19 +31,38 @@ public class BookingServlet extends HttpServlet {
 			// HARDCODED VALUES FOR PRACTICAL
 			// =========================================
 
-			String userId = "user-001";
+			String userId = "user-003";
 
-			String showId = "show-001";
+			String showId = request.getParameter("showId");
+			String selectedSeats = request.getParameter("selectedSeats");
 
-			String[] showSeatIds = { "show-seat-001", "show-seat-002" };
+			if (showId == null || showId.trim().isEmpty()) {
 
-			BigDecimal[] prices = { new BigDecimal("150.00"), new BigDecimal("150.00") };
+				response.getWriter().println("Show ID is missing");
+				return;
+			}
+
+			if (selectedSeats == null || selectedSeats.trim().isEmpty()) {
+
+				response.getWriter().println("No seats selected");
+				return;
+			}
+
+			String[] showSeatIds = selectedSeats.split(",");
+
+			BigDecimal price = new BigDecimal("150.00");
+
+//
+//			String[] showSeatIds = { "show-seat-001", "show-seat-002" };
+//
+//			BigDecimal[] prices = { new BigDecimal("150.00"), new BigDecimal("150.00") };
 
 			// =========================================
 			// TOTAL AMOUNT
 			// =========================================
 
-			BigDecimal totalAmount = prices[0].add(prices[1]);
+			BigDecimal totalAmount = price.multiply(BigDecimal.valueOf(showSeatIds.length));
+//			BigDecimal totalAmount = prices[0].add(prices[1]);
 
 			// =========================================
 			// CREATE BOOKING
@@ -86,7 +107,9 @@ public class BookingServlet extends HttpServlet {
 			// INSERT SEATS
 			// =========================================
 
-			for (int i = 0; i < showSeatIds.length; i++) {
+			for (String showSeatId : showSeatIds) {
+
+				showSeatId = showSeatId.trim();
 
 				BookingSeatBean seat = new BookingSeatBean();
 
@@ -94,9 +117,9 @@ public class BookingServlet extends HttpServlet {
 
 				seat.setBookingId(bookingId);
 
-				seat.setShowSeatId(showSeatIds[i]);
+				seat.setShowSeatId(showSeatId);
 
-				seat.setPrice(prices[i]);
+				seat.setPrice(price);
 
 				boolean seatSaved = dao.addBookingSeat(seat);
 
@@ -108,14 +131,29 @@ public class BookingServlet extends HttpServlet {
 				}
 			}
 
+			PaymentBean payment = new PaymentBean();
+
+			payment.setId(UUID.randomUUID().toString());
+			payment.setBookingId(bookingId);
+			payment.setAmount(totalAmount);
+			payment.setPaymentStatus("PENDING");
+
+			PaymentDAO paymentDAO = new PaymentDAO();
+
+			boolean paymentCreated = paymentDAO.createPayment(payment);
+
+			if (!paymentCreated) {
+
+				response.getWriter().println("Payment creation failed");
+
+				return;
+			}
+
 			// =========================================
-			// SUCCESS
+			// GO TO PAYMENT
 			// =========================================
 
-			response.getWriter()
-					.println("<h2>Booking Successful</h2>" + "<p>Booking ID: " + bookingId + "</p>"
-							+ "<p>Booking Reference: " + booking.getBookingReference() + "</p>" + "<p>Total Amount: ₹"
-							+ totalAmount + "</p>");
+			response.sendRedirect(request.getContextPath() + "/payment?bookingId=" + bookingId);
 
 		} catch (Exception e) {
 

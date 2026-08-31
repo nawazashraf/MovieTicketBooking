@@ -23,12 +23,8 @@ public class SeatSelectionServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		//String showId = request.getParameter("showId");
-		
+		// String showId = request.getParameter("showId");
 		String showId = "show-001";
-		
-		
-		
 
 		// Check showId
 		if (showId == null || showId.trim().isEmpty()) {
@@ -87,10 +83,4 @@ public class SeatSelectionServlet extends HttpServlet {
 		}
 	}
 
-	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-
-		doPost(request, response);
-	}
 }

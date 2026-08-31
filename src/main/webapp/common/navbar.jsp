@@ -11,6 +11,13 @@
 
 	<div class="nav-links">
 		<a href="#">Home</a> <a href="#">Movies</a> <a href="#">Malls</a>
+		<a href="${pageContext.request.contextPath}/profile">
+        My Profile
+    </a>
+
+    <a href="${pageContext.request.contextPath}/logout">
+        Logout
+    </a>
 	</div>
 
 </nav>

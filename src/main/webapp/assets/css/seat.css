@@ -33,14 +33,14 @@ html, body {
 
 /* LOGO */
 .logo {
-	width: 200px;
+	width: 250px;
 	display: flex;
 	align-items: center;
 	gap: 7px;
 }
 
 .logo-icon {
-	width: 21px;
+	width: 24px;
 	height: 21px;
 	background: #f84464;
 	border-radius: 4px;
@@ -52,43 +52,35 @@ html, body {
 	position: absolute;
 	color: white;
 	font-size: 9px;
-	left: 6px;
-	top: 6px;
+	left: 9px;
+	top: 5px;
 }
 
 .logo-text {
-	font-size: 13px;
+	font-size: 18px;
 	font-weight: bold;
 	color: #222;
 }
 
 /* MOVIE */
 .movie-info {
-	flex: 1;
-	text-align: center;
+    flex: 1;
+    text-align: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .movie-info h2 {
 	margin: 0;
-	font-size: 13px;
+	font-size: 25px;
 	font-weight: bold;
 }
 
 .movie-info p {
 	margin: 2px 0 0;
-	font-size: 8px;
+	font-size: 16px;
 	color: #777;
-}
-
-/* SIGN IN */
-.sign-in {
-	width: 48px;
-	height: 24px;
-	border: 1px solid #f84464;
-	background: white;
-	color: #f84464;
-	border-radius: 4px;
-	font-size: 8px;
 }
 
 /* =====================================================
@@ -113,24 +105,24 @@ html, body {
 
 .calendar {
 	color: #6a35c9;
-	font-size: 11px;
+	font-size: 18px;
 }
 
 .date {
-	font-size: 9px;
+	font-size: 12px;
 	font-weight: bold;
 	color: #555;
 }
 
 .time {
 	height: 23px;
-	padding: 0 12px;
+	padding: 0 14px;
 	display: flex;
 	align-items: center;
 	border: 1px solid #f84464;
 	border-radius: 4px;
 	color: #f84464;
-	font-size: 9px;
+	font-size: 12px;
 	font-weight: bold;
 }
 
@@ -157,7 +149,7 @@ html, body {
 .type-title {
 	text-align: center;
 	margin-bottom: 8px;
-	font-size: 9px;
+	font-size: 14px;
 	font-weight: bold;
 	color: #32185f;
 	text-transform: uppercase;
@@ -168,11 +160,12 @@ html, body {
 ===================================================== */
 .row {
 	width: 100%;
-	height: 24px;
+	height: 28px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	margin: 6px 0;
+	margin: 5px 0;
+	text-align: center;
 }
 
 /* =====================================================
@@ -182,8 +175,9 @@ html, body {
 	width: 25px;
 	margin-right: 5px;
 	text-align: center;
-	font-size: 8px;
+	font-size: 12px;
 	color: #777;
+	
 }
 
 /* =====================================================
@@ -195,7 +189,7 @@ html, body {
 	margin: 0 3px;
 	padding: 0;
 	border-radius: 5px;
-	font-size: 8px;
+	font-size: 12px;
 	font-family: Arial, sans-serif;
 }
 
@@ -237,7 +231,7 @@ html, body {
 }
 
 .screen {
-	width: 345px;
+	width: 500px;
 	height: 25px;
 	margin: auto;
 	background: #c9b8f5;
@@ -249,7 +243,7 @@ html, body {
 .screen-text {
 	margin-top: 14px;
 	color: #7452b5;
-	font-size: 9px;
+	font-size: 13px;
 	font-weight: bold;
 }
 
@@ -262,7 +256,7 @@ html, body {
 	align-items: center;
 	gap: 22px;
 	margin-top: 18px;
-	font-size: 8px;
+	font-size: 12px;
 	color: #555;
 }
 
@@ -273,8 +267,8 @@ html, body {
 }
 
 .legend-box {
-	width: 12px;
-	height: 12px;
+	width: 14px;
+	height: 14px;
 	border-radius: 3px;
 }
 
@@ -300,7 +294,7 @@ html, body {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	height: 74px;
+	height: 70px;
 	background: white;
 	border-top: 1px solid #dddddd;
 	display: flex;
@@ -317,12 +311,12 @@ html, body {
 
 .count {
 	color: #6a35c9;
-	font-size: 9px;
+	font-size: 12px;
 	margin-bottom: 7px;
 }
 
 .total {
-	font-size: 10px;
+	font-size: 14px;
 	font-weight: bold;
 }
 
@@ -333,7 +327,7 @@ html, body {
 }
 
 .selected-list {
-	font-size: 8px;
+	font-size: 14px;
 	color: #555;
 }
 
@@ -350,7 +344,7 @@ html, body {
 	border-radius: 5px;
 	background: #cfd0d8;
 	color: white;
-	font-size: 9px;
+	font-size: 12px;
 	font-weight: bold;
 	cursor: not-allowed;
 }
@@ -362,7 +356,7 @@ html, body {
 
 .continue-message {
 	margin-top: 5px;
-	font-size: 7px;
+	font-size: 10px;
 	color: #999;
 }
 

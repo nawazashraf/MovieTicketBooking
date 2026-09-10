@@ -61,7 +61,7 @@
 
 			<div class="logo-icon"></div>
 
-			<div class="logo-text">Online Movie Ticket</div>
+			<div class="logo-text">Online Movie Tickets</div>
 
 		</div>
 
@@ -79,8 +79,6 @@
 
 		</div>
 
-
-		<button class="sign-in">Sign In</button>
 
 	</div>
 

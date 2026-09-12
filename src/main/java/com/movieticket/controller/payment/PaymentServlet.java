@@ -22,20 +22,16 @@ public class PaymentServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
+
 		HttpSession session = request.getSession(false);
 
-		if (session == null ||
-		    session.getAttribute("user") == null) {
+		if (session == null || session.getAttribute("user") == null) {
 
-		    response.sendRedirect(
-		        request.getContextPath() + "/login.jsp"
-		    );
+			response.sendRedirect(request.getContextPath() + "/login.jsp");
 
-		    return;
+			return;
 		}
-		
-		
+
 		String bookingId = request.getParameter("bookingId");
 
 		BookingDAO bookingDAO = new BookingDAO();
@@ -74,44 +70,45 @@ public class PaymentServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
-		
+
 		HttpSession session = request.getSession(false);
 
-		if (session == null ||
-		    session.getAttribute("user") == null) {
+		if (session == null || session.getAttribute("user") == null) {
 
-		    response.sendRedirect(
-		        request.getContextPath() + "/login.jsp"
-		    );
+			response.sendRedirect(request.getContextPath() + "/login.jsp");
 
-		    return;
+			return;
 		}
-		
-		
-		
+
 		String bookingId = request.getParameter("bookingId");
 		String paymentMethod = request.getParameter("paymentMethod");
 
-		String transactionId = "TXN-" + UUID.randomUUID().toString();
+		request.setAttribute("bookingId", bookingId);
+		request.setAttribute("paymentMethod", paymentMethod);
 
-		PaymentDAO paymentDAO = new PaymentDAO();
-
-		boolean paymentSuccess = paymentDAO.markPaymentSuccess(bookingId, paymentMethod, transactionId);
-
-		if (paymentSuccess) {
-
-			BookingDAO bookingDAO = new BookingDAO();
-
-			boolean bookingConfirmed = bookingDAO.confirmBookingAndSeats(bookingId);
-
-			if (bookingConfirmed) {
-				response.sendRedirect(request.getContextPath() + "/ticket?bookingId=" + bookingId);
-
-			} else {
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Payment Successfull but booking failed");
-			}
-		}
+		// Go to payment processing page
+		request.getRequestDispatcher("/payment/payment-processing.jsp").forward(request, response);
+//
+//		String transactionId = "TXN-" + UUID.randomUUID().toString();
+//
+//		PaymentDAO paymentDAO = new PaymentDAO();
+//
+//		boolean paymentSuccess = paymentDAO.markPaymentSuccess(bookingId, paymentMethod, transactionId);
+//
+//		if (paymentSuccess) {
+//
+//			BookingDAO bookingDAO = new BookingDAO();
+//
+//			boolean bookingConfirmed = bookingDAO.confirmBookingAndSeats(bookingId);
+//
+//			if (bookingConfirmed) {
+//				response.sendRedirect(request.getContextPath() + "/ticket?bookingId=" + bookingId);
+//
+//			} else {
+//				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+//						"Payment Successfull but booking failed");
+//			}
+//		}
 
 	}
 

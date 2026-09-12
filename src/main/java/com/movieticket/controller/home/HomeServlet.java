@@ -19,8 +19,12 @@ public class HomeServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		List<MovieBean> movies = movieDAO.getAllMovies();
-		request.setAttribute("movies", movies);
+
+		List<MovieBean> nowShowingMovies = movieDAO.getMoviesByStatus("NOW_SHOWING");
+		List<MovieBean> comingSoonMovies = movieDAO.getMoviesByStatus("COMING_SOON");
+
+		request.setAttribute("nowShowingMovies", nowShowingMovies);
+		request.setAttribute("comingSoonMovies", comingSoonMovies);
 
 		request.getRequestDispatcher("/index.jsp").forward(request, response);
 	}

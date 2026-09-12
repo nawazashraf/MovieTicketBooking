@@ -82,6 +82,9 @@ List<ShowBean> shows = (List<ShowBean>) request.getAttribute("shows");
 				%>
 
 				<div class="show-card">
+					<a
+						href="${pageContext.request.contextPath}/booking/seats?showId=<%= show.getShowId() %>">
+						Select Show </a>
 
 					<h3><%=show.getMallName()%></h3>
 

@@ -1,20 +1,24 @@
-<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
+<%@ page import="java.util.List"%>
+<%@ page import="java.util.Map"%>
 <%@ page import="com.movieticket.model.MovieBean"%>
 <%@ page import="com.movieticket.model.ShowBean"%>
-<%
-MovieBean movie = (MovieBean) request.getAttribute("movie");
-%>
 
 <%
-List<ShowBean> shows = (List<ShowBean>) request.getAttribute("shows");
+MovieBean movie = (MovieBean) request.getAttribute("movie");
+
+Map<String, List<ShowBean>> showsByDate = (Map<String, List<ShowBean>>) request.getAttribute("showsByDate");
 %>
+
 <!DOCTYPE html>
 <html>
+
 <head>
+
 <meta charset="UTF-8">
+
 <title>Movie Details</title>
 
 <link rel="stylesheet"
@@ -22,8 +26,12 @@ List<ShowBean> shows = (List<ShowBean>) request.getAttribute("shows");
 
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/assets/css/movie-details.css">
+
 </head>
+
 <body>
+
+	<!-- Movie Hero Section -->
 
 	<div class="movie-hero">
 
@@ -33,20 +41,29 @@ List<ShowBean> shows = (List<ShowBean>) request.getAttribute("shows");
 		<div class="movie-hero-content">
 
 			<div class="movie-poster">
+
 				<img src="<%=movie.getPosterUrl()%>"
 					alt="<%=movie.getTitle()%> Poster">
+
 			</div>
 
 			<div class="movie-info">
 
-				<h1><%=movie.getTitle()%></h1>
+				<h1>
+					<%=movie.getTitle()%>
+				</h1>
 
 				<p class="movie-meta">
+
 					<%=movie.getLanguage()%>
+
 					&nbsp;•&nbsp;
+
 					<%=movie.getDurationMinutes()%>
 					min &nbsp;•&nbsp;
+
 					<%=movie.getCertificate()%>
+
 				</p>
 
 				<p class="movie-description">
@@ -57,6 +74,7 @@ List<ShowBean> shows = (List<ShowBean>) request.getAttribute("shows");
 
 					<a href="<%=movie.getTrailerUrl()%>" target="_blank"> Watch
 						Trailer </a> <a href="${pageContext.request.contextPath}/movies">
+
 						Back to Movies </a>
 
 				</div>
@@ -66,40 +84,117 @@ List<ShowBean> shows = (List<ShowBean>) request.getAttribute("shows");
 		</div>
 
 	</div>
+
+
+	<!-- Shows Section -->
+
 	<div class="shows-section">
 
 		<h2>Available Shows</h2>
 
-		<%
-		if (shows != null && !shows.isEmpty()) {
+		<div class="date-selector">
 
-			for (ShowBean show : shows) {
+			<button type="button" class="date-btn active">All</button>
+
+			<%
+			if (showsByDate != null && !showsByDate.isEmpty()) {
+
+				for (String date : showsByDate.keySet()) {
+			%>
+
+			<button type="button" class="date-btn" data-date="<%=date%>">
+
+				<%=date%>
+
+			</button>
+
+			<%
+			}
+			}
+			%>
+
+		</div>
+
+
+		<%
+		if (showsByDate != null && !showsByDate.isEmpty()) {
+
+			for (Map.Entry<String, List<ShowBean>> entry : showsByDate.entrySet()) {
+
+				String date = entry.getKey();
+
+				List<ShowBean> dateShows = entry.getValue();
 		%>
 
-		<div class="show-row">
 
-			<div class="show-mall">
-				<h3><%=show.getMallName()%></h3>
-				<span> <%=show.getShowDate()%>
-				</span> 
+		<!-- Date -->
+
+		<div class="show-date" data-date="<%=date%>">
+
+			<div class="date-heading">
+				<h3><%=date%></h3>
 			</div>
 
-			<div class="show-time">
-				<a
-					href="${pageContext.request.contextPath}/booking/seats?showId=<%= show.getShowId() %>">
-					<%=show.getStartTime()%>
-				</a>
-			</div>
+
+			<%
+			String currentMall = null;
+
+			for (ShowBean show : dateShows) {
+
+				String mallName = show.getMallName();
+
+				if (!mallName.equals(currentMall)) {
+
+					if (currentMall != null) {
+			%>
 
 		</div>
 
 		<%
 		}
 
-		} else {
+		currentMall = mallName;
 		%>
 
-		<p>No shows available for this movie.</p>
+
+		<!-- Mall -->
+
+		<div class="show-list">
+
+			<div class="show-mall">
+
+				<strong> <%=mallName%>
+				</strong>
+
+			</div>
+
+
+			<!-- Show Times -->
+
+			<div class="show-times">
+
+				<%
+				}
+				%>
+
+
+				<a
+					href="${pageContext.request.contextPath}/booking/seats?showId=<%= show.getShowId() %>">
+
+					<%=show.getStartTime()%>
+
+				</a>
+
+
+				<%
+				}
+
+				if (currentMall != null) {
+				%>
+
+			</div>
+
+		</div>
 
 		<%
 		}
@@ -108,5 +203,27 @@ List<ShowBean> shows = (List<ShowBean>) request.getAttribute("shows");
 	</div>
 
 
+	<%
+	}
+
+	} else {
+	%>
+
+
+	<p class="no-shows">No shows available for this movie.</p>
+
+
+	<%
+	}
+	%>
+
+	</div>
+
+
+
+	<script type="text/javascript"
+		src="${pageContext.request.contextPath}/assets/js/movie-details.js"></script>
+
 </body>
+
 </html>

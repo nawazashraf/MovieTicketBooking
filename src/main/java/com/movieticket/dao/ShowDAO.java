@@ -97,7 +97,7 @@ public class ShowDAO {
 				JOIN movies m ON sh.movie_id = m.id
 				JOIN malls ma ON sh.mall_id = ma.id
 				WHERE sh.movie_id = ?
-				ORDER BY sh.show_date, sh.start_time
+				ORDER BY sh.show_date, ma.name, sh.start_time
 				""";
 
 		List<ShowBean> shows = new ArrayList<>();

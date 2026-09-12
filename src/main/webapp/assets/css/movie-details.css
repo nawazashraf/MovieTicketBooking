@@ -241,6 +241,24 @@
 	cursor: pointer;
 	font-size: 14px;
 	transition: 0.2s;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 4px;
+}
+
+.show-time {
+	font-size: 15px;
+	font-weight: 600;
+}
+
+.available-seats {
+	font-size: 11px;
+	color: #777;
+}
+
+.show-time-btn.selected .available-seats {
+	color: #eee;
 }
 
 .show-time-btn:hover {

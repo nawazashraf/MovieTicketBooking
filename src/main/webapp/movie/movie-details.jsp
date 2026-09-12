@@ -209,12 +209,16 @@ Map<String, List<ShowBean>> showsByDate = (Map<String, List<ShowBean>>) request.
 
 
 			<!-- Showtime -->
-			<button type="button" class="show-time-btn"
+			<button type="button"
+				class="show-time-btn <%=show.getAvailableSeats() == 0 ? "sold-out" : ""%>"
 				data-show-id="<%=show.getShowId()%>" data-show-date="<%=date%>"
 				data-mall-name="<%=show.getMallName()%>"
-				data-show-time="<%=show.getStartTime()%>">
+				data-show-time="<%=show.getStartTime()%>"
+				<%=show.getAvailableSeats() == 0 ? "disabled" : ""%>>
 
-				<%=show.getStartTime()%>
+				<span class="show-time"> <%=show.getStartTime()%>
+				</span> <span class="available-seats"> <%=show.getAvailableSeats() == 0 ? "Sold Out" : show.getAvailableSeats() + " seats"%>
+				</span>
 
 			</button>
 

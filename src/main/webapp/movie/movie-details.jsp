@@ -259,8 +259,9 @@ Map<String, List<ShowBean>> showsByDate = (Map<String, List<ShowBean>>) request.
 				Please select a showtime </strong>
 		</div>
 
-		<button type="button" id="proceedButton" disabled>Proceed</button>
-
+		<button type="button" id="proceedButton"
+			data-context-path="<%=request.getContextPath()%>" disabled>
+			Proceed</button>
 	</div>
 
 

@@ -1,6 +1,9 @@
 const dateButtons = document.querySelectorAll(".date-btn");
 const showDates = document.querySelectorAll(".show-date");
-const showTimeButtons = document.querySelectorAll(".show-time-btn")
+const showTimeButtons = document.querySelectorAll(".show-time-btn");
+
+const selectedShow = document.getElementById("selectedShow");
+const proceedButton = document.getElementById("proceedButton");
 
 dateButtons.forEach(button => {
 
@@ -34,7 +37,7 @@ dateButtons.forEach(button => {
 
 showTimeButtons.forEach(button => {
 
-    button.addEventListener("click", function () {
+    button.addEventListener("click", function() {
 
         showTimeButtons.forEach(btn => {
             btn.classList.remove("selected");
@@ -60,8 +63,16 @@ showTimeButtons.forEach(button => {
 proceedButton.addEventListener("click", function() {
 
     const showId = this.dataset.showId;
+    const contextPath = this.dataset.contextPath;
 
-    window.location.href =
+    if (!showId) {
+        console.log("No show selected");
+        return;
+    }
+
+    const url =
         contextPath + "/booking/seats?showId=" + encodeURIComponent(showId);
 
+
+    window.location.assign(url);
 });

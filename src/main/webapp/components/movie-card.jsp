@@ -6,32 +6,36 @@
 <%
 MovieBean movie = (MovieBean) request.getAttribute("movie");
 %>
-<div class="movie-card">
-	<img src="<%=movie.getPosterUrl()%>" alt="<%=movie.getTitle()%> Poster">
+<a
+	href="${pageContext.request.contextPath}/movies/details?id=<%= movie.getId() %>">
+	<div class="movie-card">
+		<img src="<%=movie.getPosterUrl()%>"
+			alt="<%=movie.getTitle()%> Poster">
 
-	<div class="movie-info">
-		<h2><%=movie.getTitle()%></h2>
+		<div class="movie-info">
+			<h2><%=movie.getTitle()%></h2>
 
-		<p><%=movie.getDescription()%></p>
+			<p><%=movie.getDescription()%></p>
 
-		<p>
-			<strong>Duration:</strong>
-			<%=movie.getDurationMinutes()%>
-			minutes
-		</p>
+			<p>
+				<strong>Duration:</strong>
+				<%=movie.getDurationMinutes()%>
+				minutes
+			</p>
 
-		<p>
-			<strong>Language:</strong>
-			<%=movie.getLanguage()%>
-		</p>
+			<p>
+				<strong>Language:</strong>
+				<%=movie.getLanguage()%>
+			</p>
 
-		<p>
-			<strong>Certificate:</strong>
-			<%=movie.getCertificate()%>
-		</p>
+			<p>
+				<strong>Certificate:</strong>
+				<%=movie.getCertificate()%>
+			</p>
 
-		<p class="status">
-			<%=movie.getStatus()%>
-		</p>
+			<p class="status">
+				<%=movie.getStatus()%>
+			</p>
+		</div>
 	</div>
-</div>
+</a>

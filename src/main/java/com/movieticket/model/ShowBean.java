@@ -15,6 +15,7 @@ public class ShowBean {
     private String startTime;
     private String endTime;
     private String status;
+	private int availableSeats;
     private Timestamp createdAt;
 
     public String getShowId() {
@@ -88,8 +89,17 @@ public class ShowBean {
     public void setStatus(String status) {
         this.status = status;
     }
+    
 
-    public Timestamp getCreatedAt() {
+    public int getAvailableSeats() {
+		return availableSeats;
+	}
+
+	public void setAvailableSeats(int availableSeats) {
+		this.availableSeats = availableSeats;
+	}
+
+	public Timestamp getCreatedAt() {
         return createdAt;
     }
 

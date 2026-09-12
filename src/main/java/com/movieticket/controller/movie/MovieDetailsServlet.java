@@ -1,7 +1,10 @@
 package com.movieticket.controller.movie;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -33,15 +36,23 @@ public class MovieDetailsServlet extends HttpServlet {
 		}
 
 		MovieBean movie = movieDAO.getMovieById(movieId);
-		List<ShowBean> shows = showDAO.getShowsByMovieId(movieId);
 
 		if (movie == null) {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND, "Movie not found");
 			return;
 		}
 
+		List<ShowBean> shows = showDAO.getShowsByMovieId(movieId);
+
+		Map<String, List<ShowBean>> showsByDate = new LinkedHashMap<String, List<ShowBean>>();
+
+		for (ShowBean show : shows) {
+			showsByDate.computeIfAbsent(show.getShowDate(), key -> new ArrayList<>()).add(show);
+		}
+
 		request.setAttribute("movie", movie);
 		request.setAttribute("shows", shows);
+		request.setAttribute("showsByDate", showsByDate);
 
 		request.getRequestDispatcher("/movie/movie-details.jsp").forward(request, response);
 

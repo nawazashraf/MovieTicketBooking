@@ -1,11 +1,8 @@
 @charset "UTF-8";
 
-
-
 h1 {
 	text-align: center;
 }
-
 
 .movie-card {
 	width: 260px;
@@ -28,6 +25,12 @@ h1 {
 .movie-info h2 {
 	font-size: 20px;
 	margin-top: 0;
+}
+
+.movie-card-link {
+	text-decoration: none;
+	color: inherit;
+	display: block;
 }
 
 .status {

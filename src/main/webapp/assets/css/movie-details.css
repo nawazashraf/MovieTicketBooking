@@ -185,18 +185,52 @@
 }
 
 .date-btn {
-	flex-shrink: 0;
-	padding: 10px 18px;
-	border: 1px solid #ccc;
-	border-radius: 8px;
-	background: white;
+	min-width: 70px;
+	padding: 8px 12px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 3px;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+	background: #fff;
+	color: #333;
 	cursor: pointer;
+	transition: 0.2s;
+}
+
+.date-day {
+	font-size: 10px;
+	font-weight: 600;
+}
+
+.date-number {
+	font-size: 12px;
+	font-weight: 700;
+}
+
+.date-month {
+	font-size: 10px;
+	color: #777;
+}
+
+.date-btn.active .date-month {
+	color: #fff;
+}
+
+.date-btn:hover {
+	border-color: #222;
 }
 
 .date-btn.active {
 	background: #222;
 	color: white;
 	border-color: #222;
+}
+
+.date-day {
+	display: block;
+	font-weight: #222;
 }
 
 .show-time-btn {
@@ -217,4 +251,50 @@
 	background: #222;
 	color: white;
 	border-color: #222;
+}
+
+.booking-summary {
+	margin-top: 30px;
+	padding: 20px 24px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 20px;
+	background: #ffffff;
+	border-radius: 12px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+}
+
+.booking-summary span {
+	display: block;
+	font-size: 13px;
+	color: #777;
+	margin-bottom: 5px;
+}
+
+.booking-summary strong {
+	display: block;
+	font-size: 17px;
+}
+
+#proceedButton {
+	padding: 12px 22px;
+	border: none;
+	border-radius: 8px;
+	background: #222;
+	color: white;
+	font-size: 15px;
+	font-weight: bold;
+	cursor: pointer;
+	background: #222;
+}
+
+#proceedButton:hover:not(:disabled) {
+	opacity: 0.85;
+}
+
+#proceedButton:disabled {
+	background: #ccc;
+	color: #777;
+	cursor: not-allowed;
 }

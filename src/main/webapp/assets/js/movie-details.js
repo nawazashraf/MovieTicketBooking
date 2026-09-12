@@ -34,16 +34,34 @@ dateButtons.forEach(button => {
 
 showTimeButtons.forEach(button => {
 
-    button.addEventListener("click", function() {
+    button.addEventListener("click", function () {
 
         showTimeButtons.forEach(btn => {
-
             btn.classList.remove("selected");
-
         });
 
         this.classList.add("selected");
 
+        const showId = this.dataset.showId;
+        const showDate = this.dataset.showDate;
+        const mallName = this.dataset.mallName;
+        const showTime = this.dataset.showTime;
+
+        selectedShow.textContent =
+            mallName + " • " + showDate + " • " + showTime;
+
+        proceedButton.disabled = false;
+        proceedButton.dataset.showId = showId;
+
     });
+
+});
+
+proceedButton.addEventListener("click", function() {
+
+    const showId = this.dataset.showId;
+
+    window.location.href =
+        contextPath + "/booking/seats?showId=" + encodeURIComponent(showId);
 
 });

@@ -1,5 +1,9 @@
 @charset "UTF-8";
 
+.home-page {
+	padding: 0 48px;
+}
+
 .movie-container {
 	display: flex;
 	gap: 20px;

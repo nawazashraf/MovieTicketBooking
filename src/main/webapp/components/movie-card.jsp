@@ -7,7 +7,8 @@
 MovieBean movie = (MovieBean) request.getAttribute("movie");
 %>
 <a
-	href="${pageContext.request.contextPath}/movies/details?id=<%= movie.getId() %>">
+	href="${pageContext.request.contextPath}/movies/details?id=<%= movie.getId() %>"
+	class="movie-card-link">
 	<div class="movie-card">
 		<img src="<%=movie.getPosterUrl()%>"
 			alt="<%=movie.getTitle()%> Poster">

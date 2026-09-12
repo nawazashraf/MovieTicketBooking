@@ -14,20 +14,26 @@ import com.movieticket.model.MovieBean;
 
 @WebServlet("/movies")
 public class MovieServlet extends HttpServlet {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private final MovieDAO movieDAO = new MovieDAO();
+	private final MovieDAO movieDAO = new MovieDAO();
 
-    @Override
-    protected void doGet(HttpServletRequest request,
-                         HttpServletResponse response)
-            throws ServletException, IOException {
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
-        List<MovieBean> movies = movieDAO.getAllMovies();
+		String status = request.getParameter("status");
 
-        request.setAttribute("movies", movies);
+		List<MovieBean> movies;
 
-        request.getRequestDispatcher("/movie/movies.jsp")
-               .forward(request, response);
-    }
+		if (status != null && !status.isBlank()) {
+			movies = movieDAO.getMoviesByStatus(status);
+		} else {
+			movies = movieDAO.getAllMovies();
+		}
+
+		request.setAttribute("movies", movies);
+
+		request.getRequestDispatcher("/movie/movies.jsp").forward(request, response);
+	}
 }

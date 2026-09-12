@@ -1,1 +1,33 @@
 @charset "UTF-8";
+
+.movie-container {
+	display: flex;
+	gap: 20px;
+	overflow-x: auto;
+	padding: 10px 5px 20px;
+	scrollbar-width: none; /* Firefox */
+	-ms-overflow-style: none; /* IE/Edge */
+}
+
+.movie-container::-webkit-scrollbar {
+	display: none; /* Chrome/Safari */
+}
+
+.movie-card {
+	flex: 0 0 260px;
+}
+
+.section-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 10px;
+}
+
+.section-header h2 {
+	margin: 0;
+}
+
+.section-header a {
+	text-decoration: none;
+}

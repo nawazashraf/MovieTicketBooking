@@ -1,9 +1,15 @@
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
 <%@ page import="com.movieticket.model.MovieBean"%>
+<%@ page import="com.movieticket.model.ShowBean"%>
 <%
 MovieBean movie = (MovieBean) request.getAttribute("movie");
+%>
+
+<%
+List<ShowBean> shows = (List<ShowBean>) request.getAttribute("shows");
 %>
 <!DOCTYPE html>
 <html>
@@ -62,6 +68,50 @@ MovieBean movie = (MovieBean) request.getAttribute("movie");
 				<a href="<%=movie.getTrailerUrl()%>" target="_blank"> Watch
 					Trailer </a> <a href="${pageContext.request.contextPath}/movies">
 					Back to Movies </a>
+
+			</div>
+
+			<div class="shows-section">
+
+				<h2>Available Shows</h2>
+
+				<%
+				if (shows != null && !shows.isEmpty()) {
+
+					for (ShowBean show : shows) {
+				%>
+
+				<div class="show-card">
+
+					<h3><%=show.getMallName()%></h3>
+
+					<p>
+						<%=show.getShowDate()%>
+					</p>
+
+					<p>
+						<%=show.getStartTime()%>
+						-
+						<%=show.getEndTime()%>
+					</p>
+
+					<p>
+						<%=show.getStatus()%>
+					</p>
+
+				</div>
+
+				<%
+				}
+
+				} else {
+				%>
+
+				<p>No shows available for this movie.</p>
+
+				<%
+				}
+				%>
 
 			</div>
 		</div>

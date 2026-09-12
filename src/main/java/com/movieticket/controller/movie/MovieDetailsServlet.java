@@ -41,6 +41,7 @@ public class MovieDetailsServlet extends HttpServlet {
 		}
 
 		request.setAttribute("movie", movie);
+		request.setAttribute("shows", shows);
 
 		request.getRequestDispatcher("/movie/movie-details.jsp").forward(request, response);
 

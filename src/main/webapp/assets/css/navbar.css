@@ -1,35 +1,31 @@
 @charset "UTF-8";
 
 .navbar {
-	height: 60px;
+	height: 64px;
 	padding: 0 40px;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	background-color: #1f1f1f;
+	background-color: #ffffff;
+	border-bottom: 1px solid #e5e7eb;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+	position: relative;
+	z-index: 100;
 }
 
+/* =========================
+   LOGO
+   ========================= */
 .nav-logo {
-	color: #FFB4AA;
+	color: #222222;
 	font-size: 22px;
-	font-weight: bold;
+	font-weight: 700;
+	letter-spacing: -0.3px;
 }
 
-.nav-links {
-	display: flex;
-	gap: 25px;
-}
-
-.nav-links a {
-	color: #ffb4aa;
-	text-decoration: none;
-	font-size: 16px;
-}
-
-.nav-links a:hover {
-	color: #f5c518;
-}
-
+/* =========================
+   SEARCH
+   ========================= */
 .nav-search {
 	display: flex;
 	align-items: center;
@@ -37,17 +33,67 @@
 }
 
 .nav-search input {
-	width: 220px;
-	padding: 8px 12px;
-	background-color: #292A2A;
-	border: 1px solid #555;
-	border-radius: 20px;
+	width: 260px;
+	padding: 9px 15px;
+	background-color: #f7f7f7;
+	border: 1px solid #dddddd;
+	border-radius: 22px;
 	outline: none;
+	color: #222222;
+	font-size: 14px;
+	transition: all 0.2s ease;
 }
 
+.nav-search input::placeholder {
+	color: #999999;
+}
+
+.nav-search input:focus {
+	background-color: #ffffff;
+	border-color: #222222;
+	box-shadow: 0 0 0 3px rgba(34, 34, 34, 0.08);
+}
+
+/* =========================
+   NAV LINKS
+   ========================= */
+.nav-links {
+	display: flex;
+	align-items: center;
+	gap: 25px;
+}
+
+.nav-links a {
+	color: #444444;
+	text-decoration: none;
+	font-size: 15px;
+	font-weight: 500;
+	transition: color 0.2s ease;
+}
+
+.nav-links a:hover {
+	color: #000000;
+}
+
+/* =========================
+   LOGOUT
+   ========================= */
+.nav-links a:last-child {
+	color: #555555;
+}
+
+.nav-links a:last-child:hover {
+	color: #d32f2f;
+}
+
+/* =========================
+   SEARCH BUTTON
+   ========================= */
 .nav-search button {
 	padding: 8px 14px;
 	border: none;
 	border-radius: 5px;
+	background-color: #222222;
+	color: #ffffff;
 	cursor: pointer;
 }

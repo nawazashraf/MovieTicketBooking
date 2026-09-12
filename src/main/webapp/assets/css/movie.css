@@ -2,6 +2,7 @@
 
 .home-page {
 	padding: 0 48px;
+	background-color: #F1F1F1;
 }
 
 .movie-container {
@@ -19,6 +20,10 @@
 
 .movie-card {
 	flex: 0 0 260px;
+}
+
+.movie-section {
+	padding: 8px 0;
 }
 
 .section-header {

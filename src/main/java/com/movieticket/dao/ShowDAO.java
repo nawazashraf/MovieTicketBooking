@@ -106,7 +106,11 @@ public class ShowDAO {
 			ps.setString(1, movieId);
 			try (ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {
-					shows.add(mapShow(rs));
+					ShowBean show = mapShow(rs);
+
+					show.setAvailableSeats(getAvailableSeatCount(show.getShowId()));
+
+					shows.add(show);
 				}
 			}
 		} catch (Exception e) {
@@ -114,6 +118,32 @@ public class ShowDAO {
 		}
 		return shows;
 
+	}
+
+	public int getAvailableSeatCount(String showId) {
+		String sql = """
+				SELECT COUNT(*)
+				FROM show_seats
+				WHERE show_id = ?
+				AND status = 'AVAILABLE'
+				""";
+
+		try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+			ps.setString(1, showId);
+
+			try (ResultSet rs = ps.executeQuery()) {
+
+				if (rs.next()) {
+					return rs.getInt(1);
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return 0;
 	}
 
 	public boolean updateShow(ShowBean show) {

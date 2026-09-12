@@ -6,55 +6,106 @@
 <head>
 <meta charset="UTF-8">
 <title>E-Ticket</title>
+
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/assets/css/ticket.css">
 </head>
 
 <body>
 
-	<h1>Movie E-Ticket</h1>
+	<div class="ticket">
 
-	<hr>
+		<!-- Header -->
+		<div class="ticket-header">
+			<h1>Movie E-Ticket</h1>
+			<p>Your booking has been confirmed</p>
+		</div>
 
-	<h3>${ticket.movieTitle}</h3>
+		<!-- Movie & Booking Details -->
+		<div class="movie-section">
 
-	<p>
-		<strong>Booking Reference:</strong> ${ticket.bookingReference}
-	</p>
+			<h2 class="movie-title">${ticket.movieTitle}</h2>
 
-	<p>
-		<strong>Mall:</strong> ${ticket.mallName}
-	</p>
+			<div class="booking-ref">
+				<strong>Booking Reference:</strong> ${ticket.bookingReference}
+			</div>
 
-	<p>
-		<strong>Show Date:</strong> ${ticket.showDate}
-	</p>
+			<div class="details">
 
-	<p>
-		<strong>Show Time:</strong> ${ticket.startTime}
-	</p>
+				<div class="detail">
+					<span class="detail-label">Mall</span> <span class="detail-value">${ticket.mallName}</span>
+				</div>
 
-	<p>
-		<strong>Total Amount:</strong> ₹${ticket.totalAmount}
-	</p>
+				<div class="detail">
+					<span class="detail-label">Show Date</span> <span
+						class="detail-value">${ticket.showDate}</span>
+				</div>
 
-	<hr>
+				<div class="detail">
+					<span class="detail-label">Show Time</span> <span
+						class="detail-value">${ticket.startTime}</span>
+				</div>
 
-	<h3>Payment Details</h3>
+				<div class="detail">
+					<span class="detail-label">Total Amount</span> <span
+						class="detail-value">₹${ticket.totalAmount}</span>
+				</div>
 
-	<p>
-		<strong>Payment Method:</strong> ${ticket.paymentMethod}
-	</p>
+			</div>
 
-	<p>
-		<strong>Transaction ID:</strong> ${ticket.transactionId}
-	</p>
+		</div>
 
-	<p>
-		<strong>Payment Status:</strong> ${ticket.paymentStatus}
-	</p>
+		<!-- Ticket Divider -->
+		<div class="ticket-divider"></div>
 
-	<p>
-		<strong>Seats </strong> ${ticket.seats}
-	</p>
+		<!-- Payment Details -->
+		<div class="payment-section">
+
+			<h3>Payment Details</h3>
+
+			<div class="payment-details">
+
+				<div class="detail">
+					<span class="detail-label">Payment Method</span> <span
+						class="detail-value">${ticket.paymentMethod}</span>
+				</div>
+
+				<div class="detail">
+					<span class="detail-label">Transaction ID</span> <span
+						class="detail-value">${ticket.transactionId}</span>
+				</div>
+
+				<div class="detail">
+					<span class="detail-label">Payment Status</span> <span
+						class="detail-value"> <span class="status">${ticket.paymentStatus}</span>
+					</span>
+				</div>
+
+			</div>
+
+			<div class="seats">
+				<span class="seats-label">Seats</span> <span class="seats-value">${ticket.seats}</span>
+			</div>
+
+		</div>
+
+		<div class="ticket-actions">
+
+			<!--  <a
+				href="${pageContext.request.contextPath}/ticket/download?bookingId=${ticket.bookingId}"
+				class="download-btn"> Download Ticket </a> -->
+
+			<button onclick="window.print()" class="print-btn">Print
+				Ticket</button>
+
+		</div>
+
+
+		<!-- Footer -->
+		<div class="ticket-footer">Please carry this e-ticket for entry
+			into the theatre.</div>
+
+	</div>
 
 </body>
 </html>

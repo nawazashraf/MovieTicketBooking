@@ -178,12 +178,11 @@ Map<String, List<ShowBean>> showsByDate = (Map<String, List<ShowBean>>) request.
 				%>
 
 
-				<a
-					href="${pageContext.request.contextPath}/booking/seats?showId=<%= show.getShowId() %>">
 
+				<button type="button" class="show-time-btn"
+					data-show-id="<%=show.getShowId()%>">
 					<%=show.getStartTime()%>
-
-				</a>
+				</button>
 
 
 				<%

@@ -198,3 +198,23 @@
 	color: white;
 	border-color: #222;
 }
+
+.show-time-btn {
+	padding: 10px 18px;
+	border: 1px solid #ccc;
+	border-radius: 8px;
+	background: white;
+	cursor: pointer;
+	font-size: 14px;
+	transition: 0.2s;
+}
+
+.show-time-btn:hover {
+	border-color: #222;
+}
+
+.show-time-btn.selected {
+	background: #222;
+	color: white;
+	border-color: #222;
+}

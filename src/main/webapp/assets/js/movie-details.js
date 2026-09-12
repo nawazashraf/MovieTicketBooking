@@ -1,5 +1,6 @@
 const dateButtons = document.querySelectorAll(".date-btn");
 const showDates = document.querySelectorAll(".show-date");
+const showTimeButtons = document.querySelectorAll(".show-time-btn")
 
 dateButtons.forEach(button => {
 
@@ -26,6 +27,22 @@ dateButtons.forEach(button => {
             }
 
         });
+
+    });
+
+});
+
+showTimeButtons.forEach(button => {
+
+    button.addEventListener("click", function() {
+
+        showTimeButtons.forEach(btn => {
+
+            btn.classList.remove("selected");
+
+        });
+
+        this.classList.add("selected");
 
     });
 

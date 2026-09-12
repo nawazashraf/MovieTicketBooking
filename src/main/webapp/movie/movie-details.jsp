@@ -9,7 +9,10 @@ MovieBean movie = (MovieBean) request.getAttribute("movie");
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Movie Details</title>
+
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/assets/css/movie-details.css">
 </head>
 <body>
 
@@ -52,10 +55,19 @@ MovieBean movie = (MovieBean) request.getAttribute("movie");
 				<%=movie.getStatus()%>
 			</p>
 
-			<a href="${pageContext.request.contextPath}/movies"> Back to
-				Movies </a>
 
+
+			<div class="movie-actions">
+
+				<a href="<%=movie.getTrailerUrl()%>" target="_blank"> Watch
+					Trailer </a> <a href="${pageContext.request.contextPath}/movies">
+					Back to Movies </a>
+
+			</div>
 		</div>
+
+
+
 
 	</div>
 </body>

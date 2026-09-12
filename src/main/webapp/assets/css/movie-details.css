@@ -1,0 +1,36 @@
+@charset "UTF-8";
+
+.movie-details {
+	display: flex;
+	gap: 40px;
+	max-width: 1100px;
+	margin: 50px auto;
+	padding: 30px;
+}
+
+.movie-poster img {
+	width: 300px;
+	height: 450px;
+	object-fit: cover;
+	border-radius: 10px;
+}
+
+.movie-info {
+	flex: 1;
+}
+
+.movie-info h1 {
+	margin-top: 0;
+}
+
+.movie-actions {
+	display: flex;
+	gap: 15px;
+	margin-top: 25px;
+}
+
+.movie-actions a {
+	text-decoration: none;
+	padding: 10px 18px;
+	border-radius: 6px;
+}

@@ -12,154 +12,179 @@ import com.movieticket.util.DBConnection;
 
 public class ShowDAO {
 
-    public boolean addShow(ShowBean show) {
-        String sql = """
-            INSERT INTO shows
-            (id, movie_id, mall_id, show_date, start_time, end_time, status)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-            """;
+	public boolean addShow(ShowBean show) {
+		String sql = """
+				INSERT INTO shows
+				(id, movie_id, mall_id, show_date, start_time, end_time, status)
+				VALUES (?, ?, ?, ?, ?, ?, ?)
+				""";
 
-        if (show.getShowId() == null || show.getShowId().isBlank()) {
-            show.setShowId(UUID.randomUUID().toString());
-        }
+		if (show.getShowId() == null || show.getShowId().isBlank()) {
+			show.setShowId(UUID.randomUUID().toString());
+		}
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+		try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            setInsertValues(ps, show);
-            return ps.executeUpdate() > 0;
+			setInsertValues(ps, show);
+			return ps.executeUpdate() > 0;
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
-    public ShowBean getShowById(String showId) {
-        String sql = """
-            SELECT sh.*, m.title AS movie_name, ma.name AS mall_name
-            FROM shows sh
-            JOIN movies m ON sh.movie_id = m.id
-            JOIN malls ma ON sh.mall_id = ma.id
-            WHERE sh.id = ?
-            """;
+	public ShowBean getShowById(String showId) {
+		String sql = """
+				SELECT sh.*, m.title AS movie_name, ma.name AS mall_name
+				FROM shows sh
+				JOIN movies m ON sh.movie_id = m.id
+				JOIN malls ma ON sh.mall_id = ma.id
+				WHERE sh.id = ?
+				""";
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+		try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, showId);
+			ps.setString(1, showId);
 
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return mapShow(rs);
-                }
-            }
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					return mapShow(rs);
+				}
+			}
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    public List<ShowBean> getAllShows() {
-        String sql = """
-            SELECT sh.*, m.title AS movie_name, ma.name AS mall_name
-            FROM shows sh
-            JOIN movies m ON sh.movie_id = m.id
-            JOIN malls ma ON sh.mall_id = ma.id
-            ORDER BY sh.show_date, sh.start_time
-            """;
+	public List<ShowBean> getAllShows() {
+		String sql = """
+				SELECT sh.*, m.title AS movie_name, ma.name AS mall_name
+				FROM shows sh
+				JOIN movies m ON sh.movie_id = m.id
+				JOIN malls ma ON sh.mall_id = ma.id
+				ORDER BY sh.show_date, sh.start_time
+				""";
 
-        List<ShowBean> shows = new ArrayList<>();
+		List<ShowBean> shows = new ArrayList<>();
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+		try (Connection conn = DBConnection.getConnection();
+				PreparedStatement ps = conn.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery()) {
 
-            while (rs.next()) {
-                shows.add(mapShow(rs));
-            }
+			while (rs.next()) {
+				shows.add(mapShow(rs));
+			}
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-        return shows;
-    }
+		return shows;
+	}
 
-    public boolean updateShow(ShowBean show) {
-        String sql = """
-            UPDATE shows
-            SET movie_id = ?,
-                mall_id = ?,
-                show_date = ?,
-                start_time = ?,
-                end_time = ?,
-                status = ?
-            WHERE id = ?
-            """;
+	public List<ShowBean> getShowsByMovieId(String movieId) {
+		String sql = """
+				SELECT
+					sh.*,
+					m.title AS movie_name,
+					ma.name AS mall_name
+				FROM
+					shows sh
+				JOIN movies m ON sh.movie_id = m.id
+				JOIN malls ma ON sh.mall_id = ma.id
+				WHERE sh.movie_id = ?
+				ORDER BY sh.show_date, sh.start_time
+				""";
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+		List<ShowBean> shows = new ArrayList<>();
 
-            ps.setString(1, show.getMovieId());
-            ps.setString(2, show.getMallId());
-            ps.setString(3, show.getShowDate());
-            ps.setString(4, show.getStartTime());
-            ps.setString(5, show.getEndTime());
-            ps.setString(6, show.getStatus());
-            ps.setString(7, show.getShowId());
+		try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+			ps.setString(1, movieId);
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					shows.add(mapShow(rs));
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return shows;
 
-            return ps.executeUpdate() > 0;
+	}
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+	public boolean updateShow(ShowBean show) {
+		String sql = """
+				UPDATE shows
+				SET movie_id = ?,
+				    mall_id = ?,
+				    show_date = ?,
+				    start_time = ?,
+				    end_time = ?,
+				    status = ?
+				WHERE id = ?
+				""";
 
-    public boolean deleteShow(String showId) {
-        String sql = "DELETE FROM shows WHERE id = ?";
+		try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+			ps.setString(1, show.getMovieId());
+			ps.setString(2, show.getMallId());
+			ps.setString(3, show.getShowDate());
+			ps.setString(4, show.getStartTime());
+			ps.setString(5, show.getEndTime());
+			ps.setString(6, show.getStatus());
+			ps.setString(7, show.getShowId());
 
-            ps.setString(1, showId);
-            return ps.executeUpdate() > 0;
+			return ps.executeUpdate() > 0;
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
-    private ShowBean mapShow(ResultSet rs) throws Exception {
-        ShowBean show = new ShowBean();
+	public boolean deleteShow(String showId) {
+		String sql = "DELETE FROM shows WHERE id = ?";
 
-        show.setShowId(rs.getString("id"));
-        show.setMovieId(rs.getString("movie_id"));
-        show.setMallId(rs.getString("mall_id"));
-        show.setMovieName(rs.getString("movie_name"));
-        show.setMallName(rs.getString("mall_name"));
-        show.setShowDate(rs.getString("show_date"));
-        show.setStartTime(rs.getString("start_time"));
-        show.setEndTime(rs.getString("end_time"));
-        show.setStatus(rs.getString("status"));
-        show.setCreatedAt(rs.getTimestamp("created_at"));
+		try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
-        return show;
-    }
+			ps.setString(1, showId);
+			return ps.executeUpdate() > 0;
 
-    private void setInsertValues(PreparedStatement ps, ShowBean show)
-            throws Exception {
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
-        ps.setString(1, show.getShowId());
-        ps.setString(2, show.getMovieId());
-        ps.setString(3, show.getMallId());
-        ps.setString(4, show.getShowDate());
-        ps.setString(5, show.getStartTime());
-        ps.setString(6, show.getEndTime());
-        ps.setString(7, show.getStatus());
-    }
+	private ShowBean mapShow(ResultSet rs) throws Exception {
+		ShowBean show = new ShowBean();
+
+		show.setShowId(rs.getString("id"));
+		show.setMovieId(rs.getString("movie_id"));
+		show.setMallId(rs.getString("mall_id"));
+		show.setMovieName(rs.getString("movie_name"));
+		show.setMallName(rs.getString("mall_name"));
+		show.setShowDate(rs.getString("show_date"));
+		show.setStartTime(rs.getString("start_time"));
+		show.setEndTime(rs.getString("end_time"));
+		show.setStatus(rs.getString("status"));
+		show.setCreatedAt(rs.getTimestamp("created_at"));
+
+		return show;
+	}
+
+	private void setInsertValues(PreparedStatement ps, ShowBean show) throws Exception {
+
+		ps.setString(1, show.getShowId());
+		ps.setString(2, show.getMovieId());
+		ps.setString(3, show.getMallId());
+		ps.setString(4, show.getShowDate());
+		ps.setString(5, show.getStartTime());
+		ps.setString(6, show.getEndTime());
+		ps.setString(7, show.getStatus());
+	}
 }

@@ -18,110 +18,95 @@ List<ShowBean> shows = (List<ShowBean>) request.getAttribute("shows");
 <title>Movie Details</title>
 
 <link rel="stylesheet"
+	href="${pageContext.request.contextPath}/assets/css/common.css">
+
+<link rel="stylesheet"
 	href="${pageContext.request.contextPath}/assets/css/movie-details.css">
 </head>
 <body>
 
-	<div class="movie-details">
+	<div class="movie-hero">
 
-		<div class="movie-poster">
-			<img src="<%=movie.getPosterUrl()%>"
-				alt="<%=movie.getTitle()%> Poster">
-		</div>
+		<div class="movie-backdrop"
+			style="background-image: url('<%=movie.getPosterUrl()%>');"></div>
 
-		<div class="movie-info">
+		<div class="movie-hero-content">
 
-			<h1><%=movie.getTitle()%></h1>
-
-			<p><%=movie.getDescription()%></p>
-
-			<p>
-				<strong>Duration:</strong>
-				<%=movie.getDurationMinutes()%>
-				minutes
-			</p>
-
-			<p>
-				<strong>Language:</strong>
-				<%=movie.getLanguage()%>
-			</p>
-
-			<p>
-				<strong>Certificate:</strong>
-				<%=movie.getCertificate()%>
-			</p>
-
-			<p>
-				<strong>Release Date:</strong>
-				<%=movie.getReleaseDate()%>
-			</p>
-
-			<p>
-				<strong>Status:</strong>
-				<%=movie.getStatus()%>
-			</p>
-
-
-
-			<div class="movie-actions">
-
-				<a href="<%=movie.getTrailerUrl()%>" target="_blank"> Watch
-					Trailer </a> <a href="${pageContext.request.contextPath}/movies">
-					Back to Movies </a>
-
+			<div class="movie-poster">
+				<img src="<%=movie.getPosterUrl()%>"
+					alt="<%=movie.getTitle()%> Poster">
 			</div>
 
-			<div class="shows-section">
+			<div class="movie-info">
 
-				<h2>Available Shows</h2>
+				<h1><%=movie.getTitle()%></h1>
 
-				<%
-				if (shows != null && !shows.isEmpty()) {
+				<p class="movie-meta">
+					<%=movie.getLanguage()%>
+					&nbsp;•&nbsp;
+					<%=movie.getDurationMinutes()%>
+					min &nbsp;•&nbsp;
+					<%=movie.getCertificate()%>
+				</p>
 
-					for (ShowBean show : shows) {
-				%>
+				<p class="movie-description">
+					<%=movie.getDescription()%>
+				</p>
 
-				<div class="show-card">
-					<a
-						href="${pageContext.request.contextPath}/booking/seats?showId=<%= show.getShowId() %>">
-						Select Show </a>
+				<div class="movie-actions">
 
-					<h3><%=show.getMallName()%></h3>
-
-					<p>
-						<%=show.getShowDate()%>
-					</p>
-
-					<p>
-						<%=show.getStartTime()%>
-						-
-						<%=show.getEndTime()%>
-					</p>
-
-					<p>
-						<%=show.getStatus()%>
-					</p>
+					<a href="<%=movie.getTrailerUrl()%>" target="_blank"> Watch
+						Trailer </a> <a href="${pageContext.request.contextPath}/movies">
+						Back to Movies </a>
 
 				</div>
 
-				<%
-				}
-
-				} else {
-				%>
-
-				<p>No shows available for this movie.</p>
-
-				<%
-				}
-				%>
-
 			</div>
+
 		</div>
 
+	</div>
+	<div class="shows-section">
 
+		<h2>Available Shows</h2>
 
+		<%
+		if (shows != null && !shows.isEmpty()) {
+
+			for (ShowBean show : shows) {
+		%>
+
+		<div class="show-row">
+
+			<div class="show-mall">
+				<h3><%=show.getMallName()%></h3>
+				<span> <%=show.getShowDate()%>
+				</span> 
+			</div>
+
+			<div class="show-time">
+				<a
+					href="${pageContext.request.contextPath}/booking/seats?showId=<%= show.getShowId() %>">
+					<%=show.getStartTime()%>
+				</a>
+			</div>
+
+		</div>
+
+		<%
+		}
+
+		} else {
+		%>
+
+		<p>No shows available for this movie.</p>
+
+		<%
+		}
+		%>
 
 	</div>
+
+
 </body>
 </html>

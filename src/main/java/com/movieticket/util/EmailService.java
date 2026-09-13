@@ -1,3 +1,4 @@
+
 package com.movieticket.util;
 
 import java.io.InputStream;
@@ -24,36 +25,31 @@ public class EmailService {
 	public static void sendTicketEmail(TicketBean ticket, HttpSession session, byte[] pdfBytes) {
 
 		UserBean user = (UserBean) session.getAttribute("user");
-
 		String receiverEmail = user.getEmail();
 
-		// System.out.print(receiverEmail);
+		System.out.println("Receiver Email: " + receiverEmail);
 
 		Properties properties = new Properties();
 
-		InputStream input = DBConnection.class.getClassLoader().getResourceAsStream("db.properties");
-
-		//properties.load(input);
-
-		String SENDER_EMAIL= properties.getProperty("SENDER_EMAIL");
-		String SENDER_PASSWORD=properties.getProperty("SENDER_PASSWORD");
-		
-		
-
-		properties.put("mail.smtp.host", "smtp.gmail.com");
-		properties.put("mail.smtp.port", "587");
-		properties.put("mail.smtp.auth", "true");
-		properties.put("mail.smtp.starttls.enable", "true");
-
-		Session mailSession = Session.getInstance(properties, new Authenticator() {
-
-			protected PasswordAuthentication getPasswordAuthentication() {
-
-				return new PasswordAuthentication(SENDER_EMAIL, SENDER_PASSWORD);
-			}
-		});
-
 		try {
+			InputStream input = DBConnection.class.getClassLoader().getResourceAsStream("db.properties");
+
+			properties.load(input);
+
+			String SENDER_EMAIL = properties.getProperty("SENDER_EMAIL");
+			String SENDER_PASSWORD = properties.getProperty("SENDER_PASSWORD");
+
+			properties.put("mail.smtp.host", "smtp.gmail.com");
+			properties.put("mail.smtp.port", "587");
+			properties.put("mail.smtp.auth", "true");
+			properties.put("mail.smtp.starttls.enable", "true");
+
+			Session mailSession = Session.getInstance(properties, new Authenticator() {
+
+				protected PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication(SENDER_EMAIL, SENDER_PASSWORD);
+				}
+			});
 
 			Message message = new MimeMessage(mailSession);
 
@@ -97,7 +93,6 @@ public class EmailService {
 			System.out.println("Ticket email sent to: " + receiverEmail);
 
 		} catch (Exception e) {
-
 			e.printStackTrace();
 		}
 	}

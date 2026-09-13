@@ -37,7 +37,6 @@ public class BookingServlet extends HttpServlet {
 
 		try {
 
-
 			String userId = (String) session.getAttribute("userId");
 
 			String showId = request.getParameter("showId");
@@ -56,6 +55,12 @@ public class BookingServlet extends HttpServlet {
 			}
 
 			String[] showSeatIds = selectedSeats.split(",");
+
+			System.out.println("Selected seats: " + selectedSeats);
+
+			for (String showSeatId : showSeatIds) {
+				System.out.println("Show Seat ID: [" + showSeatId.trim() + "]");
+			}
 
 			BookingDAO dao = new BookingDAO();
 
@@ -97,7 +102,6 @@ public class BookingServlet extends HttpServlet {
 			// =========================================
 			// DAO
 			// =========================================
-
 
 			// =========================================
 			// INSERT BOOKING

@@ -244,7 +244,7 @@ public class BookingDAO {
 		
 		try(Connection conn = DBConnection.getConnection();
 				PreparedStatement ps = conn.prepareStatement(sql)){
-			ps.setString(0, showSeatId);
+			ps.setString(1, showSeatId);
 			
 			try (ResultSet rs = ps.executeQuery()) {
 				if(rs.next()) {

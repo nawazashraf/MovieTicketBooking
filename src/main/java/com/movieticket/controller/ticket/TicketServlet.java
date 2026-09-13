@@ -12,6 +12,7 @@ import java.io.IOException;
 import com.movieticket.dao.TicketDAO;
 import com.movieticket.model.TicketBean;
 import com.movieticket.util.EmailService;
+import com.movieticket.util.PdfService;
 
 @WebServlet("/ticket")
 public class TicketServlet extends HttpServlet {
@@ -44,16 +45,42 @@ public class TicketServlet extends HttpServlet {
 			return;
 		}
 
+		if ("pdf".equals(request.getParameter("format"))) {
+
+			byte[] pdfBytes = PdfService.generateTicketPdf(ticket);
+
+			if (pdfBytes == null) {
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "PDF generation failed");
+				return;
+			}
+
+			response.setContentType("application/pdf");
+
+			response.setHeader("Content-Disposition",
+					"inline; filename=Movie-Ticket-" + ticket.getBookingReference() + ".pdf");
+
+			response.setContentLength(pdfBytes.length);
+
+			response.getOutputStream().write(pdfBytes);
+
+			return;
+		}
+
 		request.setAttribute("ticket", ticket);
 
-//		String emailSentKey = "ticketEmailSent_" + bookingId;
-//
-//		if (session.getAttribute(emailSentKey) == null) {
-//
-//			EmailService.sendTicketEmail(ticket, session);
-//
-//			session.setAttribute(emailSentKey, true);
-//		}
+		String emailSentKey = "ticketEmailSent_" + bookingId;
+
+		if (session.getAttribute(emailSentKey) == null) {
+
+			byte[] pdfBytes = PdfService.generateTicketPdf(ticket);
+
+			if (pdfBytes != null) {
+
+				EmailService.sendTicketEmail(ticket, session, pdfBytes);
+
+				session.setAttribute(emailSentKey, true);
+			}
+		}
 
 		request.getRequestDispatcher("/ticket/ticket.jsp").forward(request, response);
 	}

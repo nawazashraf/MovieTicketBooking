@@ -97,3 +97,4 @@
 	color: #ffffff;
 	cursor: pointer;
 }
+.navbar{display:flex;align-items:center;gap:18px;padding:14px 24px;background:#111;color:#fff;flex-wrap:wrap}.nav-logo a,.nav-links a{color:#fff;text-decoration:none}.nav-logo{font-weight:700;font-size:22px}.nav-search{display:flex;gap:6px;flex:1;max-width:420px}.nav-search input{flex:1;padding:8px;border-radius:6px;border:1px solid #ccc}.nav-search button{padding:8px 12px;border:0;border-radius:6px;cursor:pointer}.nav-links{display:flex;gap:14px;align-items:center;flex-wrap:wrap}

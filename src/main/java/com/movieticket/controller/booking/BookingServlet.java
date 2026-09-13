@@ -45,7 +45,8 @@ public class BookingServlet extends HttpServlet {
 			// HARDCODED VALUES FOR PRACTICAL
 			// =========================================
 
-			String userId = "user-003";
+			String userId = (String) session.getAttribute("userId");
+
 
 			String showId = request.getParameter("showId");
 			String selectedSeats = request.getParameter("selectedSeats");

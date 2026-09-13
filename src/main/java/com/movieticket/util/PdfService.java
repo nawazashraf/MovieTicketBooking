@@ -1,3 +1,4 @@
+
 package com.movieticket.util;
 
 import java.io.ByteArrayOutputStream;
@@ -25,72 +26,74 @@ public class PdfService {
 
 			String html = "<!DOCTYPE html>" + "<html>" + "<head>" + "<meta charset='UTF-8' />" + "<style>"
 
+					+ "@page {" + "size: A4;" + "margin: 5mm;" + "}"
+
 					+ "* {" + "margin: 0;" + "padding: 0;" + "box-sizing: border-box;" + "}"
 
 					+ "body {" + "font-family: Arial, Helvetica, sans-serif;" + "background: #f5f5f5;"
-					+ "color: #222222;" + "padding: 30px;" + "}"
+					+ "color: #222222;" + "padding: 8px;" + "font-size: 9px;" + "}"
 
-					+ ".ticket {" + "width: 100%;" + "background: #ffffff;" + "border-radius: 18px;"
+					+ ".ticket {" + "width: 100%;" + "background: #ffffff;" + "border-radius: 10px;"
 					+ "overflow: hidden;" + "}"
 
-					+ ".ticket-header {" + "padding: 25px 30px;" + "background: #fafafa;"
+					+ ".ticket-header {" + "padding: 10px 15px;" + "background: #fafafa;"
 					+ "border-bottom: 1px solid #dddddd;" + "}"
 
-					+ ".ticket-header h1 {" + "font-size: 26px;" + "margin-bottom: 6px;" + "}"
+					+ ".ticket-header h1 {" + "font-size: 18px;" + "margin-bottom: 3px;" + "}"
 
-					+ ".ticket-header p {" + "color: #666666;" + "font-size: 13px;" + "}"
+					+ ".ticket-header p {" + "color: #666666;" + "font-size: 9px;" + "}"
 
-					+ ".confirmed {" + "margin-top: 10px;" + "padding: 7px 12px;" + "border-radius: 20px;"
-					+ "background: #e8f7ef;" + "color: #218a55;" + "font-size: 12px;" + "font-weight: bold;"
+					+ ".confirmed {" + "margin-top: 4px;" + "padding: 4px 8px;" + "border-radius: 20px;"
+					+ "background: #e8f7ef;" + "color: #218a55;" + "font-size: 8px;" + "font-weight: bold;"
 					+ "display: inline-block;" + "}"
 
-					+ ".movie-section {" + "padding: 25px 30px;" + "}"
+					+ ".movie-section {" + "padding: 10px 15px;" + "}"
 
-					+ ".movie-poster {" + "width: 120px;" + "height: 170px;" + "float: left;" + "margin-right: 20px;"
-					+ "background: #eeeeee;" + "border-radius: 10px;" + "overflow: hidden;" + "}"
+					+ ".movie-poster {" + "width: 75px;" + "height: 105px;" + "float: left;" + "margin-right: 12px;"
+					+ "background: #eeeeee;" + "border-radius: 6px;" + "overflow: hidden;" + "}"
 
-					+ ".movie-poster img {" + "width: 120px;" + "height: 170px;" + "}"
+					+ ".movie-poster img {" + "width: 75px;" + "height: 105px;" + "}"
 
-					+ ".movie-info {" + "min-height: 170px;" + "padding-top: 5px;" + "}"
+					+ ".movie-info {" + "min-height: 105px;" + "padding-top: 2px;" + "}"
 
-					+ ".movie-title {" + "font-size: 25px;" + "margin-bottom: 10px;" + "}"
+					+ ".movie-title {" + "font-size: 18px;" + "margin-bottom: 5px;" + "}"
 
-					+ ".movie-meta {" + "color: #666666;" + "font-size: 13px;" + "margin-bottom: 12px;" + "}"
+					+ ".movie-meta {" + "color: #666666;" + "font-size: 9px;" + "margin-bottom: 5px;" + "}"
 
-					+ ".genre {" + "display: inline-block;" + "padding: 5px 10px;" + "border-radius: 20px;"
-					+ "background: #eeeeee;" + "color: #444444;" + "font-size: 12px;" + "margin-bottom: 20px;" + "}"
+					+ ".genre {" + "display: inline-block;" + "padding: 3px 7px;" + "border-radius: 20px;"
+					+ "background: #eeeeee;" + "color: #444444;" + "font-size: 8px;" + "margin-bottom: 7px;" + "}"
 
-					+ ".booking-ref {" + "padding: 12px 14px;" + "background: #f5f5f5;" + "border-radius: 8px;"
+					+ ".booking-ref {" + "padding: 6px 8px;" + "background: #f5f5f5;" + "border-radius: 5px;"
 					+ "display: inline-block;" + "}"
 
-					+ ".section {" + "padding: 22px 30px;" + "border-top: 1px solid #e0e0e0;" + "}"
+					+ ".section {" + "padding: 8px 15px;" + "border-top: 1px solid #e0e0e0;" + "}"
 
-					+ ".section-title {" + "font-size: 17px;" + "margin-bottom: 17px;" + "}"
+					+ ".section-title {" + "font-size: 12px;" + "margin-bottom: 7px;" + "}"
 
-					+ ".detail-label {" + "color: #888888;" + "font-size: 10px;" + "text-transform: uppercase;"
-					+ "letter-spacing: 1px;" + "display: block;" + "margin-bottom: 5px;" + "}"
+					+ ".detail-label {" + "color: #888888;" + "font-size: 7px;" + "text-transform: uppercase;"
+					+ "letter-spacing: 0.5px;" + "display: block;" + "margin-bottom: 2px;" + "}"
 
-					+ ".detail-value {" + "color: #222222;" + "font-size: 13px;" + "font-weight: bold;" + "}"
+					+ ".detail-value {" + "color: #222222;" + "font-size: 9px;" + "font-weight: bold;" + "}"
 
-					+ ".cinema-box {" + "padding: 18px;" + "background: #fafafa;" + "border-radius: 10px;" + "}"
+					+ ".cinema-box {" + "padding: 7px;" + "background: #fafafa;" + "border-radius: 6px;" + "}"
 
-					+ ".detail {" + "margin-bottom: 13px;" + "}"
+					+ ".detail {" + "margin-bottom: 5px;" + "}"
 
 					+ ".show-details {" + "width: 100%;" + "}"
 
-					+ ".show-item {" + "display: inline-block;" + "width: 31%;" + "margin-right: 2%;" + "padding: 16px;"
-					+ "background: #fafafa;" + "border-radius: 10px;" + "vertical-align: top;" + "}"
+					+ ".show-item {" + "display: inline-block;" + "width: 31%;" + "margin-right: 2%;" + "padding: 7px;"
+					+ "background: #fafafa;" + "border-radius: 6px;" + "vertical-align: top;" + "}"
 
-					+ ".show-value {" + "font-size: 16px;" + "font-weight: bold;" + "}"
+					+ ".show-value {" + "font-size: 11px;" + "font-weight: bold;" + "}"
 
-					+ ".seats-box {" + "background: #fafafa;" + "border-radius: 10px;" + "overflow: hidden;" + "}"
+					+ ".seats-box {" + "background: #fafafa;" + "border-radius: 6px;" + "overflow: hidden;" + "}"
 
-					+ ".seat-header, .seat-row {" + "width: 100%;" + "padding: 13px 16px;" + "}"
+					+ ".seat-header, .seat-row {" + "width: 100%;" + "padding: 6px 8px;" + "}"
 
-					+ ".seat-header {" + "background: #eeeeee;" + "color: #888888;" + "font-size: 10px;"
+					+ ".seat-header {" + "background: #eeeeee;" + "color: #888888;" + "font-size: 7px;"
 					+ "text-transform: uppercase;" + "}"
 
-					+ ".seat-row {" + "font-size: 13px;" + "font-weight: bold;" + "}"
+					+ ".seat-row {" + "font-size: 9px;" + "font-weight: bold;" + "}"
 
 					+ ".customer-details {" + "width: 100%;" + "}"
 
@@ -102,32 +105,32 @@ public class PdfService {
 					+ ".payment-details .detail {" + "display: inline-block;" + "width: 47%;" + "margin-right: 2%;"
 					+ "vertical-align: top;" + "}"
 
-					+ ".status {" + "display: inline-block;" + "padding: 5px 10px;" + "border-radius: 20px;"
-					+ "background: #e8f7ef;" + "color: #218a55;" + "font-size: 11px;" + "font-weight: bold;" + "}"
+					+ ".status {" + "display: inline-block;" + "padding: 3px 6px;" + "border-radius: 20px;"
+					+ "background: #e8f7ef;" + "color: #218a55;" + "font-size: 8px;" + "font-weight: bold;" + "}"
 
-					+ ".total-section {" + "padding: 20px 30px;" + "background: #fafafa;"
+					+ ".total-section {" + "padding: 8px 15px;" + "background: #fafafa;"
 					+ "border-top: 1px solid #dddddd;" + "border-bottom: 1px solid #dddddd;" + "}"
 
-					+ ".total-label {" + "display: block;" + "font-size: 15px;" + "font-weight: bold;"
-					+ "margin-top: 4px;" + "}"
+					+ ".total-label {" + "display: block;" + "font-size: 10px;" + "font-weight: bold;"
+					+ "margin-top: 2px;" + "}"
 
-					+ ".total-amount {" + "font-size: 25px;" + "font-weight: bold;" + "margin-top: 8px;" + "}"
+					+ ".total-amount {" + "font-size: 17px;" + "font-weight: bold;" + "margin-top: 3px;" + "}"
 
-					+ ".booking-section {" + "padding: 25px 30px;" + "}"
+					+ ".booking-section {" + "padding: 10px 15px;" + "}"
 
 					+ ".booking-info {" + "width: 65%;" + "display: inline-block;" + "vertical-align: top;" + "}"
 
-					+ ".booking-info h3 {" + "font-size: 17px;" + "margin-bottom: 18px;" + "}"
+					+ ".booking-info h3 {" + "font-size: 12px;" + "margin-bottom: 7px;" + "}"
 
-					+ ".qr-box {" + "width: 150px;" + "height: 150px;" + "padding: 10px;" + "display: inline-block;"
+					+ ".qr-box {" + "width: 95px;" + "height: 95px;" + "padding: 5px;" + "display: inline-block;"
 					+ "vertical-align: top;" + "text-align: center;" + "}"
 
-					+ ".qr-box img {" + "width: 130px;" + "height: 130px;" + "}"
+					+ ".qr-box img {" + "width: 85px;" + "height: 85px;" + "}"
 
-					+ ".ticket-footer {" + "padding: 18px 30px;" + "background: #eeeeee;" + "text-align: center;"
-					+ "color: #777777;" + "font-size: 11px;" + "line-height: 1.6;" + "}"
+					+ ".ticket-footer {" + "padding: 7px 15px;" + "background: #eeeeee;" + "text-align: center;"
+					+ "color: #777777;" + "font-size: 7px;" + "line-height: 1.3;" + "}"
 
-					+ ".ticket-footer strong {" + "display: block;" + "color: #444444;" + "margin-bottom: 5px;" + "}"
+					+ ".ticket-footer strong {" + "display: block;" + "color: #444444;" + "margin-bottom: 2px;" + "}"
 
 					+ "</style>" + "</head>"
 
@@ -143,7 +146,9 @@ public class PdfService {
 					+ "<div class='movie-poster'>";
 
 			if (posterData != null) {
+
 				html += "<img src='" + posterData + "' />";
+
 			}
 
 			html += "</div>"
@@ -245,7 +250,7 @@ public class PdfService {
 					+ "</div>" + "</div>"
 
 					+ "<div class='total-section'>" + "<span class='detail-label'>TOTAL AMOUNT</span>"
-					+ "<span class='total-label'>Amount Paid</span>" + "<div class='total-amount'>₹"
+					+ "<span class='total-label'>Amount Paid</span>" + "<div class='total-amount'>&#8377;"
 					+ ticket.getTotalAmount() + "</div>" + "</div>"
 
 					+ "<div class='booking-section'>"
@@ -339,6 +344,7 @@ public class PdfService {
 			int bytesRead;
 
 			while ((bytesRead = inputStream.read(buffer)) != -1) {
+
 				output.write(buffer, 0, bytesRead);
 			}
 
@@ -359,5 +365,4 @@ public class PdfService {
 			return null;
 		}
 	}
-
 }

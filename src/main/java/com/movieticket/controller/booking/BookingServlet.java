@@ -25,28 +25,20 @@ public class BookingServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
-		
+
 		HttpSession session = request.getSession(false);
 
-		if (session == null ||
-		    session.getAttribute("user") == null) {
+		if (session == null || session.getAttribute("user") == null) {
 
-		    response.sendRedirect(
-		        request.getContextPath() + "/login.jsp"
-		    );
+			response.sendRedirect(request.getContextPath() + "/login.jsp");
 
-		    return;
+			return;
 		}
 
 		try {
 
-			// =========================================
-			// HARDCODED VALUES FOR PRACTICAL
-			// =========================================
 
 			String userId = (String) session.getAttribute("userId");
-
 
 			String showId = request.getParameter("showId");
 			String selectedSeats = request.getParameter("selectedSeats");
@@ -65,20 +57,23 @@ public class BookingServlet extends HttpServlet {
 
 			String[] showSeatIds = selectedSeats.split(",");
 
-			BigDecimal price = new BigDecimal("150.00");
+			BookingDAO dao = new BookingDAO();
 
-//
-//			String[] showSeatIds = { "show-seat-001", "show-seat-002" };
-//
-//			BigDecimal[] prices = { new BigDecimal("150.00"), new BigDecimal("150.00") };
+			BigDecimal totalAmount = BigDecimal.ZERO;
 
-			// =========================================
-			// TOTAL AMOUNT
-			// =========================================
+			for (String showSeatId : showSeatIds) {
 
-			BigDecimal totalAmount = price.multiply(BigDecimal.valueOf(showSeatIds.length));
-//			BigDecimal totalAmount = prices[0].add(prices[1]);
+				showSeatId = showSeatId.trim();
 
+				BigDecimal price = dao.getSeatPrice(showSeatId);
+
+				if (price == null) {
+					response.getWriter().println("Invalid seat: " + showSeatId);
+					return;
+				}
+
+				totalAmount = totalAmount.add(price);
+			}
 			// =========================================
 			// CREATE BOOKING
 			// =========================================
@@ -103,7 +98,6 @@ public class BookingServlet extends HttpServlet {
 			// DAO
 			// =========================================
 
-			BookingDAO dao = new BookingDAO();
 
 			// =========================================
 			// INSERT BOOKING
@@ -125,6 +119,13 @@ public class BookingServlet extends HttpServlet {
 			for (String showSeatId : showSeatIds) {
 
 				showSeatId = showSeatId.trim();
+
+				BigDecimal price = dao.getSeatPrice(showSeatId);
+
+				if (price == null) {
+					response.getWriter().println("Invalid seat: " + showSeatId);
+					return;
+				}
 
 				BookingSeatBean seat = new BookingSeatBean();
 

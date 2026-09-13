@@ -179,10 +179,6 @@ TicketBean ticket = (TicketBean) request.getAttribute("ticket");
 
 		</div>
 
-
-		<!-- SEAT DETAILS -->
-
-	
 		<!-- SEAT DETAILS -->
 
 		<div class="section">

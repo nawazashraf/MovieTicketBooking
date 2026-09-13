@@ -1,4 +1,3 @@
-
 package com.movieticket.util;
 
 import java.io.ByteArrayOutputStream;
@@ -11,7 +10,6 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
-
 import com.movieticket.model.TicketBean;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 
@@ -88,12 +86,14 @@ public class PdfService {
 
 					+ ".seats-box {" + "background: #fafafa;" + "border-radius: 6px;" + "overflow: hidden;" + "}"
 
-					+ ".seat-header, .seat-row {" + "width: 100%;" + "padding: 6px 8px;" + "}"
+					+ ".seat-header, .seat-row {" + "display: table;" + "width: 100%;" + "table-layout: fixed;" + "}"
 
 					+ ".seat-header {" + "background: #eeeeee;" + "color: #888888;" + "font-size: 7px;"
-					+ "text-transform: uppercase;" + "}"
+					+ "text-transform: uppercase;" + "padding: 6px 8px;" + "}"
 
-					+ ".seat-row {" + "font-size: 9px;" + "font-weight: bold;" + "}"
+					+ ".seat-row {" + "font-size: 9px;" + "font-weight: bold;" + "padding: 6px 8px;" + "}"
+
+					+ ".seat-header span, .seat-row span {" + "display: table-cell;" + "width: 33.33%;" + "}"
 
 					+ ".customer-details {" + "width: 100%;" + "}"
 
@@ -141,21 +141,15 @@ public class PdfService {
 					+ "<div class='ticket-header'>" + "<h1>Movie E-Ticket</h1>" + "<p>Booking Confirmed</p>"
 					+ "<div class='confirmed'>CONFIRMED</div>" + "</div>"
 
-					+ "<div class='movie-section'>"
-
-					+ "<div class='movie-poster'>";
+					+ "<div class='movie-section'>" + "<div class='movie-poster'>";
 
 			if (posterData != null) {
-
 				html += "<img src='" + posterData + "' />";
-
 			}
 
 			html += "</div>"
 
-					+ "<div class='movie-info'>"
-
-					+ "<h2 class='movie-title'>" + ticket.getMovieTitle() + "</h2>"
+					+ "<div class='movie-info'>" + "<h2 class='movie-title'>" + ticket.getMovieTitle() + "</h2>"
 
 					+ "<div class='movie-meta'>" + ticket.getLanguage() + " &#160; • &#160; " + ticket.getCertificate()
 					+ " &#160; • &#160; " + ticket.getDurationMinutes() + " min" + "</div>"
@@ -168,7 +162,6 @@ public class PdfService {
 					+ "</div>" + "</div>"
 
 					+ "<div class='section'>" + "<h3 class='section-title'>Cinema Details</h3>"
-
 					+ "<div class='cinema-box'>"
 
 					+ "<div class='detail'>" + "<span class='detail-label'>Cinema / Mall</span>"
@@ -189,7 +182,6 @@ public class PdfService {
 					+ "</div>" + "</div>"
 
 					+ "<div class='section'>" + "<h3 class='section-title'>Show Details</h3>"
-
 					+ "<div class='show-details'>"
 
 					+ "<div class='show-item'>" + "<span class='detail-label'>DATE</span>" + "<span class='show-value'>"
@@ -204,20 +196,24 @@ public class PdfService {
 					+ "</div>" + "</div>"
 
 					+ "<div class='section'>" + "<h3 class='section-title'>Seat Details</h3>"
-
 					+ "<div class='seats-box'>"
 
-					+ "<div class='seat-header'>"
-					+ "Seat &#160;&#160;&#160;&#160;&#160;&#160; Type &#160;&#160;&#160;&#160;&#160;&#160; Price"
-					+ "</div>"
+					+ "<div class='seat-header'>" + "<span>Seat</span>" + "<span>Type</span>"
+					+ "<span>Total Price</span>" + "</div>";
 
-					+ "<div class='seat-row'>" + ticket.getSeats() + " &#160;&#160;&#160;&#160;&#160;&#160; "
-					+ "Booked Seats" + " &#160;&#160;&#160;&#160;&#160;&#160; ₹" + ticket.getTotalAmount() + "</div>"
+			String[] seats = ticket.getSeats().split("\\|");
+			String[] seatTypes = ticket.getSeatTypes().split("\\|");
+			String[] seatPrices = ticket.getSeatPrices().split("\\|");
 
-					+ "</div>" + "</div>"
+			for (int i = 0; i < seatTypes.length; i++) {
+
+				html += "<div class='seat-row'>" + "<span>" + seats[i] + "</span>" + "<span>" + seatTypes[i] + "</span>"
+						+ "<span>&#8377;" + seatPrices[i] + "</span>" + "</div>";
+			}
+
+			html += "</div>" + "</div>"
 
 					+ "<div class='section'>" + "<h3 class='section-title'>Customer Details</h3>"
-
 					+ "<div class='customer-details'>"
 
 					+ "<div class='detail'>" + "<span class='detail-label'>NAME</span>" + "<span class='detail-value'>"
@@ -232,7 +228,6 @@ public class PdfService {
 					+ "</div>" + "</div>"
 
 					+ "<div class='section'>" + "<h3 class='section-title'>Payment Details</h3>"
-
 					+ "<div class='payment-details'>"
 
 					+ "<div class='detail'>" + "<span class='detail-label'>PAYMENT METHOD</span>"
@@ -255,9 +250,7 @@ public class PdfService {
 
 					+ "<div class='booking-section'>"
 
-					+ "<div class='booking-info'>"
-
-					+ "<h3>Booking Information</h3>"
+					+ "<div class='booking-info'>" + "<h3>Booking Information</h3>"
 
 					+ "<div class='detail'>" + "<span class='detail-label'>BOOKING ID</span>"
 					+ "<span class='detail-value'>" + ticket.getBookingId() + "</span>" + "</div>"
@@ -274,28 +267,18 @@ public class PdfService {
 
 					+ "</div>"
 
-					+ "<div class='ticket-footer'>"
-
-					+ "<strong>Please arrive 15-20 minutes before the show.</strong>"
-
+					+ "<div class='ticket-footer'>" + "<strong>Please arrive 15-20 minutes before the show.</strong>"
 					+ "<p>Carry this e-ticket and a valid ID for entry into the theatre.</p>"
+					+ "<p>Tickets are subject to the cinema's cancellation and refund policy.</p>" + "</div>"
 
-					+ "<p>Tickets are subject to the cinema's cancellation and refund policy.</p>"
-
-					+ "</div>"
-
-					+ "</div>"
-
-					+ "</body>" + "</html>";
+					+ "</div>" + "</body>" + "</html>";
 
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
 
 			PdfRendererBuilder builder = new PdfRendererBuilder();
 
 			builder.withHtmlContent(html, null);
-
 			builder.toStream(output);
-
 			builder.run();
 
 			return output.toByteArray();
@@ -329,15 +312,21 @@ public class PdfService {
 
 			URL url = new URL(imageUrl);
 
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			HttpURLConnection connection =
+					(HttpURLConnection) url.openConnection();
 
 			connection.setConnectTimeout(5000);
 			connection.setReadTimeout(5000);
-			connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+			connection.setRequestProperty(
+					"User-Agent",
+					"Mozilla/5.0"
+			);
 
-			InputStream inputStream = connection.getInputStream();
+			InputStream inputStream =
+					connection.getInputStream();
 
-			ByteArrayOutputStream output = new ByteArrayOutputStream();
+			ByteArrayOutputStream output =
+					new ByteArrayOutputStream();
 
 			byte[] buffer = new byte[4096];
 
@@ -345,22 +334,35 @@ public class PdfService {
 
 			while ((bytesRead = inputStream.read(buffer)) != -1) {
 
-				output.write(buffer, 0, bytesRead);
+				output.write(
+						buffer,
+						0,
+						bytesRead
+				);
 			}
 
 			inputStream.close();
 
-			String contentType = connection.getContentType();
+			String contentType =
+					connection.getContentType();
 
 			if (contentType == null) {
 				contentType = "image/jpeg";
 			}
 
-			return "data:" + contentType + ";base64," + Base64.getEncoder().encodeToString(output.toByteArray());
+			return "data:"
+					+ contentType
+					+ ";base64,"
+					+ Base64.getEncoder().encodeToString(
+							output.toByteArray()
+					);
 
 		} catch (Exception e) {
 
-			System.out.println("Poster could not be loaded: " + e.getMessage());
+			System.out.println(
+					"Poster could not be loaded: "
+							+ e.getMessage()
+			);
 
 			return null;
 		}

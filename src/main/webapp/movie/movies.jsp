@@ -63,8 +63,10 @@ h1 {
 </head>
 
 <body>
+	<%@ include file="/common/navbar.jsp" %>
 
-	<h1>Now Showing Movies</h1>
+	<h1><%= (request.getAttribute("searchQuery") != null && !((String)request.getAttribute("searchQuery")).isBlank()) ? "Search Results" : "Movies" %></h1>
+	<% if (request.getAttribute("searchQuery") != null && !((String)request.getAttribute("searchQuery")).isBlank()) { %><p>Results for: <strong><%=request.getAttribute("searchQuery")%></strong></p><% } %>
 
 	<div class="movie-container">
 

@@ -1,3 +1,4 @@
+
 * {
 	margin: 0;
 	padding: 0;
@@ -346,62 +347,64 @@ body {
 	.ticket-divider::before, .ticket-divider::after {
 		background: white;
 	}
-	@media ( max-width : 700px) {
-		body {
-			padding: 20px 10px;
-		}
-		.ticket-header {
-			padding: 25px 22px;
-		}
-		.ticket-header h1 {
-			font-size: 24px;
-		}
-		.confirmed {
-			font-size: 11px;
-			padding: 7px 10px;
-		}
-		.movie-section {
-			padding: 25px 22px;
-			flex-direction: column;
-		}
-		.movie-poster {
-			width: 130px;
-			height: 180px;
-		}
-		.movie-title {
-			font-size: 23px;
-		}
-		.section {
-			padding: 25px 22px;
-		}
-		.cinema-box {
-			grid-template-columns: 1fr;
-			gap: 18px;
-		}
-		.show-details {
-			grid-template-columns: 1fr;
-		}
-		.customer-details {
-			grid-template-columns: 1fr;
-		}
-		.payment-details {
-			grid-template-columns: 1fr;
-		}
-		.booking-section {
-			padding: 25px 22px;
-			flex-direction: column;
-		}
-		.qr-placeholder {
-			margin: 0 auto;
-		}
-		.total-section {
-			padding: 22px;
-		}
-		.total-amount {
-			font-size: 23px;
-		}
-		.ticket-footer {
-			padding: 20px 22px;
-		}
+}
+
+/* MOBILE */
+@media ( max-width : 700px) {
+	body {
+		padding: 20px 10px;
+	}
+	.ticket-header {
+		padding: 25px 22px;
+	}
+	.ticket-header h1 {
+		font-size: 24px;
+	}
+	.confirmed {
+		font-size: 11px;
+		padding: 7px 10px;
+	}
+	.movie-section {
+		padding: 25px 22px;
+		flex-direction: column;
+	}
+	.movie-poster {
+		width: 130px;
+		height: 180px;
+	}
+	.movie-title {
+		font-size: 23px;
+	}
+	.section {
+		padding: 25px 22px;
+	}
+	.cinema-box {
+		grid-template-columns: 1fr;
+		gap: 18px;
+	}
+	.show-details {
+		grid-template-columns: 1fr;
+	}
+	.customer-details {
+		grid-template-columns: 1fr;
+	}
+	.payment-details {
+		grid-template-columns: 1fr;
+	}
+	.booking-section {
+		padding: 25px 22px;
+		flex-direction: column;
+	}
+	.qr-placeholder {
+		margin: 0 auto;
+	}
+	.total-section {
+		padding: 22px;
+	}
+	.total-amount {
+		font-size: 23px;
+	}
+	.ticket-footer {
+		padding: 20px 22px;
 	}
 }

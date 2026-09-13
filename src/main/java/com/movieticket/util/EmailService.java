@@ -1,5 +1,6 @@
 package com.movieticket.util;
 
+import java.io.InputStream;
 import java.util.Properties;
 
 import jakarta.activation.DataHandler;
@@ -28,10 +29,16 @@ public class EmailService {
 
 		// System.out.print(receiverEmail);
 
-		final String senderEmail = "YourEmail";
-		final String senderPassword = "YourAppPassword";
-
 		Properties properties = new Properties();
+
+		InputStream input = DBConnection.class.getClassLoader().getResourceAsStream("db.properties");
+
+		//properties.load(input);
+
+		String SENDER_EMAIL= properties.getProperty("SENDER_EMAIL");
+		String SENDER_PASSWORD=properties.getProperty("SENDER_PASSWORD");
+		
+		
 
 		properties.put("mail.smtp.host", "smtp.gmail.com");
 		properties.put("mail.smtp.port", "587");
@@ -42,7 +49,7 @@ public class EmailService {
 
 			protected PasswordAuthentication getPasswordAuthentication() {
 
-				return new PasswordAuthentication(senderEmail, senderPassword);
+				return new PasswordAuthentication(SENDER_EMAIL, SENDER_PASSWORD);
 			}
 		});
 
@@ -50,7 +57,7 @@ public class EmailService {
 
 			Message message = new MimeMessage(mailSession);
 
-			message.setFrom(new InternetAddress(senderEmail));
+			message.setFrom(new InternetAddress(SENDER_EMAIL));
 
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(receiverEmail));
 

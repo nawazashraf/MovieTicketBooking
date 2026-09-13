@@ -27,8 +27,6 @@ public class EmailService {
 		UserBean user = (UserBean) session.getAttribute("user");
 		String receiverEmail = user.getEmail();
 
-		System.out.println("Receiver Email: " + receiverEmail);
-
 		Properties properties = new Properties();
 
 		try {

@@ -21,6 +21,7 @@ public class BookingBean {
 	private String movieTitle;
 	private String posterUrl;
 	private String mallName;
+	private String seatLabels;
 
 	private Timestamp createdAt;
 	private Timestamp expiresAt;
@@ -123,6 +124,10 @@ public class BookingBean {
 	public void setMallName(String mallName) {
 		this.mallName = mallName;
 	}
+
+	public String getSeatLabels() { return seatLabels; }
+
+	public void setSeatLabels(String seatLabels) { this.seatLabels = seatLabels; }
 
 	public Timestamp getCreatedAt() {
 		return createdAt;

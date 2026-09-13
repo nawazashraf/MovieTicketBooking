@@ -1,3 +1,9 @@
+
+<%@ page import="com.movieticket.model.TicketBean"%>
+<%
+TicketBean ticket = (TicketBean) request.getAttribute("ticket");
+%>
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
@@ -176,28 +182,40 @@
 
 		<!-- SEAT DETAILS -->
 
-		<div class="section">
+	
+		<!-- SEAT DETAILS -->
 
+		<div class="section">
 			<h3 class="section-title">Seat Details</h3>
 
 			<div class="seats-box">
 
 				<div class="seat-header">
-
-					<span>Seat</span> <span>Type</span> <span>Price</span>
-
+					<span>Seat</span> <span>Type</span> <span>Total Price</span>
 				</div>
+
+				<%
+				String[] seats = ticket.getSeats().split("\\|");
+				String[] seatTypes = ticket.getSeatTypes().split("\\|");
+				String[] seatPrices = ticket.getSeatPrices().split("\\|");
+
+				for (int i = 0; i < seatTypes.length; i++) {
+				%>
 
 				<div class="seat-row">
-
-					<span class="seat-number"> ${ticket.seats} </span> <span>
-						Booked Seats </span> <span> ₹${ticket.totalAmount} </span>
-
+					<span class="seat-number"><%=seats[i]%></span> <span><%=seatTypes[i]%></span>
+					<span>₹<%=seatPrices[i]%></span>
 				</div>
 
-			</div>
+				<%
+				}
+				%>
 
+			</div>
 		</div>
+		
+
+
 
 
 		<!-- CUSTOMER DETAILS -->

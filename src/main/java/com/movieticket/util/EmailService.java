@@ -28,8 +28,8 @@ public class EmailService {
 
 		// System.out.print(receiverEmail);
 
-		final String senderEmail = "YOUR_EMAIL_ID";
-		final String senderPassword = "YOUR_APP_PASSWORD";
+		final String senderEmail = "YourEmail";
+		final String senderPassword = "YourAppPassword";
 
 		Properties properties = new Properties();
 

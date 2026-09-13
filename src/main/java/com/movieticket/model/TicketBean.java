@@ -21,6 +21,10 @@ public class TicketBean {
 
 	private String seats;
 
+	private String seatTypes;
+
+	private String seatPrices;
+
 	private BigDecimal totalAmount;
 
 	private String paymentMethod;
@@ -149,6 +153,22 @@ public class TicketBean {
 
 		this.seats = seats;
 
+	}
+
+	public String getSeatTypes() {
+		return seatTypes;
+	}
+
+	public void setSeatTypes(String seatTypes) {
+		this.seatTypes = seatTypes;
+	}
+
+	public String getSeatPrices() {
+		return seatPrices;
+	}
+
+	public void setSeatPrices(String seatPrices) {
+		this.seatPrices = seatPrices;
 	}
 
 	public BigDecimal getTotalAmount() {

@@ -1,5 +1,6 @@
 package com.movieticket.dao;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -229,5 +230,31 @@ public class BookingDAO {
 	    }
 
 	    return false;
+	}
+	
+	public BigDecimal getSeatPrice(String showSeatId) {
+		String sql = """
+				SELECT
+					price
+				FROM 
+					show_seats
+				WHERE
+					id = ?
+				""";
+		
+		try(Connection conn = DBConnection.getConnection();
+				PreparedStatement ps = conn.prepareStatement(sql)){
+			ps.setString(0, showSeatId);
+			
+			try (ResultSet rs = ps.executeQuery()) {
+				if(rs.next()) {
+					return rs.getBigDecimal("price");
+				}
+			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

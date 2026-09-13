@@ -37,8 +37,8 @@ public class SeatSelectionServlet extends HttpServlet {
 		    return;
 		}
 
-		// String showId = request.getParameter("showId");
-		String showId = "show-001";
+		 String showId = request.getParameter("showId");
+//		String showId = "show-001";
 
 		// Check showId
 		if (showId == null || showId.trim().isEmpty()) {

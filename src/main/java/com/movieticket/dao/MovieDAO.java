@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.LinkedHashMap;
 import java.util.UUID;
 
 import com.movieticket.model.MovieBean;
@@ -271,4 +273,29 @@ public class MovieDAO {
 		ps.setString(9, movie.getStatus());
 		ps.setString(10, movie.getId());
 	}
+	public List<MovieBean> searchMoviesByTitle(String query) {
+		String sql = "SELECT * FROM movies WHERE LOWER(title) LIKE LOWER(?) ORDER BY title";
+		List<MovieBean> movies = new ArrayList<>();
+		try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+			ps.setString(1, "%" + query + "%");
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					MovieBean movie = mapMovie(rs);
+					movie.setGenreIds(getGenreIds(conn, movie.getId()));
+					movies.add(movie);
+				}
+			}
+		} catch (Exception e) { e.printStackTrace(); }
+		return movies;
+	}
+
+	public Map<String, String> getAllGenres() {
+		Map<String, String> genres = new LinkedHashMap<>();
+		String sql = "SELECT id, name FROM genres ORDER BY name";
+		try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+			while (rs.next()) genres.put(rs.getString("id"), rs.getString("name"));
+		} catch (Exception e) { e.printStackTrace(); }
+		return genres;
+	}
+
 }

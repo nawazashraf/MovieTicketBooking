@@ -1,4 +1,3 @@
-
 package com.movieticket.controller.payment;
 
 import jakarta.servlet.ServletException;
@@ -21,6 +20,7 @@ import com.google.zxing.common.BitMatrix;
 
 import com.movieticket.dao.BookingDAO;
 import com.movieticket.dao.PaymentDAO;
+
 import com.movieticket.model.BookingBean;
 import com.movieticket.model.PaymentBean;
 
@@ -33,12 +33,22 @@ public class PaymentServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		String bookingId = request.getParameter("bookingId");
+
 		String qr = request.getParameter("qr");
+
 		String check = request.getParameter("check");
+
+		String processing = request.getParameter("processing");
+
+		String paymentMethod = request.getParameter("paymentMethod");
 
 		PaymentDAO paymentDAO = new PaymentDAO();
 
-		// CHECK PAYMENT STATUS
+		/*
+		 * ================================================= CHECK PAYMENT STATUS
+		 * =================================================
+		 */
+
 		if ("true".equals(check)) {
 
 			PaymentBean payment = paymentDAO.getPaymentByBookingId(bookingId);
@@ -46,15 +56,22 @@ public class PaymentServlet extends HttpServlet {
 			response.setContentType("text/plain;charset=UTF-8");
 
 			if (payment != null) {
+
 				response.getWriter().print(payment.getPaymentStatus());
+
 			} else {
+
 				response.getWriter().print("PENDING");
 			}
 
 			return;
 		}
 
-		// GET BOOKING
+		/*
+		 * ================================================= GET BOOKING
+		 * =================================================
+		 */
+
 		BookingDAO bookingDAO = new BookingDAO();
 
 		BookingBean booking = bookingDAO.getBookingById(bookingId);
@@ -66,7 +83,36 @@ public class PaymentServlet extends HttpServlet {
 			return;
 		}
 
-		// GET OR CREATE PAYMENT
+		/*
+		 * ================================================= PROCESSING PAGE FOR QR
+		 * PAYMENT =================================================
+		 */
+
+		if ("true".equals(processing)) {
+
+			PaymentBean payment = paymentDAO.getPaymentByBookingId(bookingId);
+
+			if (payment == null || !"SUCCESS".equals(payment.getPaymentStatus())) {
+
+				response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Payment is not completed");
+
+				return;
+			}
+
+			request.setAttribute("bookingId", bookingId);
+
+			request.setAttribute("paymentMethod", paymentMethod);
+
+			request.getRequestDispatcher("/payment/payment-processing.jsp").forward(request, response);
+
+			return;
+		}
+
+		/*
+		 * ================================================= GET OR CREATE PAYMENT
+		 * =================================================
+		 */
+
 		PaymentBean payment = paymentDAO.getPaymentByBookingId(bookingId);
 
 		if (payment == null) {
@@ -74,8 +120,11 @@ public class PaymentServlet extends HttpServlet {
 			payment = new PaymentBean();
 
 			payment.setId(UUID.randomUUID().toString());
+
 			payment.setBookingId(booking.getId());
+
 			payment.setAmount(booking.getTotalAmount());
+
 			payment.setPaymentStatus("PENDING");
 
 			boolean paymentCreated = paymentDAO.createPayment(payment);
@@ -88,10 +137,18 @@ public class PaymentServlet extends HttpServlet {
 			}
 		}
 
-		// CHECK QR PAGE
+		/*
+		 * ================================================= CHECK QR PAGE
+		 * =================================================
+		 */
+
 		boolean qrPage = "true".equals(qr);
 
-		// LOGIN REQUIRED ONLY FOR PC PAGE
+		/*
+		 * ================================================= LOGIN REQUIRED ONLY FOR PC
+		 * PAGE =================================================
+		 */
+
 		if (!qrPage) {
 
 			HttpSession session = request.getSession(false);
@@ -104,7 +161,11 @@ public class PaymentServlet extends HttpServlet {
 			}
 		}
 
-		// CREATE QR ONLY FOR PC PAGE
+		/*
+		 * ================================================= CREATE QR ONLY FOR PC PAGE
+		 * =================================================
+		 */
+
 		if (!qrPage) {
 
 			String hostAddress = InetAddress.getLocalHost().getHostAddress();
@@ -127,16 +188,25 @@ public class PaymentServlet extends HttpServlet {
 				request.setAttribute("qrImage", qrImage);
 
 			} catch (Exception e) {
+
 				e.printStackTrace();
 			}
 		}
 
-		// SEND BOOKING TO JSP
+		/*
+		 * ================================================= SEND BOOKING TO JSP
+		 * =================================================
+		 */
+
 		request.setAttribute("booking", booking);
 
 		request.setAttribute("qrPage", qrPage);
 
-		// OPEN CORRECT PAGE
+		/*
+		 * ================================================= OPEN CORRECT PAGE
+		 * =================================================
+		 */
+
 		if (qrPage) {
 
 			request.getRequestDispatcher("/payment/qr-payment.jsp").forward(request, response);
@@ -145,6 +215,7 @@ public class PaymentServlet extends HttpServlet {
 
 			request.getRequestDispatcher("/payment/payment.jsp").forward(request, response);
 		}
+
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -152,7 +223,11 @@ public class PaymentServlet extends HttpServlet {
 
 		String dummyPayment = request.getParameter("dummyPayment");
 
-		// PHONE DUMMY PAYMENT
+		/*
+		 * ================================================= PHONE DUMMY PAYMENT
+		 * =================================================
+		 */
+
 		if ("true".equals(dummyPayment)) {
 
 			String bookingId = request.getParameter("bookingId");
@@ -167,22 +242,51 @@ public class PaymentServlet extends HttpServlet {
 
 			if (paymentSuccess) {
 
-				response.getWriter().println("<!DOCTYPE html>" + "<html>" + "<head>" + "<meta charset='UTF-8'>"
-						+ "<meta name='viewport' content='width=device-width, initial-scale=1.0'>"
-						+ "<title>Payment Successful</title>" + "<style>" + "*{box-sizing:border-box;}" + "body{"
-						+ "margin:0;" + "padding:20px;" + "min-height:100vh;" + "background:#f5f5f5;"
-						+ "font-family:Arial,Helvetica,sans-serif;" + "display:flex;" + "align-items:center;"
-						+ "justify-content:center;" + "}" + ".success-card{" + "width:100%;" + "max-width:400px;"
-						+ "background:white;" + "border-radius:16px;" + "padding:30px 25px;" + "text-align:center;"
-						+ "box-shadow:0 5px 25px rgba(0,0,0,.12);" + "}" + ".icon{" + "width:65px;" + "height:65px;"
-						+ "margin:0 auto 15px;" + "border-radius:50%;" + "background:#198754;" + "color:white;"
-						+ "font-size:35px;" + "display:flex;" + "align-items:center;" + "justify-content:center;" + "}"
-						+ ".title{" + "font-size:24px;" + "font-weight:bold;" + "color:#222;" + "margin-bottom:8px;"
-						+ "}" + ".message{" + "font-size:14px;" + "color:#777;" + "}" + "</style>" + "</head>"
-						+ "<body>" + "<div class='success-card'>" + "<div class='icon'>✓</div>"
-						+ "<div class='title'>Payment Successful</div>"
-						+ "<div class='message'>Your payment has been completed successfully.</div>" + "</div>"
-						+ "</body>" + "</html>");
+				response.getWriter()
+						.println("<!DOCTYPE html>" + "<html>" + "<head>" + "<meta charset='UTF-8'>"
+								+ "<meta name='viewport' content='width=device-width, initial-scale=1.0'>"
+								+ "<title>Payment Successful</title>"
+
+								+ "<style>"
+
+								+ "*{box-sizing:border-box;}"
+
+								+ "body{" + "margin:0;" + "padding:20px;" + "min-height:100vh;" + "background:#f5f5f5;"
+								+ "font-family:Arial,Helvetica,sans-serif;" + "display:flex;" + "align-items:center;"
+								+ "justify-content:center;" + "}"
+
+								+ ".success-card{" + "width:100%;" + "max-width:400px;" + "background:white;"
+								+ "border-radius:16px;" + "padding:30px 25px;" + "text-align:center;"
+								+ "box-shadow:0 5px 25px rgba(0,0,0,.12);" + "}"
+
+								+ ".icon{" + "width:65px;" + "height:65px;" + "margin:0 auto 15px;"
+								+ "border-radius:50%;" + "background:#198754;" + "color:white;" + "font-size:35px;"
+								+ "display:flex;" + "align-items:center;" + "justify-content:center;" + "}"
+
+								+ ".title{" + "font-size:24px;" + "font-weight:bold;" + "color:#222;"
+								+ "margin-bottom:8px;" + "}"
+
+								+ ".message{" + "font-size:14px;" + "color:#777;" + "}"
+
+								+ "</style>"
+
+								+ "</head>"
+
+								+ "<body>"
+
+								+ "<div class='success-card'>"
+
+								+ "<div class='icon'>✓</div>"
+
+								+ "<div class='title'>Payment Successful</div>"
+
+								+ "<div class='message'>" + "Your payment has been completed successfully." + "</div>"
+
+								+ "</div>"
+
+								+ "</body>"
+
+								+ "</html>");
 
 			} else {
 
@@ -192,7 +296,11 @@ public class PaymentServlet extends HttpServlet {
 			return;
 		}
 
-		// NORMAL PC PAYMENT
+		/*
+		 * ================================================= NORMAL PC PAYMENT
+		 * =================================================
+		 */
+
 		HttpSession session = request.getSession(false);
 
 		if (session == null || session.getAttribute("user") == null) {
@@ -211,5 +319,7 @@ public class PaymentServlet extends HttpServlet {
 		request.setAttribute("paymentMethod", paymentMethod);
 
 		request.getRequestDispatcher("/payment/payment-processing.jsp").forward(request, response);
+
 	}
+
 }

@@ -75,7 +75,7 @@
 
 								<p>${booking.mallName}</p>
 
-								<p>${booking.showDate} &nbsp;•&nbsp; ${booking.startTime}</p>
+								<p>${booking.showDate}&nbsp;•&nbsp; ${booking.startTime}</p>
 
 							</div>
 
@@ -366,7 +366,9 @@
 	<!-- ================================================= -->
 	<!-- EXTERNAL JAVASCRIPT -->
 	<!-- ================================================= -->
-
+	<script>
+		window.contextPath = "${pageContext.request.contextPath}";
+	</script>
 	<script src="${pageContext.request.contextPath}/assets/js/payment.js"></script>
 
 </body>

@@ -8,6 +8,7 @@ public class SeatBean {
 	private String typeName;
 	private double price;
 	private String status;
+	private String section;
 
 	public String getShowSeatId() {
 		return showSeatId;
@@ -55,5 +56,13 @@ public class SeatBean {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getSection() {
+		return section;
+	}
+
+	public void setSection(String section) {
+		this.section = section;
 	}
 }

@@ -41,6 +41,7 @@ public class SeatSelectionDAO {
 					show.setStartTime(rs.getString("start_time"));
 				}
 			}
+
 		} catch (Exception ex) {
 			System.out.print(ex.getMessage());
 		}
@@ -56,8 +57,8 @@ public class SeatSelectionDAO {
 
 		ArrayList<SeatBean> seats = new ArrayList<>();
 
-		String sql = "SELECT ss.id, " + "s.row_name, " + "s.seat_number, " + "st.type_name, " + "ss.price, "
-				+ "ss.status " + "FROM show_seats ss " + "JOIN seats s ON ss.seat_id = s.id "
+		String sql = "SELECT " + "ss.id, " + "s.row_name, " + "s.seat_number, " + "s.section, " + "st.type_name, "
+				+ "ss.price, " + "ss.status " + "FROM show_seats ss " + "JOIN seats s ON ss.seat_id = s.id "
 				+ "JOIN seat_types st ON s.seat_type_id = st.id " + "WHERE ss.show_id = ? "
 				+ "ORDER BY s.row_name, s.seat_number";
 
@@ -76,6 +77,8 @@ public class SeatSelectionDAO {
 					seat.setRowName(rs.getString("row_name"));
 
 					seat.setSeatNumber(rs.getInt("seat_number"));
+
+					seat.setSection(rs.getString("section"));
 
 					seat.setTypeName(rs.getString("type_name"));
 

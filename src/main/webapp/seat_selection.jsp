@@ -5,14 +5,8 @@
 <%@ page import="com.movieticket.model.SeatBean"%>
 <%@ page import="com.movieticket.model.ShowBean"%>
 
-
-
-
-
 <!DOCTYPE html>
-
 <html>
-
 <head>
 
 <meta charset="UTF-8">
@@ -22,12 +16,9 @@
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/assets/css/seat.css">
 
-
 </head>
 
-
 <body>
-
 
 	<%
 	ShowBean show = (ShowBean) request.getAttribute("show");
@@ -42,11 +33,10 @@
 	<h2>Show not found</h2>
 
 	<%
-	return;
-	}
+	} else {
 
 	if (seats == null) {
-	seats = new ArrayList<SeatBean>();
+		seats = new ArrayList<SeatBean>();
 	}
 	%>
 
@@ -79,7 +69,6 @@
 
 		</div>
 
-
 	</div>
 
 
@@ -92,12 +81,11 @@
 
 		<div class="show-left">
 
-			<span class="calendar"> ▣ </span> <span class="date"> <%=show.getShowDate()%>
+			<span class="calendar">▣</span> <span class="date"> <%=show.getShowDate()%>
 			</span> <span class="time"> <%=show.getStartTime()%>
 			</span>
 
 		</div>
-
 
 	</div>
 
@@ -109,26 +97,25 @@
 
 	<div class="container">
 
-
 		<%
 		/*
-		 * These are the ACTUAL seat types
-		 * from your database.
+		 * Seat types from database:
+		 *
+		 * PREMIUM
+		 * RECLINER
+		 * REGULAR
 		 */
 
-		String[] seatTypes = { "PREMIUM", "RECLINER", "REGULAR" };
+		String[] seatTypes = {"PREMIUM", "RECLINER", "REGULAR"};
 
 		for (String currentType : seatTypes) {
 
-			// -----------------------------------------------------
-			// Check whether this seat type exists
-			// -----------------------------------------------------
-
+			// Check if this seat type exists
 			boolean exists = false;
 
 			for (SeatBean seat : seats) {
 
-				if (seat.getTypeName().equalsIgnoreCase(currentType)) {
+				if (seat.getTypeName() != null && seat.getTypeName().equalsIgnoreCase(currentType)) {
 
 			exists = true;
 			break;
@@ -139,11 +126,17 @@
 				continue;
 			}
 
-			// -----------------------------------------------------
-			// Display name
-			// -----------------------------------------------------
+			// Find price for this category
+			double categoryPrice = 0;
 
-			String displayType = currentType;
+			for (SeatBean seat : seats) {
+
+				if (seat.getTypeName() != null && seat.getTypeName().equalsIgnoreCase(currentType)) {
+
+			categoryPrice = seat.getPrice();
+			break;
+				}
+			}
 		%>
 
 
@@ -153,70 +146,107 @@
 
 		<div class="seat-section">
 
-
 			<div class="type-title">
 
-				<%=displayType%>
-
-				•
-
-
-				<%
-				// -------------------------------------------------
-				// Find price for this seat type
-				// -------------------------------------------------
-
-				boolean priceFound = false;
-
-				for (SeatBean seat : seats) {
-
-					if (seat.getTypeName().equalsIgnoreCase(currentType) && !priceFound) {
-				%>
-
-				₹<%=String.format("%.2f", seat.getPrice())%>
-
-				<%
-				priceFound = true;
-				}
-				}
-				%>
+				<span> <%=currentType%>
+				</span> <span>•</span> <span class="type-price"> ₹<%=String.format("%.2f", categoryPrice)%>
+				</span>
 
 			</div>
 
 
+			<!-- =================================================
+	     SEAT ROWS -- each row now renders as 3 blocks
+	     (LEFT wing / CENTER / RIGHT wing) so the LEFT and
+	     RIGHT sections can curve independently instead of
+	     being one flat 10-seat strip.
+	================================================= -->
+
+			<div class="seat-layout">
+
+				<%
+				String currentRow = "";
+				String currentSection = "";
+				double curveAngle = 0;
+
+				// Rows are always returned ordered by row_name then
+				// seat_number, and within a row seat_number runs
+				// LEFT -> CENTER -> RIGHT (see the seed script), so
+				// section changes are encountered in that fixed order.
+				for (SeatBean seat : seats) {
+
+					String type = seat.getTypeName();
+
+					if (type == null || !type.equalsIgnoreCase(currentType)) {
+						continue;
+					}
+
+					String row = seat.getRowName();
+
+					if (row == null) {
+						continue;
+					}
+
+					String section = seat.getSection();
+
+					if (section == null) {
+						section = "CENTER";
+					}
+
+					int number = seat.getSeatNumber();
+
+					String showSeatId = seat.getShowSeatId();
+
+					double price = seat.getPrice();
+
+					String status = seat.getStatus();
+
+					// =============================================
+					// NEW ROW
+					// =============================================
+
+					if (!row.equals(currentRow)) {
+
+						// Close previous row (last section-grid + the
+						// seat-blocks wrapper + the seat-row itself)
+						if (!currentRow.equals("")) {
+				%>
+
+			</div>
+		</div>
+	</div>
+
+	<%
+	}
+
+	currentRow = row;
+	currentSection = "";
+
+	// Rows curve more near the screen (row A) and flatten out
+	// toward the back (row H onward). Tune the 1.4 multiplier
+	// and the "8" midpoint to taste -- this is a visual
+	// approximation, not a geometric projection.
+	int rowIndex = Character.toUpperCase(row.charAt(0)) - 'A' + 1;
+	curveAngle = Math.max(0, (8 - rowIndex)) * 1.4;
+	%>
+
+	<div class="seat-row">
+
+		<span class="row-name"> <%=row%>
+		</span>
+
+		<div class="seat-blocks">
+
 			<%
-			String currentRow = "";
+			}
 
-			// -----------------------------------------------------
-			// Display seats
-			// -----------------------------------------------------
+			// =============================================
+			// NEW SECTION WITHIN THE ROW (LEFT / CENTER / RIGHT)
+			// =============================================
 
-			for (SeatBean seat : seats) {
+			if (!section.equalsIgnoreCase(currentSection)) {
 
-				String type = seat.getTypeName();
-
-				// Only current seat type
-				if (!type.equalsIgnoreCase(currentType)) {
-					continue;
-				}
-
-				String row = seat.getRowName();
-
-				int number = seat.getSeatNumber();
-
-				String showSeatId = seat.getShowSeatId();
-
-				double price = seat.getPrice();
-
-				String status = seat.getStatus();
-
-				// -------------------------------------------------
-				// NEW ROW
-				// -------------------------------------------------
-
-				if (!row.equals(currentRow)) {
-
-					if (!currentRow.equals("")) {
+			if (!currentSection.equals("")) {
 			%>
 
 		</div>
@@ -224,22 +254,28 @@
 		<%
 		}
 
-		currentRow = row;
+		currentSection = section;
+
+		String sectionClass = "seat-grid-" + section.toLowerCase();
+		String curveStyle = "";
+
+		if (section.equalsIgnoreCase("LEFT")) {
+		curveStyle = "transform: rotate(-" + String.format("%.1f", curveAngle) + "deg); transform-origin: right center;";
+		} else if (section.equalsIgnoreCase("RIGHT")) {
+		curveStyle = "transform: rotate(" + String.format("%.1f", curveAngle) + "deg); transform-origin: left center;";
+		}
 		%>
 
-		<div class="row">
-
-			<span class="row-name"> <%=row%>
-			</span>
+		<div class="seat-grid <%=sectionClass%>" style="<%=curveStyle%>">
 
 			<%
 			}
 
-			// -------------------------------------------------
+			// =============================================
 			// BOOKED
-			// -------------------------------------------------
+			// =============================================
 
-			if (status.equalsIgnoreCase("BOOKED")) {
+			if ("BOOKED".equalsIgnoreCase(status)) {
 			%>
 
 			<button type="button" class="seat booked" disabled>
@@ -251,11 +287,11 @@
 			<%
 			}
 
-			// -------------------------------------------------
+			// =============================================
 			// AVAILABLE
-			// -------------------------------------------------
+			// =============================================
 
-			else {
+			else if ("AVAILABLE".equalsIgnoreCase(status)) {
 			%>
 
 			<button type="button" class="seat available" id="<%=showSeatId%>"
@@ -269,26 +305,50 @@
 			<%
 			}
 
+			// =============================================
+			// HELD / OTHER STATUS
+			// =============================================
+
+			else {
+			%>
+
+			<button type="button" class="seat booked" disabled>
+
+				<%=number%>
+
+			</button>
+
+			<%
 			}
 
-			// -----------------------------------------------------
-			// CLOSE LAST ROW
-			// -----------------------------------------------------
+			}
+
+			// =============================================
+			// CLOSE LAST SECTION + LAST ROW
+			// =============================================
 
 			if (!currentRow.equals("")) {
 			%>
 
 		</div>
-
-		<%
-		}
-		%>
-
+	</div>
 	</div>
 
 	<%
 	}
 	%>
+
+	</div>
+
+	</div>
+
+
+	<%
+	}
+	%>
+
+	</div>
+
 
 
 	<!-- =====================================================
@@ -311,27 +371,25 @@
 
 	<div class="legend">
 
-
 		<div class="legend-item">
 
-			<span class="legend-box legend-available"> </span> Available
+			<span class="legend-box legend-available"></span> Available
 
 		</div>
 
 
 		<div class="legend-item">
 
-			<span class="legend-box legend-occupied"> </span> Occupied
+			<span class="legend-box legend-occupied"></span> Occupied
 
 		</div>
 
 
 		<div class="legend-item">
 
-			<span class="legend-box legend-selected"> </span> Selected
+			<span class="legend-box legend-selected"></span> Selected
 
 		</div>
-
 
 	</div>
 
@@ -343,13 +401,11 @@
 
 	<div class="bottom">
 
-
 		<div class="bottom-left">
-
 
 			<div class="count">
 
-				<b id="seatCount"> 0 </b> Seats Selected
+				<b id="seatCount">0</b> Seats Selected
 
 			</div>
 
@@ -359,7 +415,6 @@
 				Total: ₹ <span id="total"> 0 </span>
 
 			</div>
-
 
 		</div>
 
@@ -377,7 +432,6 @@
 
 		<div class="bottom-right">
 
-
 			<form action="${pageContext.request.contextPath}/booking"
 				method="post" onsubmit="return checkSeats();">
 
@@ -390,13 +444,11 @@
 
 					Continue</button>
 
-
 			</form>
 
 
 			<div class="continue-message" id="continueMessage">Select your
 				seats to continue</div>
-
 
 		</div>
 
@@ -404,9 +456,13 @@
 
 
 
-	<script src="${pageContext.request.contextPath}/assets/js/seat.js"></script>
+	<script src="${pageContext.request.contextPath}/assets/js/seat.js">
+		
+	</script>
 
+	<%
+	} // end else (show != null)
+	%>
 
 </body>
-
 </html>

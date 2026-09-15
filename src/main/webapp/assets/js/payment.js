@@ -27,7 +27,7 @@ function togglePaymentInputs() {
 		}
 
 		if (cardDetails) {
-			cardDetails.style.display = "none";
+			cardDetails.classList.remove("active");
 		}
 
 	} else {
@@ -37,7 +37,7 @@ function togglePaymentInputs() {
 		}
 
 		if (cardDetails) {
-			cardDetails.style.display = "block";
+			cardDetails.classList.add("active");
 		}
 	}
 }
@@ -59,51 +59,7 @@ paymentMethods.forEach(function(radio) {
 });
 
 
-
-function togglePaymentInputs() {
-
-	var upiRadio =
-		document.querySelector(
-			'input[name="paymentMethod"][value="UPI"]'
-		);
-
-	var qrCard =
-		document.querySelector(
-			'.qr-payment-card'
-		);
-
-	var cardDetails =
-		document.querySelector(
-			'.card-details'
-		);
-
-	if (!upiRadio) {
-		return;
-	}
-
-	if (upiRadio.checked) {
-
-		if (qrCard) {
-			qrCard.style.display = "block";
-		}
-
-		if (cardDetails) {
-			cardDetails.classList.remove("active");
-		}
-
-	} else {
-
-		if (qrCard) {
-			qrCard.style.display = "none";
-		}
-
-		if (cardDetails) {
-			cardDetails.classList.add("active");
-		}
-	}
-}
-
-
+togglePaymentInputs();
 
 
 // CARD NUMBER
@@ -140,15 +96,19 @@ if (cardNumber) {
 				formatted
 					? formatted.join(" ")
 					: "";
+
 		}
 	);
+
 }
 
 
 // EXPIRY DATE
 
 var expiry =
-	document.getElementById("expiryDate");
+	document.getElementById(
+		"expiryDate"
+	);
 
 if (expiry) {
 
@@ -179,8 +139,10 @@ if (expiry) {
 
 			this.value =
 				value;
+
 		}
 	);
+
 }
 
 
@@ -204,104 +166,6 @@ if (cvv) {
 
 		}
 	);
-}
-
-
-// PC PAYMENT STATUS CHECK
-
-var paymentHandled = false;
-
-var bookingIdInput =
-	document.querySelector(
-		'input[name="bookingId"]'
-	);
-
-
-if (bookingIdInput) {
-
-	var bookingId =
-		bookingIdInput.value;
-
-
-	setInterval(function() {
-
-		if (paymentHandled) {
-			return;
-		}
-
-
-		fetch(
-			window.location.pathname +
-			"?bookingId=" +
-			encodeURIComponent(bookingId) +
-			"&check=true"
-		)
-
-			.then(function(response) {
-
-				return response.text();
-
-			})
-
-			.then(function(status) {
-
-				status =
-					status.trim();
-
-
-				console.log(
-					"Payment Status: " +
-					status
-				);
-
-
-				if (status === "SUCCESS") {
-
-					paymentHandled = true;
-
-
-					var qrStatus =
-						document.getElementById(
-							"qrStatus"
-						);
-
-
-					if (qrStatus) {
-
-						qrStatus.innerText =
-							"Payment Successful ✓";
-
-					}
-
-
-					var proceedButton =
-						document.getElementById(
-							"proceedPayButton"
-						);
-
-
-					if (proceedButton) {
-
-						proceedButton.click();
-
-					}
-
-				}
-
-			})
-
-			.catch(function(error) {
-
-				console.log(
-					"Payment check error:",
-					error
-				);
-
-			});
-
-	}, 1000);
 
 }
-
-
 

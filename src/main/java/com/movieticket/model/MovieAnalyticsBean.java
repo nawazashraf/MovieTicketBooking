@@ -1,16 +1,16 @@
 package com.movieticket.model;
 
 public class MovieAnalyticsBean {
-	private String movitTitle;
+	private String movieTitle;
 	private int ticketsSold;
 	private double revenue;
 
-	public String getMovitTitle() {
-		return movitTitle;
+	public String getMovieTitle() {
+		return movieTitle;
 	}
 
-	public void setMovitTitle(String movitTitle) {
-		this.movitTitle = movitTitle;
+	public void setMovieTitle(String movitTitle) {
+		this.movieTitle = movitTitle;
 	}
 
 	public int getTicketsSold() {

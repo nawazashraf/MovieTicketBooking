@@ -141,7 +141,7 @@ public class AnalyticsDAO {
 				while (rs.next()) {
 					MovieAnalyticsBean movie = new MovieAnalyticsBean();
 
-					movie.setMovitTitle(rs.getString("title"));
+					movie.setMovieTitle(rs.getString("title"));
 					movie.setTicketsSold(rs.getInt("tickets_sold"));
 					movie.setRevenue(rs.getDouble("revenue"));
 

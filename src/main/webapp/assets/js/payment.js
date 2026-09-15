@@ -59,7 +59,51 @@ paymentMethods.forEach(function(radio) {
 });
 
 
-togglePaymentInputs();
+
+function togglePaymentInputs() {
+
+	var upiRadio =
+		document.querySelector(
+			'input[name="paymentMethod"][value="UPI"]'
+		);
+
+	var qrCard =
+		document.querySelector(
+			'.qr-payment-card'
+		);
+
+	var cardDetails =
+		document.querySelector(
+			'.card-details'
+		);
+
+	if (!upiRadio) {
+		return;
+	}
+
+	if (upiRadio.checked) {
+
+		if (qrCard) {
+			qrCard.style.display = "block";
+		}
+
+		if (cardDetails) {
+			cardDetails.classList.remove("active");
+		}
+
+	} else {
+
+		if (qrCard) {
+			qrCard.style.display = "none";
+		}
+
+		if (cardDetails) {
+			cardDetails.classList.add("active");
+		}
+	}
+}
+
+
 
 
 // CARD NUMBER
@@ -104,9 +148,7 @@ if (cardNumber) {
 // EXPIRY DATE
 
 var expiry =
-	document.getElementById(
-		"expiry"
-	);
+	document.getElementById("expiryDate");
 
 if (expiry) {
 
@@ -257,7 +299,7 @@ if (bookingIdInput) {
 
 			});
 
-	}, 2000);
+	}, 1000);
 
 }
 

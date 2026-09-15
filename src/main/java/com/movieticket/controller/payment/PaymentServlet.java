@@ -20,7 +20,6 @@ import com.google.zxing.common.BitMatrix;
 
 import com.movieticket.dao.BookingDAO;
 import com.movieticket.dao.PaymentDAO;
-
 import com.movieticket.model.BookingBean;
 import com.movieticket.model.PaymentBean;
 
@@ -33,13 +32,9 @@ public class PaymentServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		String bookingId = request.getParameter("bookingId");
-
 		String qr = request.getParameter("qr");
-
 		String check = request.getParameter("check");
-
 		String processing = request.getParameter("processing");
-
 		String paymentMethod = request.getParameter("paymentMethod");
 
 		PaymentDAO paymentDAO = new PaymentDAO();
@@ -215,7 +210,6 @@ public class PaymentServlet extends HttpServlet {
 
 			request.getRequestDispatcher("/payment/payment.jsp").forward(request, response);
 		}
-
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -236,57 +230,81 @@ public class PaymentServlet extends HttpServlet {
 
 			String transactionId = "DUMMY-" + UUID.randomUUID().toString();
 
+			/*
+			 * MARK PAYMENT SUCCESS
+			 */
+
 			boolean paymentSuccess = paymentDAO.markPaymentSuccess(bookingId, "QR-DUMMY", transactionId);
+
+			/*
+			 * ================================================= CONFIRM BOOKING AND UPDATE
+			 * SEATS =================================================
+			 */
+
+			if (paymentSuccess) {
+
+				BookingDAO bookingDAO = new BookingDAO();
+
+				boolean bookingConfirmed = bookingDAO.confirmBookingAndSeats(bookingId);
+
+				if (!bookingConfirmed) {
+
+					paymentSuccess = false;
+				}
+			}
 
 			response.setContentType("text/html;charset=UTF-8");
 
 			if (paymentSuccess) {
 
-				response.getWriter()
-						.println("<!DOCTYPE html>" + "<html>" + "<head>" + "<meta charset='UTF-8'>"
-								+ "<meta name='viewport' content='width=device-width, initial-scale=1.0'>"
-								+ "<title>Payment Successful</title>"
+				response.getWriter().println(
 
-								+ "<style>"
+						"<!DOCTYPE html>" + "<html>" + "<head>" + "<meta charset='UTF-8'>" +
 
-								+ "*{box-sizing:border-box;}"
+								"<meta name='viewport' " + "content='width=device-width, " + "initial-scale=1.0'>" +
 
-								+ "body{" + "margin:0;" + "padding:20px;" + "min-height:100vh;" + "background:#f5f5f5;"
+								"<title>Payment Successful</title>" +
+
+								"<style>" +
+
+								"*{box-sizing:border-box;}" +
+
+								"body{" + "margin:0;" + "padding:20px;" + "min-height:100vh;" + "background:#f5f5f5;"
 								+ "font-family:Arial,Helvetica,sans-serif;" + "display:flex;" + "align-items:center;"
-								+ "justify-content:center;" + "}"
+								+ "justify-content:center;" + "}" +
 
-								+ ".success-card{" + "width:100%;" + "max-width:400px;" + "background:white;"
+								".success-card{" + "width:100%;" + "max-width:400px;" + "background:white;"
 								+ "border-radius:16px;" + "padding:30px 25px;" + "text-align:center;"
-								+ "box-shadow:0 5px 25px rgba(0,0,0,.12);" + "}"
+								+ "box-shadow:0 5px 25px rgba(0,0,0,.12);" + "}" +
 
-								+ ".icon{" + "width:65px;" + "height:65px;" + "margin:0 auto 15px;"
-								+ "border-radius:50%;" + "background:#198754;" + "color:white;" + "font-size:35px;"
-								+ "display:flex;" + "align-items:center;" + "justify-content:center;" + "}"
+								".icon{" + "width:65px;" + "height:65px;" + "margin:0 auto 15px;" + "border-radius:50%;"
+								+ "background:#198754;" + "color:white;" + "font-size:35px;" + "display:flex;"
+								+ "align-items:center;" + "justify-content:center;" + "}" +
 
-								+ ".title{" + "font-size:24px;" + "font-weight:bold;" + "color:#222;"
-								+ "margin-bottom:8px;" + "}"
+								".title{" + "font-size:24px;" + "font-weight:bold;" + "color:#222;"
+								+ "margin-bottom:8px;" + "}" +
 
-								+ ".message{" + "font-size:14px;" + "color:#777;" + "}"
+								".message{" + "font-size:14px;" + "color:#777;" + "}" +
 
-								+ "</style>"
+								"</style>" +
 
-								+ "</head>"
+								"</head>" +
 
-								+ "<body>"
+								"<body>" +
 
-								+ "<div class='success-card'>"
+								"<div class='success-card'>" +
 
-								+ "<div class='icon'>✓</div>"
+								"<div class='icon'>✓</div>" +
 
-								+ "<div class='title'>Payment Successful</div>"
+								"<div class='title'>" + "Payment Successful" + "</div>" +
 
-								+ "<div class='message'>" + "Your payment has been completed successfully." + "</div>"
+								"<div class='message'>" + "Your payment has been completed successfully." + "</div>" +
 
-								+ "</div>"
+								"</div>" +
 
-								+ "</body>"
+								"</body>" +
 
-								+ "</html>");
+								"</html>");
 
 			} else {
 
@@ -319,7 +337,5 @@ public class PaymentServlet extends HttpServlet {
 		request.setAttribute("paymentMethod", paymentMethod);
 
 		request.getRequestDispatcher("/payment/payment-processing.jsp").forward(request, response);
-
 	}
-
 }

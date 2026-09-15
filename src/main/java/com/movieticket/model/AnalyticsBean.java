@@ -7,6 +7,10 @@ public class AnalyticsBean {
 	private int totalBookings;
 	private int confirmedBookings;
 	private int totalTicketsSold;
+	private int totalUsers;
+
+	private BigDecimal revenueToday;
+	private BigDecimal revenueThisMonth;
 
 	public BigDecimal getTotalRevenue() {
 		return totalRevenue;
@@ -38,6 +42,30 @@ public class AnalyticsBean {
 
 	public void setTotalTicketsSold(int totalTicketsSold) {
 		this.totalTicketsSold = totalTicketsSold;
+	}
+
+	public int getTotalUsers() {
+		return totalUsers;
+	}
+
+	public void setTotalUsers(int totalUsers) {
+		this.totalUsers = totalUsers;
+	}
+
+	public BigDecimal getRevenueToday() {
+		return revenueToday;
+	}
+
+	public void setRevenueToday(BigDecimal revenueToday) {
+		this.revenueToday = revenueToday;
+	}
+
+	public BigDecimal getRevenueThisMonth() {
+		return revenueThisMonth;
+	}
+
+	public void setRevenueThisMonth(BigDecimal revenueThisMonth) {
+		this.revenueThisMonth = revenueThisMonth;
 	}
 
 }

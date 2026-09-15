@@ -3,8 +3,11 @@ package com.movieticket.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.movieticket.model.AnalyticsBean;
+import com.movieticket.model.MovieAnalyticsBean;
 import com.movieticket.util.DBConnection;
 
 public class AnalyticsDAO {
@@ -101,5 +104,53 @@ public class AnalyticsDAO {
 		}
 
 		return null;
+	}
+
+	public List<MovieAnalyticsBean> getTopMovies() {
+
+		List<MovieAnalyticsBean> movies = new ArrayList<>();
+
+		String sql = """
+				SELECT
+					m.title,
+					COUNT(bs.id) AS tickets_sold,
+					COALESCE(SUM(bs.price), 0) AS revenue
+
+				FROM movies m
+
+				JOIN shows s
+				        ON s.movie_id = m.id
+
+				    JOIN bookings b
+				        ON b.show_id = s.id
+
+				    JOIN booking_seats bs
+				        ON bs.booking_id = b.id
+
+				    WHERE b.booking_status = 'CONFIRMED'
+
+				    GROUP BY m.id, m.title
+
+				    ORDER BY tickets_sold DESC
+
+				    LIMIT 5
+				""";
+
+		try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					MovieAnalyticsBean movie = new MovieAnalyticsBean();
+
+					movie.setMovitTitle(rs.getString("title"));
+					movie.setTicketsSold(rs.getInt("tickets_sold"));
+					movie.setRevenue(rs.getDouble("revenue"));
+
+					movies.add(movie);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return movies;
 	}
 }

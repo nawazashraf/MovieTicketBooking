@@ -1,5 +1,8 @@
 @charset "UTF-8";
 
+/* =========================
+   NAVBAR
+   ========================= */
 .navbar {
 	height: 64px;
 	padding: 0 40px;
@@ -7,6 +10,7 @@
 	align-items: center;
 	justify-content: space-between;
 	background-color: #ffffff;
+	color: #222222;
 	border-bottom: 1px solid #e5e7eb;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 	position: relative;
@@ -17,10 +21,14 @@
    LOGO
    ========================= */
 .nav-logo {
-	color: #222222;
 	font-size: 22px;
 	font-weight: 700;
 	letter-spacing: -0.3px;
+}
+
+.nav-logo a {
+	color: #222222;
+	text-decoration: none;
 }
 
 /* =========================
@@ -36,10 +44,10 @@
 	width: 260px;
 	padding: 9px 15px;
 	background-color: #f7f7f7;
+	color: #222222;
 	border: 1px solid #dddddd;
 	border-radius: 22px;
 	outline: none;
-	color: #222222;
 	font-size: 14px;
 	transition: all 0.2s ease;
 }
@@ -96,5 +104,54 @@
 	background-color: #222222;
 	color: #ffffff;
 	cursor: pointer;
+	transition: background-color 0.2s ease;
 }
-.navbar{display:flex;align-items:center;gap:18px;padding:14px 24px;background:#111;color:#fff;flex-wrap:wrap}.nav-logo a,.nav-links a{color:#fff;text-decoration:none}.nav-logo{font-weight:700;font-size:22px}.nav-search{display:flex;gap:6px;flex:1;max-width:420px}.nav-search input{flex:1;padding:8px;border-radius:6px;border:1px solid #ccc}.nav-search button{padding:8px 12px;border:0;border-radius:6px;cursor:pointer}.nav-links{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+
+.nav-search button:hover {
+	background-color: #000000;
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+@media ( max-width : 900px) {
+	.navbar {
+		height: auto;
+		min-height: 64px;
+		padding: 14px 24px;
+		gap: 18px;
+		flex-wrap: wrap;
+	}
+	.nav-search {
+		flex: 1;
+		max-width: 420px;
+	}
+	.nav-search input {
+		width: auto;
+		flex: 1;
+	}
+	.nav-links {
+		gap: 14px;
+		flex-wrap: wrap;
+	}
+}
+
+@media ( max-width : 600px) {
+	.navbar {
+		padding: 14px 18px;
+	}
+	.nav-logo {
+		font-size: 20px;
+	}
+	.nav-search {
+		order: 3;
+		width: 100%;
+		max-width: none;
+	}
+	.nav-links {
+		gap: 12px;
+	}
+	.nav-links a {
+		font-size: 14px;
+	}
+}

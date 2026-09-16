@@ -10,8 +10,12 @@
 <title>Admin Management</title>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/assets/css/admin.css">
+	
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/assets/css/common.css">
 </head>
 <body>
+	<%@ include file="/common/navbar.jsp"%>
 	<div class="admin-wrap">
 		<h1>Movie Ticket Booking — Admin Management</h1>
 		<div class="admin-nav">
@@ -22,8 +26,7 @@
 		<%
 		String message = (String) request.getAttribute("message");
 		if (message != null) {
-		%><div
-			class="message"><%=message%></div>
+		%><div class="message"><%=message%></div>
 		<%
 		}
 		%>
@@ -61,8 +64,7 @@
 					value="<%=editMovie == null ? "addMovie" : "updateMovie"%>">
 				<%
 				if (editMovie != null) {
-				%><input type="hidden" name="id"
-					value="<%=editMovie.getId()%>">
+				%><input type="hidden" name="id" value="<%=editMovie.getId()%>">
 				<%
 				}
 				%>
@@ -81,8 +83,7 @@
 						name="status">
 							<%
 							String ms = editMovie == null ? "NOW_SHOWING" : editMovie.getStatus();
-							%><option
-								<%="NOW_SHOWING".equals(ms) ? "selected" : ""%>>NOW_SHOWING</option>
+							%><option <%="NOW_SHOWING".equals(ms) ? "selected" : ""%>>NOW_SHOWING</option>
 							<option <%="COMING_SOON".equals(ms) ? "selected" : ""%>>COMING_SOON</option>
 							<option <%="ENDED".equals(ms) ? "selected" : ""%>>ENDED</option>
 					</select></label><label class="full">Poster URL<input name="posterUrl"
@@ -97,9 +98,9 @@
 					if (genres != null)
 						for (Map.Entry<String, String> g : genres.entrySet()) {
 							boolean checked = editMovie != null && editMovie.getGenreIds().contains(g.getKey());
-					%><label><input
-						type="checkbox" style="width: auto" name="genreIds"
-						value="<%=g.getKey()%>" <%=checked ? "checked" : ""%>> <%=g.getValue()%></label>
+					%><label><input type="checkbox" style="width: auto"
+						name="genreIds" value="<%=g.getKey()%>"
+						<%=checked ? "checked" : ""%>> <%=g.getValue()%></label>
 					<%
 					}
 					%>
@@ -133,7 +134,7 @@
 						<td><%=m.getStatus()%></td>
 						<td class="actions"><a class="btn"
 							href="${pageContext.request.contextPath}/admin?editMovie=<%=m.getId()%>#movies">Edit</a>
-						<form method="post"
+							<form method="post"
 								action="${pageContext.request.contextPath}/admin"
 								onsubmit="return confirm('Delete this movie?');">
 								<input type="hidden" name="action" value="deleteMovie"><input
@@ -155,8 +156,7 @@
 					value="<%=editTheatre == null ? "addTheatre" : "updateTheatre"%>">
 				<%
 				if (editTheatre != null) {
-				%><input type="hidden" name="id"
-					value="<%=editTheatre.getId()%>">
+				%><input type="hidden" name="id" value="<%=editTheatre.getId()%>">
 				<%
 				}
 				%><div class="form-grid">
@@ -204,7 +204,7 @@
 						<td><%=t.isStatus() ? "Active" : "Inactive"%></td>
 						<td class="actions"><a class="btn"
 							href="${pageContext.request.contextPath}/admin?editTheatre=<%=t.getId()%>#theatres">Edit</a>
-						<form method="post"
+							<form method="post"
 								action="${pageContext.request.contextPath}/admin"
 								onsubmit="return confirm('Delete this theatre?');">
 								<input type="hidden" name="action" value="deleteTheatre"><input
@@ -226,8 +226,7 @@
 					value="<%=editShow == null ? "addShow" : "updateShow"%>">
 				<%
 				if (editShow != null) {
-				%><input type="hidden" name="id"
-					value="<%=editShow.getShowId()%>">
+				%><input type="hidden" name="id" value="<%=editShow.getShowId()%>">
 				<%
 				}
 				%><div class="form-grid">
@@ -236,8 +235,7 @@
 							<%
 							if (movies != null)
 								for (MovieBean m : movies) {
-							%><option
-								value="<%=m.getId()%>"
+							%><option value="<%=m.getId()%>"
 								<%=editShow != null && m.getId().equals(editShow.getMovieId()) ? "selected" : ""%>><%=m.getTitle()%></option>
 							<%
 							}
@@ -246,8 +244,7 @@
 							<%
 							if (theatres != null)
 								for (TheatreBean t : theatres) {
-							%><option
-								value="<%=t.getId()%>"
+							%><option value="<%=t.getId()%>"
 								<%=editShow != null && t.getId().equals(editShow.getMallId()) ? "selected" : ""%>><%=t.getName()%></option>
 							<%
 							}
@@ -262,8 +259,7 @@
 					</label><label>Status<select name="status">
 							<%
 							String ss = editShow == null ? "ACTIVE" : editShow.getStatus();
-							%><option
-								<%="ACTIVE".equals(ss) ? "selected" : ""%>>ACTIVE</option>
+							%><option <%="ACTIVE".equals(ss) ? "selected" : ""%>>ACTIVE</option>
 							<option <%="INACTIVE".equals(ss) ? "selected" : ""%>>INACTIVE</option>
 							<option <%="CANCELLED".equals(ss) ? "selected" : ""%>>CANCELLED</option>
 					</select></label>
@@ -301,7 +297,7 @@
 						<td><%=s.getAvailableSeats()%></td>
 						<td class="actions"><a class="btn"
 							href="${pageContext.request.contextPath}/admin?editShow=<%=s.getShowId()%>#shows">Edit</a>
-						<form method="post"
+							<form method="post"
 								action="${pageContext.request.contextPath}/admin">
 								<input type="hidden" name="action" value="generateShowSeats"><input
 									type="hidden" name="showId" value="<%=s.getShowId()%>"><input
@@ -332,8 +328,7 @@
 					value="<%=editSeat == null ? "addSeat" : "updateSeat"%>">
 				<%
 				if (editSeat != null) {
-				%><input type="hidden" name="id"
-					value="<%=editSeat.getSeatId()%>">
+				%><input type="hidden" name="id" value="<%=editSeat.getSeatId()%>">
 				<%
 				}
 				%><div class="form-grid">
@@ -342,8 +337,7 @@
 							<%
 							if (theatres != null)
 								for (TheatreBean t : theatres) {
-							%><option
-								value="<%=t.getId()%>"
+							%><option value="<%=t.getId()%>"
 								<%=editSeat != null && t.getId().equals(editSeat.getMallId()) ? "selected" : ""%>><%=t.getName()%></option>
 							<%
 							}
@@ -352,13 +346,11 @@
 							<%
 							if (seatTypes != null)
 								for (SeatBean st : seatTypes) {
-							%><option
-								value="<%=st.getSeatTypeId()%>"
+							%><option value="<%=st.getSeatTypeId()%>"
 								<%=editSeat != null && st.getSeatTypeId().equals(editSeat.getSeatTypeId()) ? "selected" : ""%>><%=st.getTypeName()%></option>
 							<%
 							}
-							%></select></label><label>Row<input required maxlength="10"
-						name="rowName"
+							%></select></label><label>Row<input required maxlength="10" name="rowName"
 						value="<%=editSeat == null ? "" : editSeat.getRowName()%>"></label><label>Seat
 						Number<input required type="number" min="1" name="seatNumber"
 						value="<%=editSeat == null ? "" : editSeat.getSeatNumber()%>">
@@ -397,7 +389,7 @@
 						<td><%=s.isActive() ? "Active" : "Inactive"%></td>
 						<td class="actions"><a class="btn"
 							href="${pageContext.request.contextPath}/admin?editSeat=<%=s.getSeatId()%>#seats">Edit</a>
-						<form method="post"
+							<form method="post"
 								action="${pageContext.request.contextPath}/admin"
 								onsubmit="return confirm('Delete this seat?');">
 								<input type="hidden" name="action" value="deleteSeat"><input

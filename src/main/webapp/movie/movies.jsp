@@ -60,6 +60,9 @@ h1 {
 	font-weight: bold;
 }
 </style>
+
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/assets/css/common.css">
 </head>
 
 <body>

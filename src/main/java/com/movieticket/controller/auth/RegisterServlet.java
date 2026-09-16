@@ -14,66 +14,67 @@ import java.io.IOException;
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private UserDAO userDAO;
+	private UserDAO userDAO;
 
-    @Override
-    public void init() {
-        userDAO = new UserDAO();
-    }
+	@Override
+	public void init() {
+		userDAO = new UserDAO();
+	}
 
-    @Override
-    protected void doPost(HttpServletRequest request,
-                          HttpServletResponse response)
-            throws ServletException, IOException {
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
-        // Get data from registration form
-        String name = request.getParameter("name");
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        String phone = request.getParameter("phone");
+		// Get data from registration form
 
-        // Create UserBean
-        UserBean user = new UserBean();
+		String name = request.getParameter("name");
 
-        user.setName(name);
-        user.setEmail(email);
-        user.setPassword(password);
-        user.setPhone(phone);
+		String email = request.getParameter("email");
 
-        // Normal users register with USER role
-        user.setRole("USER");
-        user.setStatus(true);
+		String password = request.getParameter("password");
 
-        // Save user in database
-        boolean registered = userDAO.registerUser(user);
+		String phone = request.getParameter("phone");
 
-        if (registered) {
+		// Create UserBean
 
-            response.sendRedirect(
-                request.getContextPath() + "/login.jsp"
-            );
+		UserBean user = new UserBean();
 
-        } else {
+		user.setName(name);
 
-            request.setAttribute(
-                "error",
-                "Registration failed. Email or phone may already exist."
-            );
+		user.setEmail(email);
 
-            request.getRequestDispatcher("/register.jsp")
-                   .forward(request, response);
-        }
-    }
+		user.setPassword(password);
 
-    @Override
-    protected void doGet(HttpServletRequest request,
-                         HttpServletResponse response)
-            throws ServletException, IOException {
+		user.setPhone(phone);
 
-        response.sendRedirect(
-            request.getContextPath() + "/register.jsp"
-        );
-    }
+		// Normal users register with USER role
+
+		user.setRole("USER");
+
+		user.setStatus(true);
+
+		// Save user in database
+
+		boolean registered = userDAO.registerUser(user);
+
+		if (registered) {
+
+			response.sendRedirect(request.getContextPath() + "/register.jsp?success=1");
+
+		} else {
+
+			request.setAttribute("error", "Registration failed. Email or phone may already exist.");
+
+			request.getRequestDispatcher("/register.jsp").forward(request, response);
+		}
+	}
+
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		response.sendRedirect(request.getContextPath() + "/register.jsp");
+	}
 }

@@ -1,8 +1,8 @@
 @charset "UTF-8";
 
-/* =====================================================
-   PAGE
-===================================================== */
+/* =========================================================
+   RESET
+========================================================= */
 * {
 	box-sizing: border-box;
 }
@@ -11,88 +11,85 @@ html, body {
 	margin: 0;
 	padding: 0;
 	width: 100%;
-	height: 100%;
+	min-height: 100%;
 	font-family: Arial, Helvetica, sans-serif;
 	background: #ffffff;
-	color: #333;
+	color: #333333;
 }
 
-/* =====================================================
+/* =========================================================
    HEADER
-===================================================== */
+========================================================= */
 .header {
-	height: 50px;
+	position: relative;
+	height: 60px;
 	width: 100%;
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
-	padding: 0 16px;
+	padding: 0 25px;
 	background: #ffffff;
 	border-bottom: 1px solid #eeeeee;
 }
 
-/* LOGO */
+/* =========================================================
+   LOGO
+========================================================= */
 .logo {
-	width: 250px;
 	display: flex;
 	align-items: center;
-	gap: 7px;
+	gap: 8px;
+	width: 250px;
 }
 
 .logo-icon {
-	width: 24px;
-	height: 21px;
+	width: 26px;
+	height: 22px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	background: #f84464;
-	border-radius: 4px;
-	position: relative;
-}
-
-.logo-icon:after {
-	content: "▶";
-	position: absolute;
 	color: white;
+	border-radius: 4px;
 	font-size: 9px;
-	left: 9px;
-	top: 5px;
 }
 
 .logo-text {
-	font-size: 18px;
+	font-size: 17px;
 	font-weight: bold;
-	color: #222;
+	color: #222222;
 }
 
-/* MOVIE */
+/* =========================================================
+   MOVIE INFO
+========================================================= */
 .movie-info {
-    flex: 1;
-    text-align: center;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	text-align: center;
 }
 
 .movie-info h2 {
 	margin: 0;
-	font-size: 25px;
-	font-weight: bold;
+	font-size: 20px;
+	color: #222222;
 }
 
 .movie-info p {
-	margin: 2px 0 0;
-	font-size: 16px;
-	color: #777;
+	margin: 4px 0 0;
+	font-size: 13px;
+	color: #777777;
 }
 
-/* =====================================================
+/* =========================================================
    SHOW BAR
-===================================================== */
+========================================================= */
 .show-bar {
-	height: 42px;
-	width: 100%;
+	height: 44px;
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
-	padding: 0 16px;
+	padding: 0 25px;
 	background: #fafafa;
 	border-bottom: 1px solid #eeeeee;
 }
@@ -100,180 +97,284 @@ html, body {
 .show-left {
 	display: flex;
 	align-items: center;
-	gap: 8px;
+	gap: 9px;
 }
 
 .calendar {
 	color: #6a35c9;
-	font-size: 18px;
+	font-size: 16px;
 }
 
 .date {
 	font-size: 12px;
 	font-weight: bold;
-	color: #555;
+	color: #555555;
 }
 
 .time {
-	height: 23px;
-	padding: 0 14px;
+	height: 25px;
+	padding: 0 13px;
 	display: flex;
 	align-items: center;
 	border: 1px solid #f84464;
-	border-radius: 4px;
+	border-radius: 5px;
 	color: #f84464;
 	font-size: 12px;
 	font-weight: bold;
 }
 
-
-/* =====================================================
-   MAIN SEAT AREA
-===================================================== */
+/* =========================================================
+   MAIN CONTAINER
+========================================================= */
 .container {
 	width: 100%;
-	padding: 16px 40px 90px 40px;
+	padding: 18px 15px 115px;
+	overflow-x: hidden;
 }
 
-/* =====================================================
-   SEAT SECTION
-===================================================== */
-.seat-section {
-	width: 100%;
-	margin-bottom: 20px;
-}
-
-/* =====================================================
-   TYPE TITLE
-===================================================== */
-.type-title {
+/* =========================================================
+   TITLE
+========================================================= */
+.seat-map-title {
 	text-align: center;
-	margin-bottom: 8px;
-	font-size: 14px;
-	font-weight: bold;
+	margin-bottom: 13px;
 	color: #32185f;
-	text-transform: uppercase;
-}
-
-/* =====================================================
-   ROW
-===================================================== */
-.row {
-	width: 100%;
-	height: 28px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	margin: 5px 0;
-	text-align: center;
-}
-
-/* =====================================================
-   ROW LETTER
-===================================================== */
-.row-name {
-	width: 25px;
-	margin-right: 5px;
-	text-align: center;
-	font-size: 12px;
-	color: #777;
-	
-}
-
-/* =====================================================
-   SEAT
-===================================================== */
-.seat {
-	width: 23px;
-	height: 24px;
-	margin: 0 3px;
-	padding: 0;
-	border-radius: 5px;
-	font-size: 12px;
-	font-family: Arial, sans-serif;
-}
-
-/* AVAILABLE */
-.seat.available {
-	border: 1px solid #987bd4;
-	color: #55339f;
-	background: #ffffff;
-	cursor: pointer;
-}
-
-.seat.available:hover {
-	background: #f2edff;
-}
-
-/* BOOKED */
-.seat.booked {
-	border: 1px solid #c0c0c0;
-	background: #d1d1d1;
-	color: white;
-	cursor: not-allowed;
-}
-
-/* SELECTED */
-.seat.selected {
-	border: 1px solid #6a35c9;
-	background: #6a35c9;
-	color: white;
-	cursor: pointer;
-}
-
-/* =====================================================
-   SCREEN
-===================================================== */
-.screen-area {
-	width: 100%;
-	margin-top: 24px;
-	text-align: center;
-}
-
-.screen {
-	width: 500px;
-	height: 25px;
-	margin: auto;
-	background: #c9b8f5;
-	border-radius: 50% 50% 10% 10%;
-	transform: perspective(150px) rotateX(7deg);
-	box-shadow: 0 5px 0 #b19bea, 0 7px 8px rgba(106, 53, 201, 0.12);
-}
-
-.screen-text {
-	margin-top: 14px;
-	color: #7452b5;
 	font-size: 13px;
 	font-weight: bold;
 }
 
-/* =====================================================
+/* =========================================================
+   CINEMA LAYOUT
+========================================================= */
+.cinema-layout {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+/* =========================================================
+   ROW
+========================================================= */
+.seat-row {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: max-content;
+	margin: 4px auto;
+
+	/*
+     * NO ROTATE
+     * NO SCALE
+     *
+     * Every row gets naturally wider
+     * because its center section contains
+     * one additional seat.
+     */
+}
+
+/* =========================================================
+   ROW LABEL
+========================================================= */
+.row-label {
+	width: 20px;
+	flex: 0 0 20px;
+	margin-right: 6px;
+	text-align: center;
+	font-size: 9px;
+	font-weight: bold;
+	color: #999999;
+}
+
+/* =========================================================
+   SEAT GROUP
+========================================================= */
+.seat-group {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	white-space: nowrap;
+}
+
+/* =========================================================
+   LEFT GROUP
+========================================================= */
+.left-group {
+	justify-content: flex-end;
+}
+
+/* =========================================================
+   CENTER GROUP
+========================================================= */
+.center-group {
+	justify-content: center;
+}
+
+/* =========================================================
+   RIGHT GROUP
+========================================================= */
+.right-group {
+	justify-content: flex-start;
+}
+
+/* =========================================================
+   AISLE
+========================================================= */
+.aisle {
+	width: 20px;
+	flex: 0 0 20px;
+}
+
+/* =========================================================
+   SEAT
+========================================================= */
+.seat {
+	width: 25px;
+	height: 23px;
+	flex: 0 0 25px;
+	padding: 0;
+	border: 1px solid #c0c0c0;
+	border-radius: 5px 5px 3px 3px;
+	font-size: 9px;
+	line-height: 21px;
+	font-family: Arial, Helvetica, sans-serif;
+	text-align: center;
+	background: #ffffff;
+	color: #333333;
+	transition: background 0.15s ease, border 0.15s ease, transform 0.15s
+		ease;
+}
+
+/* =========================================================
+   BOOKED
+========================================================= */
+.seat.booked {
+	background: #d1d1d1;
+	border: 1px solid #c0c0c0;
+	color: #ffffff;
+	cursor: not-allowed;
+}
+
+/* =========================================================
+   AVAILABLE (fallback if type is missing)
+========================================================= */
+.seat.available {
+	background: #ffffff;
+	border: 1px solid #987bd4;
+	color: #55339f;
+	cursor: pointer;
+}
+
+.seat.available:hover {
+	transform: translateY(-2px);
+	filter: brightness(0.95);
+}
+
+/* =========================================================
+   AVAILABLE BY TYPE
+   Colors match the legend swatches below.
+========================================================= */
+.seat.premium.available {
+	background: #ffffff;
+	border: 1px solid #2196F3;
+	color: #2196F3;
+}
+
+.seat.regular.available {
+	background: #ffffff;
+	border: 1px solid #4CAF50;
+	color: #4CAF50;
+}
+
+.seat.recliner.available {
+	background: #ffffff;
+	border: 1px solid #9C27B0;
+	color: #9C27B0;
+}
+
+/* =========================================================
+   SELECTED
+   Higher specificity than the type rules above so it always
+   wins once seat.js toggles this class, regardless of type.
+========================================================= */
+.seat.selected, .seat.selected.premium, .seat.selected.regular, .seat.selected.recliner
+	{
+	background: #6a35c9;
+	border-color: #6a35c9;
+	color: #ffffff;
+	transform: translateY(-2px);
+}
+
+/* =========================================================
+   SCREEN
+========================================================= */
+.screen-area {
+	width: 100%;
+	margin-top: 25px;
+	text-align: center;
+}
+
+.screen {
+	width: 430px;
+	max-width: 55vw;
+	height: 18px;
+	margin: auto;
+	background: #c9b8f5;
+	border-radius: 50% 50% 8% 8%;
+	box-shadow: 0 4px 0 #b19bea, 0 6px 8px rgba(106, 53, 201, 0.12);
+}
+
+.screen-text {
+	margin-top: 9px;
+	color: #7452b5;
+	font-size: 10px;
+	font-weight: bold;
+	letter-spacing: 0.5px;
+}
+
+/* =========================================================
    LEGEND
-===================================================== */
+========================================================= */
 .legend {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	gap: 22px;
-	margin-top: 18px;
-	font-size: 12px;
-	color: #555;
+	gap: 25px;
+	margin-top: 15px;
+	font-size: 11px;
+	color: #555555;
 }
 
 .legend-item {
 	display: flex;
 	align-items: center;
-	gap: 5px;
+	gap: 6px;
 }
 
 .legend-box {
-	width: 14px;
-	height: 14px;
+	width: 13px;
+	height: 13px;
 	border-radius: 3px;
 }
 
+.legend-premium {
+	background: #2196F3;
+	border: 1px solid #1976D2;
+}
+
+.legend-regular {
+	background: #4CAF50;
+	border: 1px solid #388E3C;
+}
+
+.legend-recliner {
+	background: #9C27B0;
+	border: 1px solid #7B1FA2;
+}
+
 .legend-available {
-	background: white;
+	background: #ffffff;
 	border: 1px solid #987bd4;
 }
 
@@ -284,67 +385,65 @@ html, body {
 
 .legend-selected {
 	background: #6a35c9;
+	border: 1px solid #6a35c9;
 }
 
-/* =====================================================
+/* =========================================================
    BOTTOM BAR
-===================================================== */
+========================================================= */
 .bottom {
 	position: fixed;
 	left: 0;
 	right: 0;
 	bottom: 0;
-	height: 70px;
-	background: white;
-	border-top: 1px solid #dddddd;
+	height: 72px;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	padding: 0 25px;
+	background: #ffffff;
+	border-top: 1px solid #dddddd;
 	z-index: 100;
 }
 
-/* LEFT */
 .bottom-left {
-	width: 220px;
+	width: 200px;
 }
 
 .count {
+	margin-bottom: 5px;
 	color: #6a35c9;
-	font-size: 12px;
-	margin-bottom: 7px;
+	font-size: 11px;
 }
 
 .total {
-	font-size: 14px;
+	font-size: 13px;
 	font-weight: bold;
 }
 
-/* CENTER */
 .bottom-center {
 	flex: 1;
 	text-align: center;
 }
 
 .selected-list {
-	font-size: 14px;
-	color: #555;
+	font-size: 12px;
+	color: #555555;
 }
 
-/* RIGHT */
 .bottom-right {
-	width: 220px;
+	width: 200px;
 	text-align: center;
 }
 
 .continue {
-	width: 170px;
-	height: 30px;
+	width: 160px;
+	height: 31px;
 	border: none;
 	border-radius: 5px;
 	background: #cfd0d8;
-	color: white;
-	font-size: 12px;
+	color: #ffffff;
+	font-size: 11px;
 	font-weight: bold;
 	cursor: not-allowed;
 }
@@ -355,29 +454,52 @@ html, body {
 }
 
 .continue-message {
-	margin-top: 5px;
-	font-size: 10px;
-	color: #999;
+	margin-top: 4px;
+	font-size: 9px;
+	color: #999999;
 }
 
-/* =====================================================
-   LANDSCAPE SCREEN
-===================================================== */
-@media screen and (min-width: 1000px) {
+/* =========================================================
+   ERROR
+========================================================= */
+.error-container {
+	height: 300px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* =========================================================
+   SMALLER DESKTOP
+========================================================= */
+@media screen and (max-width: 1100px) {
 	.seat {
 		width: 23px;
-		height: 24px;
-		margin-left: 3px;
-		margin-right: 3px;
+		flex-basis: 23px;
+		height: 21px;
+		font-size: 8px;
+	}
+	.seat-group {
+		gap: 3px;
+	}
+	.aisle {
+		width: 16px;
+		flex-basis: 16px;
+	}
+	.screen {
+		width: 380px;
 	}
 }
 
-/* =====================================================
-   SMALL SCREEN
-===================================================== */
-@media screen and (max-width: 800px) {
+/* =========================================================
+   MOBILE / SMALL SCREEN
+========================================================= */
+@media screen and (max-width: 850px) {
 	body {
-		min-width: 900px;
+		min-width: 850px;
 		overflow-x: auto;
+	}
+	.bottom {
+		min-width: 850px;
 	}
 }

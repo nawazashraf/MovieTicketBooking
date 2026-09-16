@@ -1,16 +1,14 @@
+<%@page import="com.movieticket.model.ShowBean"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
 <%@ page import="java.util.ArrayList"%>
+<%@ page import="java.util.LinkedHashMap"%>
+<%@ page import="java.util.Map"%>
+<%@ page import="java.util.List"%>
 <%@ page import="com.movieticket.model.SeatBean"%>
-<%@ page import="com.movieticket.model.ShowBean"%>
-
-
-
-
 
 <!DOCTYPE html>
-
 <html>
 
 <head>
@@ -22,12 +20,9 @@
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/assets/css/seat.css">
 
-
 </head>
 
-
 <body>
-
 
 	<%
 	ShowBean show = (ShowBean) request.getAttribute("show");
@@ -39,27 +34,69 @@
 	if (show == null) {
 	%>
 
-	<h2>Show not found</h2>
+	<div class="error-container">
+
+		<h2>Show not found</h2>
+
+	</div>
 
 	<%
-	return;
-	}
+	} else {
 
 	if (seats == null) {
-	seats = new ArrayList<SeatBean>();
+		seats = new ArrayList<SeatBean>();
 	}
+
+	/* =========================================================
+	   GROUP SEATS BY ROW
+	   ========================================================= */
+
+	LinkedHashMap<String, ArrayList<SeatBean>> rows = new LinkedHashMap<String, ArrayList<SeatBean>>();
+
+	for (SeatBean seat : seats) {
+
+		String row = seat.getRowName();
+
+		if (row == null || row.trim().isEmpty()) {
+			continue;
+		}
+
+		if (!rows.containsKey(row)) {
+
+			rows.put(row, new ArrayList<SeatBean>());
+
+		}
+
+		rows.get(row).add(seat);
+	}
+
+	/* =========================================================
+	   REVERSE ROW ORDER
+
+	   Database:
+	   A B C D E F G
+
+	   Display:
+	   G F E D C B A
+
+	   G = closest to screen
+	   A = farthest from screen
+	   ========================================================= */
+
+	List<Map.Entry<String, ArrayList<SeatBean>>> rowList = new ArrayList<Map.Entry<String, ArrayList<SeatBean>>>(
+			rows.entrySet());
 	%>
 
 
-	<!-- =====================================================
+	<!-- =========================================================
      HEADER
-===================================================== -->
+========================================================= -->
 
-	<div class="header">
+	<header class="header">
 
 		<div class="logo">
 
-			<div class="logo-icon"></div>
+			<div class="logo-icon">▶</div>
 
 			<div class="logo-text">Online Movie Tickets</div>
 
@@ -79,14 +116,12 @@
 
 		</div>
 
-
-	</div>
-
+	</header>
 
 
-	<!-- =====================================================
-     SHOW DATE / TIME
-===================================================== -->
+	<!-- =========================================================
+     SHOW BAR
+========================================================= -->
 
 	<div class="show-bar">
 
@@ -98,237 +133,386 @@
 
 		</div>
 
-
 	</div>
 
 
-
-	<!-- =====================================================
-     SEAT LAYOUT
-===================================================== -->
+	<!-- =========================================================
+     MAIN
+========================================================= -->
 
 	<div class="container">
 
 
-		<%
-		/*
-		 * These are the ACTUAL seat types
-		 * from your database.
-		 */
-
-		String[] seatTypes = { "PREMIUM", "RECLINER", "REGULAR" };
-
-		for (String currentType : seatTypes) {
-
-			// -----------------------------------------------------
-			// Check whether this seat type exists
-			// -----------------------------------------------------
-
-			boolean exists = false;
-
-			for (SeatBean seat : seats) {
-
-				if (seat.getTypeName().equalsIgnoreCase(currentType)) {
-
-			exists = true;
-			break;
-				}
-			}
-
-			if (!exists) {
-				continue;
-			}
-
-			// -----------------------------------------------------
-			// Display name
-			// -----------------------------------------------------
-
-			String displayType = currentType;
-		%>
+		<div class="seat-map-title">SELECT YOUR SEATS</div>
 
 
 		<!-- =====================================================
-     SEAT TYPE SECTION
-===================================================== -->
+	     SEAT LAYOUT
+	====================================================== -->
 
-		<div class="seat-section">
-
-
-			<div class="type-title">
-
-				<%=displayType%>
-
-				•
+		<div class="cinema-layout">
 
 
-				<%
-				// -------------------------------------------------
-				// Find price for this seat type
-				// -------------------------------------------------
+			<%
+			int rowNumber = 0;
 
-				boolean priceFound = false;
+			for (int i = rowList.size() - 1; i >= 0; i--) {
 
-				for (SeatBean seat : seats) {
+				rowNumber++;
 
-					if (seat.getTypeName().equalsIgnoreCase(currentType) && !priceFound) {
-				%>
+				Map.Entry<String, ArrayList<SeatBean>> entry = rowList.get(i);
 
-				₹<%=String.format("%.2f", seat.getPrice())%>
+				String rowName = entry.getKey();
 
-				<%
-				priceFound = true;
-				}
-				}
-				%>
+				ArrayList<SeatBean> rowSeats = entry.getValue();
+			%>
+
+
+			<!-- =================================================
+		     ROW
+		================================================== -->
+
+			<div class="seat-row row-<%=rowName%>">
+
+
+				<!-- =============================================
+			     ROW LABEL
+			============================================== -->
+
+				<div class="row-label">
+
+					<%=rowName%>
+
+				</div>
+
+
+				<!-- =============================================
+			     LEFT SECTION
+			============================================== -->
+
+				<div class="seat-group left-group">
+
+					<%
+					for (SeatBean seat : rowSeats) {
+
+						String section = seat.getSection();
+
+						if (section == null) {
+							section = "CENTER";
+						}
+
+						if (!section.equalsIgnoreCase("LEFT")) {
+							continue;
+						}
+
+						String status = seat.getStatus();
+
+						String showSeatId = seat.getShowSeatId();
+
+						String seatNumber = String.valueOf(seat.getSeatNumber());
+
+						String price = String.valueOf(seat.getPrice());
+
+						String type = seat.getTypeName();
+
+						String typeClass = "";
+
+						if (type != null) {
+							typeClass = type.toLowerCase().replace(" ", "-");
+						}
+
+						if ("BOOKED".equalsIgnoreCase(status)) {
+					%>
+
+					<button type="button" class="seat booked <%=typeClass%>" disabled>
+
+						<%=seatNumber%>
+
+					</button>
+
+					<%
+					} else if ("AVAILABLE".equalsIgnoreCase(status)) {
+					%>
+
+					<button type="button" class="seat available <%=typeClass%>"
+						id="<%=showSeatId%>" data-seat="<%=rowName + seatNumber%>"
+						data-price="<%=price%>" data-type="<%=type%>"
+						onclick="selectSeat(this)">
+
+						<%=seatNumber%>
+
+					</button>
+
+					<%
+					} else {
+					%>
+
+					<button type="button" class="seat booked <%=typeClass%>" disabled>
+
+						<%=seatNumber%>
+
+					</button>
+
+					<%
+					}
+
+					}
+					%>
+
+				</div>
+
+
+				<!-- =============================================
+			     AISLE
+			============================================== -->
+
+				<div class="aisle"></div>
+
+
+				<!-- =============================================
+			     CENTER SECTION
+			============================================== -->
+
+				<div class="seat-group center-group">
+
+					<%
+					for (SeatBean seat : rowSeats) {
+
+						String section = seat.getSection();
+
+						if (section == null) {
+							section = "CENTER";
+						}
+
+						if (!section.equalsIgnoreCase("CENTER")) {
+							continue;
+						}
+
+						String status = seat.getStatus();
+
+						String showSeatId = seat.getShowSeatId();
+
+						String seatNumber = String.valueOf(seat.getSeatNumber());
+
+						String price = String.valueOf(seat.getPrice());
+
+						String type = seat.getTypeName();
+
+						String typeClass = "";
+
+						if (type != null) {
+							typeClass = type.toLowerCase().replace(" ", "-");
+						}
+
+						if ("BOOKED".equalsIgnoreCase(status)) {
+					%>
+
+					<button type="button" class="seat booked <%=typeClass%>" disabled>
+
+						<%=seatNumber%>
+
+					</button>
+
+					<%
+					} else if ("AVAILABLE".equalsIgnoreCase(status)) {
+					%>
+
+					<button type="button" class="seat available <%=typeClass%>"
+						id="<%=showSeatId%>" data-seat="<%=rowName + seatNumber%>"
+						data-price="<%=price%>" data-type="<%=type%>"
+						onclick="selectSeat(this)">
+
+						<%=seatNumber%>
+
+					</button>
+
+					<%
+					} else {
+					%>
+
+					<button type="button" class="seat booked <%=typeClass%>" disabled>
+
+						<%=seatNumber%>
+
+					</button>
+
+					<%
+					}
+
+					}
+					%>
+
+				</div>
+
+
+				<!-- =============================================
+			     AISLE
+			============================================== -->
+
+				<div class="aisle"></div>
+
+
+				<!-- =============================================
+			     RIGHT SECTION
+			============================================== -->
+
+				<div class="seat-group right-group">
+
+					<%
+					for (SeatBean seat : rowSeats) {
+
+						String section = seat.getSection();
+
+						if (section == null) {
+							section = "CENTER";
+						}
+
+						if (!section.equalsIgnoreCase("RIGHT")) {
+							continue;
+						}
+
+						String status = seat.getStatus();
+
+						String showSeatId = seat.getShowSeatId();
+
+						String seatNumber = String.valueOf(seat.getSeatNumber());
+
+						String price = String.valueOf(seat.getPrice());
+
+						String type = seat.getTypeName();
+
+						String typeClass = "";
+
+						if (type != null) {
+							typeClass = type.toLowerCase().replace(" ", "-");
+						}
+
+						if ("BOOKED".equalsIgnoreCase(status)) {
+					%>
+
+					<button type="button" class="seat booked <%=typeClass%>" disabled>
+
+						<%=seatNumber%>
+
+					</button>
+
+					<%
+					} else if ("AVAILABLE".equalsIgnoreCase(status)) {
+					%>
+
+					<button type="button" class="seat available <%=typeClass%>"
+						id="<%=showSeatId%>" data-seat="<%=rowName + seatNumber%>"
+						data-price="<%=price%>" data-type="<%=type%>"
+						onclick="selectSeat(this)">
+
+						<%=seatNumber%>
+
+					</button>
+
+					<%
+					} else {
+					%>
+
+					<button type="button" class="seat booked <%=typeClass%>" disabled>
+
+						<%=seatNumber%>
+
+					</button>
+
+					<%
+					}
+
+					}
+					%>
+
+				</div>
+
 
 			</div>
 
 
 			<%
-			String currentRow = "";
-
-			// -----------------------------------------------------
-			// Display seats
-			// -----------------------------------------------------
-
-			for (SeatBean seat : seats) {
-
-				String type = seat.getTypeName();
-
-				// Only current seat type
-				if (!type.equalsIgnoreCase(currentType)) {
-					continue;
-				}
-
-				String row = seat.getRowName();
-
-				int number = seat.getSeatNumber();
-
-				String showSeatId = seat.getShowSeatId();
-
-				double price = seat.getPrice();
-
-				String status = seat.getStatus();
-
-				// -------------------------------------------------
-				// NEW ROW
-				// -------------------------------------------------
-
-				if (!row.equals(currentRow)) {
-
-					if (!currentRow.equals("")) {
+			}
 			%>
 
-		</div>
-
-		<%
-		}
-
-		currentRow = row;
-		%>
-
-		<div class="row">
-
-			<span class="row-name"> <%=row%>
-			</span>
-
-			<%
-			}
-
-			// -------------------------------------------------
-			// BOOKED
-			// -------------------------------------------------
-
-			if (status.equalsIgnoreCase("BOOKED")) {
-			%>
-
-			<button type="button" class="seat booked" disabled>
-
-				<%=number%>
-
-			</button>
-
-			<%
-			}
-
-			// -------------------------------------------------
-			// AVAILABLE
-			// -------------------------------------------------
-
-			else {
-			%>
-
-			<button type="button" class="seat available" id="<%=showSeatId%>"
-				data-seat="<%=row + number%>" data-price="<%=price%>"
-				onclick="selectSeat(this)">
-
-				<%=number%>
-
-			</button>
-
-			<%
-			}
-
-			}
-
-			// -----------------------------------------------------
-			// CLOSE LAST ROW
-			// -----------------------------------------------------
-
-			if (!currentRow.equals("")) {
-			%>
-
-		</div>
-
-		<%
-		}
-		%>
-
-	</div>
-
-	<%
-	}
-	%>
-
-
-	<!-- =====================================================
-     SCREEN
-===================================================== -->
-
-	<div class="screen-area">
-
-		<div class="screen"></div>
-
-		<div class="screen-text">SCREEN THIS WAY</div>
-
-	</div>
-
-
-
-	<!-- =====================================================
-     LEGEND
-===================================================== -->
-
-	<div class="legend">
-
-
-		<div class="legend-item">
-
-			<span class="legend-box legend-available"> </span> Available
 
 		</div>
 
 
-		<div class="legend-item">
+		<!-- =====================================================
+	     SCREEN
+	====================================================== -->
 
-			<span class="legend-box legend-occupied"> </span> Occupied
+		<div class="screen-area">
+
+			<div class="screen"></div>
+
+			<div class="screen-text">SCREEN THIS WAY</div>
 
 		</div>
 
 
-		<div class="legend-item">
+		<!-- =====================================================
+	     SEAT CATEGORY + STATUS LEGEND
+	     BELOW SCREEN
+	====================================================== -->
 
-			<span class="legend-box legend-selected"> </span> Selected
+		<div class="legend">
+
+
+			<!-- PREMIUM -->
+
+			<div class="legend-item">
+
+				<span class="legend-box legend-premium"> </span> Premium ₹250
+
+			</div>
+
+
+			<!-- REGULAR -->
+
+			<div class="legend-item">
+
+				<span class="legend-box legend-regular"> </span> Regular ₹150
+
+			</div>
+
+
+			<!-- RECLINER -->
+
+			<div class="legend-item">
+
+				<span class="legend-box legend-recliner"> </span> Recliner ₹350
+
+			</div>
+
+
+			<!-- AVAILABLE -->
+
+			<div class="legend-item">
+
+				<span class="legend-box legend-available"></span> Available
+
+			</div>
+
+
+			<!-- OCCUPIED -->
+
+			<div class="legend-item">
+
+				<span class="legend-box legend-occupied"></span> Occupied
+
+			</div>
+
+
+			<!-- SELECTED -->
+
+			<div class="legend-item">
+
+				<span class="legend-box legend-selected"></span> Selected
+
+			</div>
+
 
 		</div>
 
@@ -336,10 +520,9 @@
 	</div>
 
 
-
-	<!-- =====================================================
+	<!-- =========================================================
      BOTTOM BAR
-===================================================== -->
+========================================================= -->
 
 	<div class="bottom">
 
@@ -364,7 +547,6 @@
 		</div>
 
 
-
 		<div class="bottom-center">
 
 			<div class="selected-list" id="selectedText">No seats selected
@@ -372,7 +554,6 @@
 			</div>
 
 		</div>
-
 
 
 		<div class="bottom-right">
@@ -400,12 +581,18 @@
 
 		</div>
 
+
 	</div>
 
 
+	<script src="${pageContext.request.contextPath}/assets/js/seat.js">
+		
+	</script>
 
-	<script src="${pageContext.request.contextPath}/assets/js/seat.js"></script>
 
+	<%
+	}
+	%>
 
 </body>
 

@@ -429,6 +429,277 @@ body {
 }
 
 /* ========================================
+   EMAIL VERIFICATION
+======================================== */
+.email-verification-row {
+	width: 100%;
+	display: flex;
+	align-items: stretch;
+	gap: 8px;
+}
+
+.email-input-wrapper {
+	flex: 1;
+	min-width: 0;
+}
+
+.verify-email-button {
+	width: 125px;
+	flex-shrink: 0;
+	border: 1px solid #e50914;
+	border-radius: 7px;
+	background: #ffffff;
+	color: #e50914;
+	font-size: 11px;
+	font-weight: 700;
+	cursor: pointer;
+	transition: background 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+}
+
+.verify-email-button:hover:not(:disabled) {
+	background: #e50914;
+	color: #ffffff;
+}
+
+.verify-email-button:disabled {
+	opacity: 0.45;
+	cursor: not-allowed;
+}
+
+/* ========================================
+   OTP TRAY
+======================================== */
+.otp-tray {
+	display: none;
+	width: 100%;
+	margin-top: 12px;
+	padding: 15px;
+	border: 1px solid #e2e4e8;
+	border-radius: 9px;
+	background: #fafafa;
+	text-align: left;
+	animation: otpSlideDown 0.25s ease;
+}
+
+.otp-tray.active {
+	display: block;
+}
+
+/* ========================================
+   OTP HEADER
+======================================== */
+.otp-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	margin-bottom: 12px;
+}
+
+.otp-header strong {
+	display: block;
+	color: #222222;
+	font-size: 12px;
+}
+
+.otp-header small {
+	display: block;
+	margin-top: 4px;
+	color: #888888;
+	font-size: 10px;
+	line-height: 1.4;
+}
+
+.otp-verified-icon {
+	display: none;
+	width: 24px;
+	height: 24px;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+	background: #12b76a;
+	color: #ffffff;
+	font-size: 13px;
+	font-weight: bold;
+}
+
+.otp-verified-icon.active {
+	display: flex;
+}
+
+/* ========================================
+   OTP INPUT
+======================================== */
+.otp-input-row {
+	display: flex;
+	align-items: stretch;
+	gap: 8px;
+}
+
+#otp {
+	width: 100%;
+	height: 42px;
+	flex: 1;
+	min-width: 0;
+	padding: 0 12px;
+	border: 1px solid #d8dadd;
+	border-radius: 7px;
+	outline: none;
+	background: #ffffff;
+	color: #222222;
+	font-size: 16px;
+	font-weight: 700;
+	letter-spacing: 6px;
+	text-align: center;
+}
+
+#otp:focus {
+	border-color: #e50914;
+	box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.07);
+}
+
+.verify-otp-button {
+	width: 90px;
+	flex-shrink: 0;
+	border: none;
+	border-radius: 7px;
+	background: #222222;
+	color: #ffffff;
+	font-size: 11px;
+	font-weight: 700;
+	cursor: pointer;
+	transition: background 0.2s ease;
+}
+
+.verify-otp-button:hover:not(:disabled) {
+	background: #000000;
+}
+
+.verify-otp-button:disabled {
+	opacity: 0.45;
+	cursor: not-allowed;
+}
+
+/* ========================================
+   OTP MESSAGE
+======================================== */
+.otp-message {
+	min-height: 17px;
+	margin-top: 7px;
+	font-size: 10px;
+	font-weight: 600;
+}
+
+.otp-message.success {
+	color: #16803c;
+}
+
+.otp-message.error {
+	color: #e50914;
+}
+
+/* ========================================
+   RESEND
+======================================== */
+.resend-area {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	margin-top: 8px;
+	padding-top: 10px;
+	border-top: 1px solid #eeeeee;
+}
+
+#resendText {
+	color: #999999;
+	font-size: 10px;
+}
+
+#resendOtpButton {
+	padding: 0;
+	border: none;
+	background: transparent;
+	color: #e50914;
+	font-size: 10px;
+	font-weight: 700;
+	cursor: pointer;
+}
+
+#resendOtpButton:disabled {
+	color: #aaaaaa;
+	cursor: not-allowed;
+}
+
+/* ========================================
+   VERIFIED EMAIL
+======================================== */
+.email-input-wrapper.email-verified {
+	border-color: #12b76a;
+	background: #f4fff8;
+}
+
+.email-input-wrapper.email-verified input {
+	color: #16803c;
+}
+
+.email-verified-button {
+	border-color: #12b76a !important;
+	background: #12b76a !important;
+	color: #ffffff !important;
+	cursor: default !important;
+	opacity: 1 !important;
+}
+
+/* ========================================
+   REGISTER BUTTON
+======================================== */
+.register-button:disabled {
+	opacity: 0.45;
+	cursor: not-allowed;
+	box-shadow: none;
+}
+
+/* ========================================
+   ANIMATION
+======================================== */
+@
+keyframes otpSlideDown {from { opacity:0;
+	transform: translateY(-8px);
+}
+
+to {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+}
+
+/* ========================================
+   MOBILE
+======================================== */
+@media ( max-width : 500px) {
+	.email-verification-row {
+		flex-direction: column;
+	}
+	.verify-email-button {
+		width: 100%;
+		height: 42px;
+	}
+	.otp-input-row {
+		flex-direction: column;
+	}
+	.verify-otp-button {
+		width: 100%;
+		height: 42px;
+	}
+	.resend-area {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+}
+
+/* ========================================
    SPINNER
 ======================================== */
 .register-spinner {
@@ -443,7 +714,7 @@ body {
 	animation: registerSpin 0.7s linear infinite;
 }
 
-
+@
 keyframes registerSpin {to { transform:rotate(360deg);
 	
 }
@@ -641,7 +912,7 @@ keyframes registerSpin {to { transform:rotate(360deg);
 	background: #c70812;
 }
 
-
+@
 keyframes successPopup {from { opacity:0;
 	transform: scale(0.92);
 }

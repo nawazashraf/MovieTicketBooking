@@ -165,20 +165,73 @@
 
 
 						<!-- EMAIL -->
-
 						<div class="form-group">
 
 							<label for="email"> Email address </label>
 
-							<div class="input-wrapper">
+							<div class="email-verification-row">
 
-								<span class="input-icon"> @ </span> <input type="email"
-									id="email" name="email" placeholder="you@example.com"
-									autocomplete="email" required>
+								<div class="input-wrapper email-input-wrapper">
+
+									<span class="input-icon"> @ </span> <input type="email"
+										id="email" name="email" placeholder="you@example.com"
+										autocomplete="email" required>
+
+								</div>
+
+								<button type="button" id="verifyEmailButton"
+									class="verify-email-button" disabled>Verify Email</button>
 
 							</div>
 
 							<span id="emailError" class="field-error"> </span>
+
+
+							<!-- OTP TRAY -->
+
+							<div id="otpTray" class="otp-tray">
+
+								<div class="otp-header">
+
+									<div>
+
+										<strong> Verify your email </strong> <small> Enter the
+											4-digit code sent to your email. </small>
+
+									</div>
+
+									<span id="otpVerifiedIcon" class="otp-verified-icon"> ✓
+									</span>
+
+								</div>
+
+
+								<div class="otp-input-row">
+
+									<input type="text" id="otp" name="otp" maxlength="4"
+										inputmode="numeric" autocomplete="one-time-code"
+										placeholder="0000">
+
+									<button type="button" id="verifyOtpButton"
+										class="verify-otp-button">Verify</button>
+
+								</div>
+
+
+								<div id="otpMessage" class="otp-message"></div>
+
+
+								<div id="resendArea" class="resend-area">
+
+									<span id="resendText"> Resend available in 1s </span>
+
+									<button type="button" id="resendOtpButton" disabled>
+
+										Resend Verification Code</button>
+
+								</div>
+
+							</div>
 
 						</div>
 
@@ -244,9 +297,10 @@
 
 						<!-- REGISTER BUTTON -->
 
-						<button type="submit" id="registerButton" class="register-button">
+						<button type="submit" id="registerButton" class="register-button"
+							disabled>
 
-							<span id="buttonText"> Create account </span>
+							<span id="buttonText"> Verify Email to Continue </span>
 
 						</button>
 

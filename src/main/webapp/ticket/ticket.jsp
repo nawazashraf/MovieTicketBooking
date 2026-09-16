@@ -34,10 +34,14 @@ TicketBean ticket = (TicketBean) request.getAttribute("ticket");
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/assets/css/ticket.css">
 
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/assets/css/common.css">
+
 </head>
 
 <body>
 
+	<%@ include file="/common/navbar.jsp"%>
 	<div class="ticket">
 
 		<!-- HEADER -->
@@ -209,7 +213,7 @@ TicketBean ticket = (TicketBean) request.getAttribute("ticket");
 
 			</div>
 		</div>
-		
+
 
 
 

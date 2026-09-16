@@ -14,100 +14,162 @@ import java.io.IOException;
 @WebServlet("/changepassword")
 public class ChangePasswordServlet extends HttpServlet {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private UserDAO userDAO;
+	private UserDAO userDAO;
 
-    @Override
-    public void init() {
-        userDAO = new UserDAO();
-    }
+	@Override
+	public void init() {
 
-    @Override
-    protected void doGet(HttpServletRequest request,
-                          HttpServletResponse response)
-            throws ServletException, IOException {
+		userDAO = new UserDAO();
+	}
 
-        HttpSession session = request.getSession(false);
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
-        if (session == null || session.getAttribute("userId") == null) {
-            response.sendRedirect(
-                request.getContextPath() + "/login.jsp"
-            );
-            return;
-        }
+		HttpSession session = request.getSession(false);
 
-        request.getRequestDispatcher("/changepassword.jsp")
-               .forward(request, response);
-    }
+		/*
+		 * Forgot password flow
+		 */
+		if (session != null && session.getAttribute("forgotUserId") != null) {
 
-    @Override
-    protected void doPost(HttpServletRequest request,
-                           HttpServletResponse response)
-            throws ServletException, IOException {
+			request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
 
-        HttpSession session = request.getSession(false);
+			return;
+		}
 
-        if (session == null || session.getAttribute("userId") == null) {
-            response.sendRedirect(
-                request.getContextPath() + "/login.jsp"
-            );
-            return;
-        }
+		/*
+		 * Normal logged-in change password flow
+		 */
+		if (session == null || session.getAttribute("userId") == null) {
 
-        String userId = (String) session.getAttribute("userId");
+			response.sendRedirect(request.getContextPath() + "/login.jsp");
 
-        String currentPassword = request.getParameter("currentPassword");
-        String newPassword = request.getParameter("newPassword");
-        String confirmPassword = request.getParameter("confirmPassword");
+			return;
+		}
 
-        if (currentPassword == null ||
-            newPassword == null ||
-            confirmPassword == null ||
-            currentPassword.isEmpty() ||
-            newPassword.isEmpty() ||
-            confirmPassword.isEmpty()) {
+		request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
+	}
 
-            request.setAttribute("error", "All fields are required.");
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
-            request.getRequestDispatcher("/changepassword.jsp")
-                   .forward(request, response);
-            return;
-        }
+		HttpSession session = request.getSession(false);
 
-        if (!newPassword.equals(confirmPassword)) {
+		/*
+		 * ========================================= FORGOT PASSWORD FLOW
+		 * =========================================
+		 */
 
-            request.setAttribute(
-                "error",
-                "New password and confirm password do not match."
-            );
+		if (session != null && session.getAttribute("forgotUserId") != null) {
 
-            request.getRequestDispatcher("/changepassword.jsp")
-                   .forward(request, response);
-            return;
-        }
+			String userId = (String) session.getAttribute("forgotUserId");
 
-        boolean changed = userDAO.changePassword(
-            userId,
-            currentPassword,
-            newPassword
-        );
+			String newPassword = request.getParameter("newPassword");
 
-        if (changed) {
+			String confirmPassword = request.getParameter("confirmPassword");
 
-            response.sendRedirect(
-                request.getContextPath() + "/profile"
-            );
+			if (newPassword == null || confirmPassword == null || newPassword.isEmpty() || confirmPassword.isEmpty()) {
 
-        } else {
+				request.setAttribute("error", "All fields are required.");
 
-            request.setAttribute(
-                "error",
-                "Current password is incorrect."
-            );
+				request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
 
-            request.getRequestDispatcher("/changepassword.jsp")
-                   .forward(request, response);
-        }
-    }
+				return;
+			}
+
+			if (!newPassword.equals(confirmPassword)) {
+
+				request.setAttribute("error", "New password and confirm password do not match.");
+
+				request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
+
+				return;
+			}
+
+			if (newPassword.length() < 6) {
+
+				request.setAttribute("error", "Password must be at least 6 characters.");
+
+				request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
+
+				return;
+			}
+
+			boolean changed = userDAO.resetPassword(userId, newPassword);
+
+			if (changed) {
+
+				session.removeAttribute("forgotUserId");
+				session.removeAttribute("forgotUserEmail");
+
+				request.setAttribute("resetSuccess", "Your password has been changed successfully.");
+
+				request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
+
+			} else {
+
+				request.setAttribute("error", "Password reset failed. Please try again.");
+
+				request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
+			}
+
+			return;
+		}
+
+		/*
+		 * ========================================= NORMAL CHANGE PASSWORD FLOW
+		 * =========================================
+		 */
+
+		if (session == null || session.getAttribute("userId") == null) {
+
+			response.sendRedirect(request.getContextPath() + "/login.jsp");
+
+			return;
+		}
+
+		String userId = (String) session.getAttribute("userId");
+
+		String currentPassword = request.getParameter("currentPassword");
+
+		String newPassword = request.getParameter("newPassword");
+
+		String confirmPassword = request.getParameter("confirmPassword");
+
+		if (currentPassword == null || newPassword == null || confirmPassword == null || currentPassword.isEmpty()
+				|| newPassword.isEmpty() || confirmPassword.isEmpty()) {
+
+			request.setAttribute("error", "All fields are required.");
+
+			request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
+
+			return;
+		}
+
+		if (!newPassword.equals(confirmPassword)) {
+
+			request.setAttribute("error", "New password and confirm password do not match.");
+
+			request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
+
+			return;
+		}
+
+		boolean changed = userDAO.changePassword(userId, currentPassword, newPassword);
+
+		if (changed) {
+
+			response.sendRedirect(request.getContextPath() + "/profile");
+
+		} else {
+
+			request.setAttribute("error", "Current password is incorrect.");
+
+			request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
+		}
+	}
 }

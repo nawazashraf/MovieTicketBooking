@@ -15,62 +15,70 @@ import java.io.IOException;
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private UserDAO userDAO;
+	private UserDAO userDAO;
 
-    @Override
-    public void init() {
-        userDAO = new UserDAO();
-    }
+	@Override
+	public void init() {
 
-    @Override
-    protected void doPost(HttpServletRequest request,
-                          HttpServletResponse response)
-            throws ServletException, IOException {
+		userDAO = new UserDAO();
 
-        // Get login details from the form
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
+	}
 
-        // Check user in database
-        UserBean user = userDAO.loginUser(email, password);
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
-        if (user != null) {
+		// Get login details from the form
 
-            // Create session
-            HttpSession session = request.getSession();
+		String email = request.getParameter("email");
 
-            session.setAttribute("user", user);
-            session.setAttribute("userId", user.getId());
-            session.setAttribute("userName", user.getName());
-            session.setAttribute("userRole", user.getRole());
+		String password = request.getParameter("password");
 
-            // Login successful
-            response.sendRedirect(
-                request.getContextPath() + "/home"
-            );
+		// Check user in database
 
-        } else {
+		UserBean user = userDAO.loginUser(email, password);
 
-            // Login failed
-            request.setAttribute(
-                "error",
-                "Invalid email or password."
-            );
+		if (user != null) {
 
-            request.getRequestDispatcher("/login.jsp")
-                   .forward(request, response);
-        }
-    }
+			// Create session
 
-    @Override
-    protected void doGet(HttpServletRequest request,
-                         HttpServletResponse response)
-            throws ServletException, IOException {
+			HttpSession session = request.getSession();
 
-        response.sendRedirect(
-            request.getContextPath() + "/login.jsp"
-        );
-    }
+			session.setAttribute("user", user);
+
+			session.setAttribute("userId", user.getId());
+
+			session.setAttribute("userName", user.getName());
+
+			session.setAttribute("userRole", user.getRole());
+
+			// Login successful
+
+			response.sendRedirect(request.getContextPath() + "/home");
+
+		} else {
+
+			// Login failed
+
+			request.setAttribute("error", "Invalid email or password.");
+
+			// ========================================
+			// FORGOT PASSWORD LINK AFTER FIRST FAILURE
+			// ========================================
+
+			request.setAttribute("showForgotPassword", true);
+
+			request.getRequestDispatcher("/login.jsp").forward(request, response);
+		}
+	}
+
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		response.sendRedirect(request.getContextPath() + "/login.jsp");
+	}
+
 }

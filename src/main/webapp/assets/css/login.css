@@ -329,6 +329,25 @@ body {
 	font-size: 11px;
 }
 
+/* ========================================
+   FORGOT PASSWORD
+======================================== */
+.forgot-password-area {
+	margin-top: 14px;
+	text-align: center;
+}
+
+.forgot-password-area a {
+	color: #e50914;
+	font-size: 12px;
+	font-weight: 700;
+	text-decoration: none;
+}
+
+.forgot-password-area a:hover {
+	text-decoration: underline;
+}
+
 /* ================================
            TABLET
            ================================ */

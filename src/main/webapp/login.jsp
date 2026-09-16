@@ -162,6 +162,22 @@
 					<!-- LOGIN -->
 
 					<button type="submit" class="login-button">Sign in</button>
+					<%
+					Boolean showForgotPassword = (Boolean) request.getAttribute("showForgotPassword");
+
+					if (Boolean.TRUE.equals(showForgotPassword)) {
+					%>
+
+					<div class="forgot-password-area">
+
+						<a href="${pageContext.request.contextPath}/forgotpassword.jsp">
+							Forgot your password? </a>
+
+					</div>
+
+					<%
+					}
+					%>
 
 
 				</form>

@@ -1,54 +1,238 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
+
+<%
+Boolean forgotPassword = session.getAttribute("forgotUserId") != null;
+%>
 
 <!DOCTYPE html>
-<html>
+
+<html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Change Password</title>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title><%=forgotPassword ? "Reset Password" : "Change Password"%>
+	| MovieBook</title>
+
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/assets/css/changepassword.css">
+
 </head>
 
 <body>
 
-    <h2>Change Password</h2>
+	<%
+	String resetSuccess = (String) request.getAttribute("resetSuccess");
 
-    <%
-        String error = (String) request.getAttribute("error");
+	if (resetSuccess != null) {
+	%>
 
-        if (error != null) {
-    %>
-        <p><%= error %></p>
-    <%
-        }
-    %>
+	<div class="success-overlay">
 
-    <form action="${pageContext.request.contextPath}/changepassword"
-          method="post">
+		<div class="success-popup">
 
-        <label>Current Password:</label>
-        <input type="password" name="currentPassword" required>
+			<div class="success-icon">✓</div>
 
-        <br><br>
+			<h2>Password Changed Successfully</h2>
 
-        <label>New Password:</label>
-        <input type="password" name="newPassword" required>
+			<p>Your password has been updated successfully.</p>
 
-        <br><br>
+			<a href="${pageContext.request.contextPath}/login.jsp"
+				class="login-button"> Go to Login </a>
 
-        <label>Confirm New Password:</label>
-        <input type="password" name="confirmPassword" required>
+		</div>
 
-        <br><br>
+	</div>
 
-        <button type="submit">Change Password</button>
+	<%
+	}
+	%>
 
-    </form>
+	<main class="password-page">
 
-    <br>
+		<div class="password-card">
 
-    <a href="${pageContext.request.contextPath}/profile">
-        Back to Profile
-    </a>
+
+			<div class="brand">
+
+				<div class="brand-logo">M</div>
+
+				<span class="brand-name"> MovieBook </span>
+
+			</div>
+
+
+			<div class="password-icon">🔐</div>
+
+
+			<div class="password-header">
+
+				<h1>
+
+					<%=forgotPassword ? "Reset Password" : "Change Password"%>
+
+				</h1>
+
+				<p>
+
+					<%=forgotPassword ? "Create a new password for your account." : "Update your account password securely."%>
+
+				</p>
+
+			</div>
+
+
+			<%
+			String error = (String) request.getAttribute("error");
+
+			if (error != null) {
+			%>
+
+			<div class="error-message">
+
+				<span class="error-icon"> ! </span> <span> <%=error%>
+				</span>
+
+			</div>
+
+			<%
+			}
+			%>
+
+
+			<form id="passwordForm"
+				action="${pageContext.request.contextPath}/changepassword"
+				method="post">
+
+
+				<%
+				if (!forgotPassword) {
+				%>
+
+				<div class="form-group">
+
+					<label for="currentPassword"> Current Password </label>
+
+					<div class="password-wrapper">
+
+						<input type="password" id="currentPassword" name="currentPassword"
+							placeholder="Enter current password" required>
+
+						<button type="button" class="show-password"
+							onclick="togglePassword(
+                                'currentPassword',
+                                this
+                            )">
+
+							Show</button>
+
+					</div>
+
+				</div>
+
+				<%
+				}
+				%>
+
+
+				<div class="form-group">
+
+					<label for="newPassword"> New Password </label>
+
+					<div class="password-wrapper">
+
+						<input type="password" id="newPassword" name="newPassword"
+							placeholder="Enter new password" autocomplete="new-password"
+							required>
+
+						<button type="button" class="show-password"
+							onclick="togglePassword(
+                                'newPassword',
+                                this
+                            )">
+
+							Show</button>
+
+					</div>
+
+
+					<div class="password-strength">
+
+						<div class="strength-bar">
+
+							<span id="strengthBar"></span>
+
+						</div>
+
+						<span id="strengthText"> Enter a password </span>
+
+					</div>
+
+				</div>
+
+
+				<div class="form-group">
+
+					<label for="confirmPassword"> Confirm New Password </label>
+
+					<div class="password-wrapper">
+
+						<input type="password" id="confirmPassword" name="confirmPassword"
+							placeholder="Confirm new password" autocomplete="new-password"
+							required>
+
+						<button type="button" class="show-password"
+							onclick="togglePassword(
+                                'confirmPassword',
+                                this
+                            )">
+
+							Show</button>
+
+					</div>
+
+
+					<div id="matchMessage" class="match-message"></div>
+
+				</div>
+
+
+				<button type="submit" class="password-button">
+
+					<%=forgotPassword ? "Reset Password" : "Change Password"%>
+
+				</button>
+
+
+			</form>
+
+
+			<div class="back-login">
+
+				<a href="${pageContext.request.contextPath}/login.jsp"> ← Back
+					to Login </a>
+
+			</div>
+
+
+			<div class="security">🔒 Your account information is securely
+				handled.</div>
+
+
+		</div>
+
+	</main>
+
+
+	<script
+		src="${pageContext.request.contextPath}/assets/js/changepassword.js">
+		
+	</script>
 
 </body>
+
 </html>

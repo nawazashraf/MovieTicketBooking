@@ -12,187 +12,217 @@ import java.util.UUID;
 
 public class UserDAO {
 
-    // Register a new user
-    public boolean registerUser(UserBean user) {
+	// Register a new user
 
-        String sql = "INSERT INTO users "
-                   + "(id, name, email, password, phone, role, status) "
-                   + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+	public boolean registerUser(UserBean user) {
 
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+		String sql = "INSERT INTO users " + "(id, name, email, password, phone, role, status) "
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-            statement.setString(1, UUID.randomUUID().toString());
-            statement.setString(2, user.getName());
-            statement.setString(3, user.getEmail());
-            statement.setString(4, user.getPassword());
-            statement.setString(5, user.getPhone());
-            statement.setString(6, user.getRole());
-            statement.setBoolean(7, true);
+		try (Connection connection = DBConnection.getConnection();
+				PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            return statement.executeUpdate() > 0;
+			statement.setString(1, UUID.randomUUID().toString());
+			statement.setString(2, user.getName());
+			statement.setString(3, user.getEmail());
+			statement.setString(4, user.getPassword());
+			statement.setString(5, user.getPhone());
+			statement.setString(6, user.getRole());
+			statement.setBoolean(7, true);
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+			return statement.executeUpdate() > 0;
 
+		} catch (SQLException e) {
 
-    // Login user using email and password
-    public UserBean loginUser(String email, String password) {
+			e.printStackTrace();
 
-        String sql = "SELECT * FROM users "
-                   + "WHERE email = ? AND password = ? AND status = TRUE";
+			return false;
+		}
+	}
 
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+	// Login user using email and password
 
-            statement.setString(1, email);
-            statement.setString(2, password);
+	public UserBean loginUser(String email, String password) {
 
-            ResultSet resultSet = statement.executeQuery();
+		String sql = "SELECT * FROM users " + "WHERE email = ? AND password = ? AND status = TRUE";
 
-            if (resultSet.next()) {
+		try (Connection connection = DBConnection.getConnection();
+				PreparedStatement statement = connection.prepareStatement(sql)) {
 
-                UserBean user = new UserBean();
+			statement.setString(1, email);
+			statement.setString(2, password);
 
-                user.setId(resultSet.getString("id"));
-                user.setName(resultSet.getString("name"));
-                user.setEmail(resultSet.getString("email"));
-                user.setPassword(resultSet.getString("password"));
-                user.setPhone(resultSet.getString("phone"));
-                user.setRole(resultSet.getString("role"));
-                user.setStatus(resultSet.getBoolean("status"));
+			ResultSet resultSet = statement.executeQuery();
 
-                Timestamp createdAt = resultSet.getTimestamp("created_at");
-                user.setCreatedAt(createdAt);
+			if (resultSet.next()) {
 
-                return user;
-            }
+				UserBean user = new UserBean();
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+				user.setId(resultSet.getString("id"));
+				user.setName(resultSet.getString("name"));
+				user.setEmail(resultSet.getString("email"));
+				user.setPassword(resultSet.getString("password"));
+				user.setPhone(resultSet.getString("phone"));
+				user.setRole(resultSet.getString("role"));
+				user.setStatus(resultSet.getBoolean("status"));
 
-        return null;
-    }
+				Timestamp createdAt = resultSet.getTimestamp("created_at");
 
+				user.setCreatedAt(createdAt);
 
-    // Find user using ID
-    public UserBean getUserById(String id) {
+				return user;
+			}
 
-        String sql = "SELECT * FROM users WHERE id = ?";
+		} catch (SQLException e) {
 
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+			e.printStackTrace();
+		}
 
-            statement.setString(1, id);
+		return null;
+	}
 
-            ResultSet resultSet = statement.executeQuery();
+	// Find user using ID
 
-            if (resultSet.next()) {
+	public UserBean getUserById(String id) {
 
-                UserBean user = new UserBean();
+		String sql = "SELECT * FROM users WHERE id = ?";
 
-                user.setId(resultSet.getString("id"));
-                user.setName(resultSet.getString("name"));
-                user.setEmail(resultSet.getString("email"));
-                user.setPassword(resultSet.getString("password"));
-                user.setPhone(resultSet.getString("phone"));
-                user.setRole(resultSet.getString("role"));
-                user.setStatus(resultSet.getBoolean("status"));
-                user.setCreatedAt(resultSet.getTimestamp("created_at"));
+		try (Connection connection = DBConnection.getConnection();
+				PreparedStatement statement = connection.prepareStatement(sql)) {
 
-                return user;
-            }
+			statement.setString(1, id);
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+			ResultSet resultSet = statement.executeQuery();
 
-        return null;
-    }
+			if (resultSet.next()) {
 
+				UserBean user = new UserBean();
 
-    // Find user using email
-    public UserBean getUserByEmail(String email) {
+				user.setId(resultSet.getString("id"));
+				user.setName(resultSet.getString("name"));
+				user.setEmail(resultSet.getString("email"));
+				user.setPassword(resultSet.getString("password"));
+				user.setPhone(resultSet.getString("phone"));
+				user.setRole(resultSet.getString("role"));
+				user.setStatus(resultSet.getBoolean("status"));
 
-        String sql = "SELECT * FROM users WHERE email = ?";
+				user.setCreatedAt(resultSet.getTimestamp("created_at"));
 
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+				return user;
+			}
 
-            statement.setString(1, email);
+		} catch (SQLException e) {
 
-            ResultSet resultSet = statement.executeQuery();
+			e.printStackTrace();
+		}
 
-            if (resultSet.next()) {
+		return null;
+	}
 
-                UserBean user = new UserBean();
+	// Find user using email
 
-                user.setId(resultSet.getString("id"));
-                user.setName(resultSet.getString("name"));
-                user.setEmail(resultSet.getString("email"));
-                user.setPassword(resultSet.getString("password"));
-                user.setPhone(resultSet.getString("phone"));
-                user.setRole(resultSet.getString("role"));
-                user.setStatus(resultSet.getBoolean("status"));
-                user.setCreatedAt(resultSet.getTimestamp("created_at"));
+	public UserBean getUserByEmail(String email) {
 
-                return user;
-            }
+		String sql = "SELECT * FROM users WHERE email = ?";
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+		try (Connection connection = DBConnection.getConnection();
+				PreparedStatement statement = connection.prepareStatement(sql)) {
 
-        return null;
-    }
+			statement.setString(1, email);
 
+			ResultSet resultSet = statement.executeQuery();
 
-    // Update password
-    public boolean changePassword(String id, String currentPassword, String newPassword) {
+			if (resultSet.next()) {
 
-        String sql = "UPDATE users SET password = ? "
-                   + "WHERE id = ? AND password = ?";
+				UserBean user = new UserBean();
 
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+				user.setId(resultSet.getString("id"));
+				user.setName(resultSet.getString("name"));
+				user.setEmail(resultSet.getString("email"));
+				user.setPassword(resultSet.getString("password"));
+				user.setPhone(resultSet.getString("phone"));
+				user.setRole(resultSet.getString("role"));
+				user.setStatus(resultSet.getBoolean("status"));
 
-            statement.setString(1, newPassword);
-            statement.setString(2, id);
-            statement.setString(3, currentPassword);
+				user.setCreatedAt(resultSet.getTimestamp("created_at"));
 
-            return statement.executeUpdate() > 0;
+				return user;
+			}
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+		} catch (SQLException e) {
 
+			e.printStackTrace();
+		}
 
-    // Update user profile
-    public boolean updateProfile(String id, String name, String email, String phone) {
+		return null;
+	}
 
-        String sql = "UPDATE users "
-                   + "SET name = ?, email = ?, phone = ? "
-                   + "WHERE id = ?";
+	// Update password
 
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+	public boolean changePassword(String id, String currentPassword, String newPassword) {
 
-            statement.setString(1, name);
-            statement.setString(2, email);
-            statement.setString(3, phone);
-            statement.setString(4, id);
+		String sql = "UPDATE users SET password = ? " + "WHERE id = ? AND password = ?";
 
-            return statement.executeUpdate() > 0;
+		try (Connection connection = DBConnection.getConnection();
+				PreparedStatement statement = connection.prepareStatement(sql)) {
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+			statement.setString(1, newPassword);
+			statement.setString(2, id);
+			statement.setString(3, currentPassword);
+
+			return statement.executeUpdate() > 0;
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+
+			return false;
+		}
+	}
+
+	// Update user profile
+
+	public boolean updateProfile(String id, String name, String email, String phone) {
+
+		String sql = "UPDATE users " + "SET name = ?, email = ?, phone = ? " + "WHERE id = ?";
+
+		try (Connection connection = DBConnection.getConnection();
+				PreparedStatement statement = connection.prepareStatement(sql)) {
+
+			statement.setString(1, name);
+			statement.setString(2, email);
+			statement.setString(3, phone);
+			statement.setString(4, id);
+
+			return statement.executeUpdate() > 0;
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+
+			return false;
+		}
+	}
+
+	// Reset password without current password
+
+	public boolean resetPassword(String id, String newPassword) {
+
+		String sql = "UPDATE users SET password = ? " + "WHERE id = ?";
+
+		try (Connection connection = DBConnection.getConnection();
+				PreparedStatement statement = connection.prepareStatement(sql)) {
+
+			statement.setString(1, newPassword);
+			statement.setString(2, id);
+
+			return statement.executeUpdate() > 0;
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+
+			return false;
+		}
+	}
 }

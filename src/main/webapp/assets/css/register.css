@@ -663,7 +663,7 @@ body {
 /* ========================================
    ANIMATION
 ======================================== */
-@
+
 keyframes otpSlideDown {from { opacity:0;
 	transform: translateY(-8px);
 }
@@ -714,7 +714,7 @@ to {
 	animation: registerSpin 0.7s linear infinite;
 }
 
-@
+
 keyframes registerSpin {to { transform:rotate(360deg);
 	
 }
@@ -912,7 +912,7 @@ keyframes registerSpin {to { transform:rotate(360deg);
 	background: #c70812;
 }
 
-@
+
 keyframes successPopup {from { opacity:0;
 	transform: scale(0.92);
 }

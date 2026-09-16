@@ -8,6 +8,9 @@
 <head>
 <meta charset="UTF-8">
 <title>My Profile</title>
+
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/assets/css/common.css">
 </head>
 
 <body>

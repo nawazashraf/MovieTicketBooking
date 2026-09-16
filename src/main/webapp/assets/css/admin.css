@@ -1,1 +1,156 @@
 @charset "UTF-8";
+
+body {
+	font-family: Arial, sans-serif;
+	margin: 0;
+	background: #f3f4f6;
+	color: #1f2937
+}
+
+.admin-wrap {
+	max-width: 1250px;
+	margin: 25px auto;
+	padding: 0 18px
+}
+
+.admin-nav {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+	margin: 18px 0
+}
+
+.admin-nav a {
+	background: #111827;
+	color: #fff;
+	text-decoration: none;
+	padding: 9px 13px;
+	border-radius: 7px
+}
+
+.message {
+	padding: 12px;
+	background: #dcfce7;
+	color: #166534;
+	border-radius: 7px;
+	margin: 12px 0
+}
+
+.panel {
+	background: #fff;
+	padding: 20px;
+	margin: 20px 0;
+	border-radius: 12px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, .07)
+}
+
+.form-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(180px, 1fr));
+	gap: 12px
+}
+
+.form-grid .full {
+	grid-column: 1/-1
+}
+
+label {
+	font-weight: bold;
+	font-size: 14px
+}
+
+input, select, textarea {
+	width: 100%;
+	padding: 9px;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	margin-top: 5px
+}
+
+textarea {
+	min-height: 75px
+}
+
+.btn {
+	border: 0;
+	background: #111827;
+	color: #fff;
+	padding: 9px 13px;
+	border-radius: 6px;
+	cursor: pointer;
+	text-decoration: none;
+	display: inline-block
+}
+
+.btn.danger {
+	background: #b91c1c
+}
+
+.btn.secondary {
+	background: #6b7280
+}
+
+.table-wrap {
+	overflow: auto
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse
+}
+
+th, td {
+	padding: 9px;
+	border-bottom: 1px solid #ddd;
+	text-align: left;
+	vertical-align: top
+}
+
+th {
+	background: #f9fafb
+}
+
+.actions {
+	display: flex;
+	gap: 6px;
+	flex-wrap: wrap
+}
+
+.checkboxes {
+	display: flex;
+	gap: 12px;
+	flex-wrap: wrap;
+	margin-top: 8px
+}
+
+.checkboxes label {
+	font-weight: normal
+}
+
+.stats {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 12px
+}
+
+.stat {
+	background: #f9fafb;
+	border: 1px solid #e5e7eb;
+	border-radius: 8px;
+	padding: 16px
+}
+
+.stat strong {
+	display: block;
+	font-size: 25px
+}
+
+@media ( max-width :800px) {
+	.form-grid, .stats {
+		grid-template-columns: 1fr
+	}
+	.nav-search {
+		max-width: none;
+		width: 100%
+	}
+}

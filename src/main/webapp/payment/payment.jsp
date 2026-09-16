@@ -1,7 +1,9 @@
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
+
 <html>
 
 <head>
@@ -33,8 +35,13 @@
 			<h1>Secure Checkout</h1>
 
 
+			<!-- ================================================= -->
+			<!-- MAIN PAYMENT FORM -->
+			<!-- ================================================= -->
+
 			<form action="${pageContext.request.contextPath}/payment"
 				method="post" class="checkout-container">
+
 
 				<!-- Booking ID -->
 
@@ -68,7 +75,7 @@
 
 								<p>${booking.mallName}</p>
 
-								<p>${booking.showDate} &nbsp;•&nbsp; ${booking.startTime}</p>
+								<p>${booking.showDate}&nbsp;•&nbsp; ${booking.startTime}</p>
 
 							</div>
 
@@ -98,7 +105,6 @@
 
 							</div>
 
-
 							<strong> ₹${booking.totalAmount} </strong>
 
 						</div>
@@ -110,8 +116,8 @@
 
 					<div class="info-card">
 
-						<i class="fa-solid fa-circle-info"></i> <span> This theatre
-							allows cancellation </span>
+						<i class="fa-solid fa-circle-info"> </i> <span> This
+							theatre allows cancellation </span>
 
 					</div>
 
@@ -122,10 +128,9 @@
 
 						<div class="offers-title">
 
-							<i class="fa-solid fa-percent"></i> <strong> Offers </strong>
+							<i class="fa-solid fa-percent"> </i> <strong> Offers </strong>
 
 						</div>
-
 
 						<button type="button">View all Offers</button>
 
@@ -137,19 +142,20 @@
 					<h2 class="payment-options-title">Payment Options</h2>
 
 
-					<!-- ================= UPI ================= -->
+					<!-- ================================================= -->
+					<!-- UPI -->
+					<!-- ================================================= -->
 
 					<div class="payment-option-block">
 
 						<label class="payment-method"> <input type="radio"
-							name="paymentMethod" value="UPI" checked>
+							name="paymentMethod" value="UPI">
 
 							<div class="payment-icon">
 
-								<i class="fa-solid fa-mobile-screen-button"></i>
+								<i class="fa-solid fa-mobile-screen-button"> </i>
 
 							</div>
-
 
 							<div class="payment-method-text">
 
@@ -162,30 +168,44 @@
 						</label>
 
 
-						<div class="payment-inputs upi-details">
+						<!-- ================= QR PAYMENT ================= -->
 
-							<label for="upiId"> UPI ID </label> <input type="text" id="upiId"
-								name="upiId" placeholder="example@upi" autocomplete="off"
-								inputmode="email">
+						<div class="qr-payment-card" style="display: none;">
+
+							<h3>Pay Using QR</h3>
+
+							<p>Scan this QR code using your phone</p>
+
+							<img src="data:image/png;base64,${qrImage}" alt="Payment QR Code"
+								class="payment-qr">
+
+							<p class="qr-amount">
+
+								Amount: <strong> ₹${booking.totalAmount} </strong>
+
+							</p>
+
+							<p class="qr-status" id="qrStatus">Waiting for payment...</p>
 
 						</div>
 
 					</div>
 
 
-					<!-- ================= CARD ================= -->
+					<!-- ================================================= -->
+					<!-- CARD -->
+					<!-- ================================================= -->
 
 					<div class="payment-option-block">
 
 						<label class="payment-method"> <input type="radio"
-							name="paymentMethod" value="CARD">
+							name="paymentMethod" value="CARD" checked>
 
 							<div class="payment-icon">
 
-								<i class="fa-regular fa-credit-card"></i>
+								<i class="fa-regular fa-credit-card"> </i>
 
 							</div>
-
 
 							<div class="payment-method-text">
 
@@ -197,6 +217,8 @@
 
 						</label>
 
+
+						<!-- ================= CARD INPUTS ================= -->
 
 						<div class="payment-inputs card-details">
 
@@ -235,15 +257,14 @@
 
 							<p class="secure-note">
 
-								<i class="fa-solid fa-lock"></i> Your card details are encrypted
-								and never stored
+								<i class="fa-solid fa-lock"> </i> Your card details are
+								encrypted and never stored
 
 							</p>
 
 						</div>
 
 					</div>
-
 
 				</section>
 
@@ -285,7 +306,6 @@
 
 						</div>
 
-
 					</div>
 
 
@@ -296,13 +316,11 @@
 
 					<div class="user-details-card">
 
-
 						<div class="user-icon">
 
-							<i class="fa-regular fa-calendar"></i>
+							<i class="fa-regular fa-calendar"> </i>
 
 						</div>
-
 
 						<div>
 
@@ -314,7 +332,6 @@
 
 						</div>
 
-
 					</div>
 
 
@@ -322,7 +339,7 @@
 
 					<div class="terms-card">
 
-						<i class="fa-regular fa-circle-question"></i> <span> Terms
+						<i class="fa-regular fa-circle-question"> </i> <span> Terms
 							and conditions </span>
 
 					</div>
@@ -330,13 +347,12 @@
 
 					<!-- ================= PAY BUTTON ================= -->
 
-					<button type="submit" class="pay-button">
+					<button type="submit" class="pay-button" id="proceedPayButton">
 
-						<span> ₹${booking.totalAmount}  </span> <span> Proceed
-							To Pay </span>
+						<span> ₹${booking.totalAmount} </span> <span> Proceed To
+							Pay </span>
 
 					</button>
-
 
 				</aside>
 
@@ -347,10 +363,15 @@
 	</main>
 
 
-	<script src="${pageContext.request.contextPath}/assets/js/payment.js">
-		
+	<!-- ================================================= -->
+	<!-- EXTERNAL JAVASCRIPT -->
+	<!-- ================================================= -->
+	<script>
+		window.contextPath = "${pageContext.request.contextPath}";
 	</script>
+	<script src="${pageContext.request.contextPath}/assets/js/payment.js"></script>
 
 </body>
 
 </html>
+

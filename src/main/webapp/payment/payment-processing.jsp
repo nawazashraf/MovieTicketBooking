@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
+
 <html>
 
 <head>
@@ -18,9 +19,11 @@
 
 </head>
 
+
 <body>
 
 	<%@ include file="/common/navbar.jsp"%>
+
 
 	<main class="payment-processing-page">
 
@@ -51,11 +54,36 @@
 
 
 	<script>
-		setTimeout(function() {
+		var paymentMethod = "${paymentMethod}";
 
-			document.getElementById("processPaymentForm").submit();
+		/* =================================================
+		   CARD PAYMENT
+		   ================================================= */
 
-		}, 2500);
+		if (paymentMethod === "CARD") {
+
+			setTimeout(function() {
+
+				document.getElementById("processPaymentForm").submit();
+
+			}, 2500);
+
+		}
+
+		/* =================================================
+		   QR / UPI PAYMENT
+		   ================================================= */
+
+		else {
+
+			setTimeout(
+					function() {
+
+						window.location.href = "${pageContext.request.contextPath}/ticket?bookingId=${bookingId}";
+
+					}, 2500);
+
+		}
 	</script>
 
 </body>

@@ -26,8 +26,7 @@
 			<div class="section-header">
 				<h2>Now Showing</h2>
 				<a
-					href="${pageContext.request.contextPath}/movies?status=COMING_SOON">View
-					All</a>
+					href="${pageContext.request.contextPath}/movies">View All</a>
 			</div>
 
 			<div class="movie-container">
@@ -54,8 +53,7 @@
 			<div class="section-header">
 				<h2>Coming Soon</h2>
 				<a
-					href="${pageContext.request.contextPath}/movies?status=COMING_SOON">View
-					All</a>
+					href="${pageContext.request.contextPath}/movies">View All</a>
 			</div>
 
 			<div class="movie-container">
@@ -86,10 +84,6 @@
 		</section>
 
 	</div>
-	<form action="${pageContext.request.contextPath}/booking/seats"
-		method="post">
-		<input type="submit" value="Submit">
-	</form>
 
 </body>
 </html>

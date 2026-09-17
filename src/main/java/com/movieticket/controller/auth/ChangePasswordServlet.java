@@ -1,6 +1,7 @@
 package com.movieticket.controller.auth;
 
 import com.movieticket.dao.UserDAO;
+import com.movieticket.util.EmailService;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -10,6 +11,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @WebServlet("/changepassword")
 public class ChangePasswordServlet extends HttpServlet {
@@ -20,7 +23,6 @@ public class ChangePasswordServlet extends HttpServlet {
 
 	@Override
 	public void init() {
-
 		userDAO = new UserDAO();
 	}
 
@@ -31,18 +33,31 @@ public class ChangePasswordServlet extends HttpServlet {
 		HttpSession session = request.getSession(false);
 
 		/*
-		 * Forgot password flow
+		 * ======================================== FORGOT PASSWORD FLOW
+		 * ========================================
 		 */
+
 		if (session != null && session.getAttribute("forgotUserId") != null) {
 
-			request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
+			Boolean verified = (Boolean) session.getAttribute("forgotPasswordVerified");
+
+			if (Boolean.TRUE.equals(verified)) {
+
+				request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
+
+				return;
+			}
+
+			response.sendRedirect(request.getContextPath() + "/forgotpassword");
 
 			return;
 		}
 
 		/*
-		 * Normal logged-in change password flow
+		 * ======================================== NORMAL LOGGED-IN CHANGE PASSWORD
+		 * FLOW ========================================
 		 */
+
 		if (session == null || session.getAttribute("userId") == null) {
 
 			response.sendRedirect(request.getContextPath() + "/login.jsp");
@@ -60,11 +75,24 @@ public class ChangePasswordServlet extends HttpServlet {
 		HttpSession session = request.getSession(false);
 
 		/*
-		 * ========================================= FORGOT PASSWORD FLOW
-		 * =========================================
+		 * ======================================== FORGOT PASSWORD FLOW
+		 * ========================================
 		 */
 
 		if (session != null && session.getAttribute("forgotUserId") != null) {
+
+			Boolean verified = (Boolean) session.getAttribute("forgotPasswordVerified");
+
+			/*
+			 * OTP MUST BE VERIFIED
+			 */
+
+			if (!Boolean.TRUE.equals(verified)) {
+
+				response.sendRedirect(request.getContextPath() + "/forgotpassword");
+
+				return;
+			}
 
 			String userId = (String) session.getAttribute("forgotUserId");
 
@@ -90,9 +118,13 @@ public class ChangePasswordServlet extends HttpServlet {
 				return;
 			}
 
-			if (newPassword.length() < 6) {
+			/*
+			 * Same password validation style as your registration page
+			 */
 
-				request.setAttribute("error", "Password must be at least 6 characters.");
+			if (newPassword.length() < 8) {
+
+				request.setAttribute("error", "Password must contain at least 8 characters.");
 
 				request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
 
@@ -103,8 +135,29 @@ public class ChangePasswordServlet extends HttpServlet {
 
 			if (changed) {
 
+				// Send password changed email ONLY after successful update
+
+				String forgotEmail = (String) session.getAttribute("forgotUserEmail");
+
+				String changedAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a"));
+
+				try {
+
+					EmailService.sendPasswordChangedEmail(forgotEmail, "MovieBook User", changedAt);
+
+				} catch (Exception e) {
+
+					e.printStackTrace();
+
+				}
+
 				session.removeAttribute("forgotUserId");
+
 				session.removeAttribute("forgotUserEmail");
+
+				session.removeAttribute("forgotPasswordVerification");
+
+				session.removeAttribute("forgotPasswordVerified");
 
 				request.setAttribute("resetSuccess", "Your password has been changed successfully.");
 
@@ -121,8 +174,8 @@ public class ChangePasswordServlet extends HttpServlet {
 		}
 
 		/*
-		 * ========================================= NORMAL CHANGE PASSWORD FLOW
-		 * =========================================
+		 * ======================================== NORMAL LOGGED-IN CHANGE PASSWORD
+		 * FLOW ========================================
 		 */
 
 		if (session == null || session.getAttribute("userId") == null) {
@@ -163,6 +216,25 @@ public class ChangePasswordServlet extends HttpServlet {
 
 		if (changed) {
 
+			// Send password changed email ONLY after successful update
+
+			com.movieticket.model.UserBean user = (com.movieticket.model.UserBean) session.getAttribute("user");
+
+			String changedAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a"));
+
+			if (user != null) {
+
+				try {
+
+					EmailService.sendPasswordChangedEmail(user.getEmail(), user.getName(), changedAt);
+
+				} catch (Exception e) {
+
+					e.printStackTrace();
+
+				}
+			}
+
 			response.sendRedirect(request.getContextPath() + "/profile");
 
 		} else {
@@ -171,5 +243,7 @@ public class ChangePasswordServlet extends HttpServlet {
 
 			request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
 		}
+
 	}
+
 }

@@ -1,90 +1,154 @@
 document.addEventListener("DOMContentLoaded", function() {
 
-	const form = document.getElementById("registerForm");
 
-	const name = document.getElementById("name");
-	const email = document.getElementById("email");
-	const phone = document.getElementById("phone");
-	const password = document.getElementById("password");
+	const form =
+		document.getElementById("registerForm");
 
-	const nameError = document.getElementById("nameError");
-	const emailError = document.getElementById("emailError");
-	const phoneError = document.getElementById("phoneError");
-	const passwordError = document.getElementById("passwordError");
 
-	const passwordToggle = document.getElementById("passwordToggle");
+	const name =
+		document.getElementById("name");
 
-	const strengthBar = document.getElementById("strengthBar");
-	const strengthText = document.getElementById("strengthText");
 
-	const registerButton = document.getElementById("registerButton");
-	const buttonText = document.getElementById("buttonText");
+	const email =
+		document.getElementById("email");
 
-	// ==================== EMAIL OTP ====================
+
+	const phone =
+		document.getElementById("phone");
+
+
+	const password =
+		document.getElementById("password");
+
+
+	const nameError =
+		document.getElementById("nameError");
+
+
+	const emailError =
+		document.getElementById("emailError");
+
+
+	const phoneError =
+		document.getElementById("phoneError");
+
+
+	const passwordError =
+		document.getElementById("passwordError");
+
+
+	const passwordToggle =
+		document.getElementById("passwordToggle");
+
+
+	const strengthBar =
+		document.getElementById("strengthBar");
+
+
+	const strengthText =
+		document.getElementById("strengthText");
+
+
+	const registerButton =
+		document.getElementById("registerButton");
+
+
+	const buttonText =
+		document.getElementById("buttonText");
+
+
+	/* ==================== EMAIL OTP ==================== */
+
 
 	const verifyEmailButton =
 		document.getElementById("verifyEmailButton");
 
+
 	const otpTray =
 		document.getElementById("otpTray");
+
 
 	const otp =
 		document.getElementById("otp");
 
+
 	const verifyOtpButton =
 		document.getElementById("verifyOtpButton");
+
 
 	const otpMessage =
 		document.getElementById("otpMessage");
 
+
 	const resendOtpButton =
 		document.getElementById("resendOtpButton");
+
 
 	const resendText =
 		document.getElementById("resendText");
 
+
 	const otpVerifiedIcon =
 		document.getElementById("otpVerifiedIcon");
 
+
 	let emailVerified = false;
+
+
 	let resendTimer = null;
 
 
-	// ==================== PASSWORD SHOW / HIDE ====================
+	const emailPattern =
+		/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-	passwordToggle.addEventListener("click", function() {
 
-		if (password.type === "password") {
 
-			password.type = "text";
+	/* ==================== PASSWORD SHOW / HIDE ==================== */
 
-			passwordToggle.textContent = "Hide";
 
-			passwordToggle.setAttribute(
-				"aria-label",
-				"Hide password"
-			);
+	passwordToggle.addEventListener(
+		"click",
+		function() {
 
-		} else {
+			if (password.type === "password") {
 
-			password.type = "password";
+				password.type = "text";
 
-			passwordToggle.textContent = "Show";
+				passwordToggle.textContent =
+					"Hide";
 
-			passwordToggle.setAttribute(
-				"aria-label",
-				"Show password"
-			);
+				passwordToggle.setAttribute(
+					"aria-label",
+					"Hide password"
+				);
+
+			} else {
+
+				password.type = "password";
+
+				passwordToggle.textContent =
+					"Show";
+
+				passwordToggle.setAttribute(
+					"aria-label",
+					"Show password"
+				);
+
+			}
+
 		}
+	);
 
-	});
 
 
-	// ==================== NAME VALIDATION ====================
+	/* ==================== NAME VALIDATION ==================== */
+
 
 	function validateName() {
 
-		const value = name.value.trim();
+		const value =
+			name.value.trim();
+
 
 		if (value === "") {
 
@@ -92,7 +156,9 @@ document.addEventListener("DOMContentLoaded", function() {
 				"Full name is required.";
 
 			return false;
+
 		}
+
 
 		if (value.length < 2) {
 
@@ -100,53 +166,76 @@ document.addEventListener("DOMContentLoaded", function() {
 				"Please enter your full name.";
 
 			return false;
+
 		}
+
 
 		nameError.textContent = "";
 
 		return true;
+
 	}
 
 
-	// ==================== EMAIL VALIDATION ====================
+
+	/* ==================== EMAIL VALIDATION ==================== */
+
 
 	function isValidEmail(value) {
 
-		return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+		return emailPattern.test(value);
+
 	}
 
 
 	function validateEmail() {
 
-		const value = email.value.trim();
+		const value =
+			email.value.trim();
+
 
 		if (value === "") {
 
 			emailError.textContent =
 				"Email address is required.";
 
+			verifyEmailButton.disabled = true;
+
 			return false;
+
 		}
+
 
 		if (!isValidEmail(value)) {
 
 			emailError.textContent =
 				"Please enter a valid email address.";
 
+			verifyEmailButton.disabled = true;
+
 			return false;
+
 		}
+
 
 		emailError.textContent = "";
 
+		verifyEmailButton.disabled = false;
+
 		return true;
+
 	}
 
 
-	// ==================== PHONE VALIDATION ====================
+
+	/* ==================== PHONE VALIDATION ==================== */
+
 
 	function validatePhone() {
 
-		const value = phone.value.trim();
+		const value =
+			phone.value.trim();
+
 
 		if (value === "") {
 
@@ -154,7 +243,9 @@ document.addEventListener("DOMContentLoaded", function() {
 				"Phone number is required.";
 
 			return false;
+
 		}
+
 
 		if (!/^\d{10}$/.test(value)) {
 
@@ -162,19 +253,26 @@ document.addEventListener("DOMContentLoaded", function() {
 				"Phone number must be exactly 10 digits.";
 
 			return false;
+
 		}
+
 
 		phoneError.textContent = "";
 
 		return true;
+
 	}
 
 
-	// ==================== PASSWORD VALIDATION ====================
+
+	/* ==================== PASSWORD VALIDATION ==================== */
+
 
 	function validatePassword() {
 
-		const value = password.value;
+		const value =
+			password.value;
+
 
 		if (value === "") {
 
@@ -182,7 +280,9 @@ document.addEventListener("DOMContentLoaded", function() {
 				"Password is required.";
 
 			return false;
+
 		}
+
 
 		if (value.length < 8) {
 
@@ -190,53 +290,77 @@ document.addEventListener("DOMContentLoaded", function() {
 				"Password must contain at least 8 characters.";
 
 			return false;
+
 		}
+
 
 		passwordError.textContent = "";
 
 		return true;
+
 	}
 
 
-	// ==================== PASSWORD STRENGTH ====================
+
+	/* ==================== PASSWORD STRENGTH ==================== */
+
 
 	function updatePasswordStrength() {
 
-		const value = password.value;
+		const value =
+			password.value;
+
 
 		let strength = 0;
 
+
 		if (value.length >= 8) {
+
 			strength++;
+
 		}
+
 
 		if (/[A-Z]/.test(value)) {
+
 			strength++;
+
 		}
+
 
 		if (/[a-z]/.test(value)) {
+
 			strength++;
+
 		}
+
 
 		if (/\d/.test(value)) {
+
 			strength++;
+
 		}
 
+
 		if (/[^A-Za-z0-9]/.test(value)) {
+
 			strength++;
+
 		}
 
 
 		if (value.length === 0) {
 
-			strengthBar.style.width = "0%";
+			strengthBar.style.width =
+				"0%";
 
 			strengthText.textContent =
 				"Use 8 or more characters";
 
 		} else if (strength <= 2) {
 
-			strengthBar.style.width = "35%";
+			strengthBar.style.width =
+				"35%";
 
 			strengthBar.style.backgroundColor =
 				"#d92d20";
@@ -246,7 +370,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
 		} else if (strength <= 4) {
 
-			strengthBar.style.width = "65%";
+			strengthBar.style.width =
+				"65%";
 
 			strengthBar.style.backgroundColor =
 				"#f79009";
@@ -256,205 +381,275 @@ document.addEventListener("DOMContentLoaded", function() {
 
 		} else {
 
-			strengthBar.style.width = "100%";
+			strengthBar.style.width =
+				"100%";
 
 			strengthBar.style.backgroundColor =
 				"#12b76a";
 
 			strengthText.textContent =
 				"Strong password";
+
 		}
+
 	}
 
 
-	// ==================== NAME EVENTS ====================
 
-	name.addEventListener("blur", function() {
-
-		validateName();
-
-	});
+	/* ==================== NAME EVENTS ==================== */
 
 
-	name.addEventListener("input", function() {
-
-		if (nameError.textContent !== "") {
+	name.addEventListener(
+		"blur",
+		function() {
 
 			validateName();
 
 		}
-
-	});
-
-
-	// ==================== EMAIL EVENTS ====================
-
-	email.addEventListener("blur", function() {
-
-		validateEmail();
-
-	});
+	);
 
 
-	email.addEventListener("input", function() {
+	name.addEventListener(
+		"input",
+		function() {
 
-		const value = email.value.trim();
+			if (nameError.textContent !== "") {
 
+				validateName();
 
-		if (isValidEmail(value)) {
-
-			verifyEmailButton.disabled = false;
-
-		} else {
-
-			verifyEmailButton.disabled = true;
+			}
 
 		}
+	);
 
 
-		if (emailVerified) {
 
-			emailVerified = false;
-
-			email.readOnly = false;
-
-			verifyEmailButton.disabled =
-				!isValidEmail(value);
-
-			verifyEmailButton.textContent =
-				"Verify Email";
-
-			otp.value = "";
-
-			otp.readOnly = false;
-
-			verifyOtpButton.disabled = true;
-
-			verifyOtpButton.textContent =
-				"Verify";
-
-			otpVerifiedIcon.style.display =
-				"none";
-
-			otpMessage.textContent = "";
-
-			otpMessage.className =
-				"otp-message";
-
-			registerButton.disabled = true;
-
-			buttonText.textContent =
-				"Verify Email to Continue";
-
-			resendOtpButton.disabled = true;
-
-			resendText.textContent =
-				"Resend Verification Code";
-
-			clearInterval(resendTimer);
-		}
+	/* ==================== EMAIL EVENTS ==================== */
 
 
-		if (emailError.textContent !== "") {
+	email.addEventListener(
+		"blur",
+		function() {
 
 			validateEmail();
 
 		}
-
-	});
-
-
-	// ==================== PHONE EVENTS ====================
-
-	phone.addEventListener("blur", function() {
-
-		validatePhone();
-
-	});
+	);
 
 
-	phone.addEventListener("input", function() {
-
-		phone.value =
-			phone.value.replace(/\D/g, "");
-
-		if (phone.value.length > 10) {
-
-			phone.value =
-				phone.value.slice(0, 10);
-		}
-
-		if (phoneError.textContent !== "") {
-
-			validatePhone();
-
-		}
-
-	});
-
-
-	// ==================== PASSWORD EVENTS ====================
-
-	password.addEventListener("blur", function() {
-
-		validatePassword();
-
-	});
-
-
-	password.addEventListener("input", function() {
-
-		updatePasswordStrength();
-
-		if (passwordError.textContent !== "") {
-
-			validatePassword();
-
-		}
-
-	});
-
-
-	// ==================== INITIAL OTP STATE ====================
-
-	verifyOtpButton.disabled = true;
-
-	resendOtpButton.disabled = true;
-
-	resendText.textContent =
-		"Resend Verification Code";
-
-	if (otpVerifiedIcon) {
-
-		otpVerifiedIcon.style.display =
-			"none";
-	}
-
-
-	// ==================== VERIFY EMAIL ====================
-
-	verifyEmailButton.addEventListener(
-		"click",
+	email.addEventListener(
+		"input",
 		function() {
 
 			const value =
 				email.value.trim();
 
-			if (!isValidEmail(value)) {
 
-				emailError.textContent =
-					"Please enter a valid email address.";
+			validateEmail();
+
+
+			if (emailVerified) {
+
+				emailVerified = false;
+
+
+				email.readOnly = false;
+
 
 				verifyEmailButton.disabled =
+					!isValidEmail(value);
+
+
+				verifyEmailButton.textContent =
+					"Verify Email";
+
+
+				verifyEmailButton.classList.remove(
+					"email-verified-button"
+				);
+
+
+				otpTray.classList.remove(
+					"active"
+				);
+
+
+				otp.value = "";
+
+
+				otp.readOnly = false;
+
+
+				verifyOtpButton.disabled =
 					true;
 
-				return;
+
+				verifyOtpButton.textContent =
+					"Verify";
+
+
+				otpVerifiedIcon.style.display =
+					"none";
+
+
+				otpMessage.textContent = "";
+
+
+				otpMessage.className =
+					"otp-message";
+
+
+				registerButton.disabled =
+					true;
+
+
+				buttonText.textContent =
+					"Verify Email to Continue";
+
+
+				resendOtpButton.disabled =
+					true;
+
+
+				resendText.textContent =
+					"Resend available in 60 seconds";
+
+
+				clearInterval(
+					resendTimer
+				);
+
 			}
 
-			emailError.textContent = "";
+		}
+	);
+
+
+
+	/* ==================== PHONE EVENTS ==================== */
+
+
+	phone.addEventListener(
+		"blur",
+		function() {
+
+			validatePhone();
+
+		}
+	);
+
+
+	phone.addEventListener(
+		"input",
+		function() {
+
+			phone.value =
+				phone.value.replace(
+					/\D/g,
+					""
+				);
+
+
+			if (phone.value.length > 10) {
+
+				phone.value =
+					phone.value.slice(0, 10);
+
+			}
+
+
+			if (phoneError.textContent !== "") {
+
+				validatePhone();
+
+			}
+
+		}
+	);
+
+
+
+	/* ==================== PASSWORD EVENTS ==================== */
+
+
+	password.addEventListener(
+		"blur",
+		function() {
+
+			validatePassword();
+
+		}
+	);
+
+
+	password.addEventListener(
+		"input",
+		function() {
+
+			updatePasswordStrength();
+
+
+			if (passwordError.textContent !== "") {
+
+				validatePassword();
+
+			}
+
+		}
+	);
+
+
+
+	/* ==================== INITIAL OTP STATE ==================== */
+
+
+	verifyEmailButton.disabled =
+		true;
+
+
+	verifyOtpButton.disabled =
+		true;
+
+
+	resendOtpButton.disabled =
+		true;
+
+
+	registerButton.disabled =
+		true;
+
+
+	if (otpVerifiedIcon) {
+
+		otpVerifiedIcon.style.display =
+			"none";
+
+	}
+
+
+
+	/* ==================== VERIFY EMAIL ==================== */
+
+
+	verifyEmailButton.addEventListener(
+		"click",
+		function() {
+
+
+			if (!validateEmail()) {
+
+				return;
+
+			}
+
+
+			const value =
+				email.value.trim();
+
 
 			verifyEmailButton.disabled =
 				true;
+
 
 			verifyEmailButton.textContent =
 				"Sending...";
@@ -465,8 +660,10 @@ document.addEventListener("DOMContentLoaded", function() {
 				method: "POST",
 
 				headers: {
+
 					"Content-Type":
 						"application/x-www-form-urlencoded"
+
 				},
 
 				body:
@@ -475,124 +672,170 @@ document.addEventListener("DOMContentLoaded", function() {
 
 			})
 
-				.then(response => response.json())
 
-				.then(data => {
+				.then(function(response) {
+
+					return response.json();
+
+				})
+
+
+				.then(function(data) {
+
 
 					if (data.success) {
+
 
 						verifyEmailButton.textContent =
 							"Code Sent";
 
-						otpTray.classList.add("active");
+
+						otpTray.classList.add(
+							"active"
+						);
+
 
 						otp.value = "";
 
+
 						otp.readOnly = false;
+
 
 						verifyOtpButton.disabled =
 							true;
 
+
 						verifyOtpButton.textContent =
 							"Verify";
 
+
 						otpMessage.textContent =
 							data.message;
+
 
 						otpMessage.className =
 							"otp-message success";
 
+
 						resendOtpButton.disabled =
 							true;
 
+
+						registerButton.disabled =
+							true;
+
+
 						startResendTimer();
 
+
 					} else {
+
 
 						verifyEmailButton.disabled =
 							false;
 
+
 						verifyEmailButton.textContent =
 							"Verify Email";
+
 
 						otpMessage.textContent =
 							data.message;
 
+
 						otpMessage.className =
 							"otp-message error";
+
 					}
 
 				})
 
-				.catch(error => {
 
-					console.error(error);
+				.catch(function() {
+
 
 					verifyEmailButton.disabled =
 						false;
 
+
 					verifyEmailButton.textContent =
 						"Verify Email";
+
 
 					otpMessage.textContent =
 						"Unable to send verification code.";
 
+
 					otpMessage.className =
 						"otp-message error";
+
 				});
 
 		}
 	);
 
 
-	// ==================== OTP INPUT ====================
 
-	otp.addEventListener("input", function() {
-
-		otp.value =
-			otp.value.replace(/\D/g, "");
-
-		otp.value =
-			otp.value.slice(0, 4);
+	/* ==================== OTP INPUT ==================== */
 
 
-		if (otp.value.length === 4) {
+	otp.addEventListener(
+		"input",
+		function() {
 
-			verifyOtpButton.disabled =
-				false;
 
-		} else {
+			otp.value =
+				otp.value
+					.replace(/\D/g, "")
+					.slice(0, 4);
 
-			verifyOtpButton.disabled =
-				true;
+
+			if (otp.value.length === 4) {
+
+				verifyOtpButton.disabled =
+					false;
+
+			} else {
+
+				verifyOtpButton.disabled =
+					true;
+
+			}
+
+
+			otpMessage.textContent = "";
+
+
+			otpMessage.className =
+				"otp-message";
+
 		}
+	);
 
 
-		otpMessage.textContent = "";
 
-		otpMessage.className =
-			"otp-message";
+	/* ==================== VERIFY OTP ==================== */
 
-	});
-
-
-	// ==================== VERIFY OTP ====================
 
 	verifyOtpButton.addEventListener(
 		"click",
 		function() {
 
-			if (otp.value.length !== 4) {
 
-				verifyOtpButton.disabled =
-					true;
+			const enteredOtp =
+				otp.value.trim();
+
+
+			if (enteredOtp.length !== 4) {
 
 				return;
+
 			}
 
 
 			verifyOtpButton.disabled =
 				true;
+
 
 			verifyOtpButton.textContent =
 				"Verifying...";
@@ -603,46 +846,61 @@ document.addEventListener("DOMContentLoaded", function() {
 				method: "POST",
 
 				headers: {
+
 					"Content-Type":
 						"application/x-www-form-urlencoded"
+
 				},
 
 				body:
 					"action=verify&otp=" +
-					encodeURIComponent(otp.value)
+					encodeURIComponent(
+						enteredOtp
+					)
 
 			})
 
-				.then(response => response.json())
 
-				.then(data => {
+				.then(function(response) {
+
+					return response.json();
+
+				})
+
+
+				.then(function(data) {
+
 
 					if (data.success) {
 
-						emailVerified = true;
+
+						emailVerified =
+							true;
 
 
 						otpMessage.textContent =
 							data.message;
 
+
 						otpMessage.className =
 							"otp-message success";
 
 
-						if (otpVerifiedIcon) {
-
-							otpVerifiedIcon.style.display =
-								"inline";
-						}
+						otpVerifiedIcon.style.display =
+							"flex";
 
 
-						email.readOnly = true;
+						email.readOnly =
+							true;
 
-						otp.readOnly = true;
+
+						otp.readOnly =
+							true;
 
 
 						verifyOtpButton.disabled =
 							true;
+
 
 						verifyOtpButton.textContent =
 							"Verified";
@@ -651,29 +909,51 @@ document.addEventListener("DOMContentLoaded", function() {
 						verifyEmailButton.disabled =
 							true;
 
+
 						verifyEmailButton.textContent =
 							"✓ Verified";
 
 
+						verifyEmailButton.classList.add(
+							"email-verified-button"
+						);
+
+
+						/* CLOSE OTP TRAY */
+
+						otpTray.classList.remove(
+							"active"
+						);
+
+
+						/* ACTIVATE REGISTER */
+
 						registerButton.disabled =
 							false;
+
 
 						buttonText.textContent =
 							"Create Account";
 
 
-						clearInterval(resendTimer);
+						clearInterval(
+							resendTimer
+						);
+
 
 						resendOtpButton.disabled =
 							true;
+
 
 						resendText.textContent =
 							"Email verified";
 
 					} else {
 
+
 						verifyOtpButton.disabled =
 							false;
+
 
 						verifyOtpButton.textContent =
 							"Verify";
@@ -682,54 +962,76 @@ document.addEventListener("DOMContentLoaded", function() {
 						otpMessage.textContent =
 							data.message;
 
+
 						otpMessage.className =
 							"otp-message error";
+
 					}
 
 				})
 
-				.catch(error => {
 
-					console.error(error);
+				.catch(function() {
+
 
 					verifyOtpButton.disabled =
 						false;
 
+
 					verifyOtpButton.textContent =
 						"Verify";
+
 
 					otpMessage.textContent =
 						"Unable to verify the code.";
 
+
 					otpMessage.className =
 						"otp-message error";
+
 				});
 
 		}
 	);
 
 
-	// ==================== RESEND OTP ====================
+
+	/* ==================== RESEND OTP ==================== */
+
 
 	resendOtpButton.addEventListener(
 		"click",
 		function() {
 
+
 			if (emailVerified) {
 
 				return;
+
 			}
 
 
 			resendOtpButton.disabled =
 				true;
 
+
+			resendText.textContent =
+				"Sending new code...";
+
+
 			otp.value = "";
+
 
 			verifyOtpButton.disabled =
 				true;
 
+
+			verifyOtpButton.textContent =
+				"Verify";
+
+
 			otpMessage.textContent = "";
+
 
 			otpMessage.className =
 				"otp-message";
@@ -740,8 +1042,10 @@ document.addEventListener("DOMContentLoaded", function() {
 				method: "POST",
 
 				headers: {
+
 					"Content-Type":
 						"application/x-www-form-urlencoded"
+
 				},
 
 				body:
@@ -749,157 +1053,235 @@ document.addEventListener("DOMContentLoaded", function() {
 
 			})
 
-				.then(response => response.json())
 
-				.then(data => {
+				.then(function(response) {
+
+					return response.json();
+
+				})
+
+
+				.then(function(data) {
+
 
 					if (data.success) {
 
+
+						emailVerified =
+							false;
+
+
+						registerButton.disabled =
+							true;
+
+
+						buttonText.textContent =
+							"Verify Email to Continue";
+
+
+						otp.value = "";
+
+
+						verifyOtpButton.disabled =
+							true;
+
+
+						verifyOtpButton.textContent =
+							"Verify";
+
+
 						otpMessage.textContent =
 							data.message;
+
 
 						otpMessage.className =
 							"otp-message success";
 
+
 						startResendTimer();
 
+
 					} else {
+
 
 						otpMessage.textContent =
 							data.message;
 
+
 						otpMessage.className =
 							"otp-message error";
 
+
 						resendOtpButton.disabled =
 							false;
+
 					}
 
 				})
 
-				.catch(error => {
 
-					console.error(error);
+				.catch(function() {
+
 
 					otpMessage.textContent =
 						"Unable to resend verification code.";
 
+
 					otpMessage.className =
 						"otp-message error";
 
+
 					resendOtpButton.disabled =
 						false;
+
 				});
 
 		}
 	);
 
 
-	// ==================== RESEND TIMER ====================
+
+	/* ==================== RESEND TIMER ==================== */
+
 
 	function startResendTimer() {
 
-		clearInterval(resendTimer);
 
-		let seconds = 60;
+		let seconds =
+			60;
+
 
 		resendOtpButton.disabled =
 			true;
 
+
 		resendText.textContent =
 			"Resend available in " +
 			seconds +
-			"s";
+			" seconds";
 
 
-		resendTimer = setInterval(
-			function() {
+		clearInterval(
+			resendTimer
+		);
 
-				seconds--;
+
+		resendTimer =
+			setInterval(
+				function() {
 
 
-				if (seconds <= 0) {
+					seconds--;
 
-					clearInterval(resendTimer);
 
-					resendOtpButton.disabled =
-						false;
+					if (seconds <= 0) {
 
-					resendText.textContent =
-						"Resend Verification Code";
 
-				} else {
+						clearInterval(
+							resendTimer
+						);
+
+
+						resendOtpButton.disabled =
+							false;
+
+
+						resendText.textContent =
+							"You can request a new code.";
+
+
+						return;
+
+					}
+
 
 					resendText.textContent =
 						"Resend available in " +
 						seconds +
-						"s";
-				}
+						" seconds";
 
-			},
-			1000
-		);
+
+				},
+				1000
+			);
+
 	}
 
 
-	// ==================== FORM SUBMIT ====================
 
-	form.addEventListener("submit", function(event) {
-
-		const validName =
-			validateName();
-
-		const validEmail =
-			validateEmail();
-
-		const validPhone =
-			validatePhone();
-
-		const validPassword =
-			validatePassword();
+	/* ==================== FORM SUBMIT ==================== */
 
 
-		if (!validName ||
-			!validEmail ||
-			!validPhone ||
-			!validPassword ||
-			!emailVerified) {
-
-			event.preventDefault();
+	form.addEventListener(
+		"submit",
+		function(event) {
 
 
-			if (!validName) {
+			const validName =
+				validateName();
 
-				name.focus();
 
-			} else if (!validEmail) {
+			const validEmail =
+				validateEmail();
 
-				email.focus();
 
-			} else if (!validPhone) {
+			const validPhone =
+				validatePhone();
 
-				phone.focus();
 
-			} else if (!validPassword) {
+			const validPassword =
+				validatePassword();
 
-				password.focus();
 
-			} else if (!emailVerified) {
+			if (
+				!validName ||
+				!validEmail ||
+				!validPhone ||
+				!validPassword ||
+				!emailVerified
+			) {
 
-				email.focus();
+
+				event.preventDefault();
+
+
+				if (!validName) {
+
+					name.focus();
+
+				} else if (!validEmail) {
+
+					email.focus();
+
+				} else if (!validPhone) {
+
+					phone.focus();
+
+				} else if (!validPassword) {
+
+					password.focus();
+
+				} else if (!emailVerified) {
+
+					email.focus();
+
+				}
+
+
+				return;
+
 			}
 
-			return;
+
+			registerButton.disabled =
+				true;
+
+
+			buttonText.textContent =
+				"Creating account...";
+
 		}
-
-
-		registerButton.disabled =
-			true;
-
-		buttonText.textContent =
-			"Creating account...";
-
-	});
+	);
 
 
 });

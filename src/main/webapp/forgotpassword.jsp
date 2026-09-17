@@ -1,163 +1,175 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
+<title>Forgot Password - MovieBook</title>
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Forgot Password | MovieBook</title>
-
-    <link rel="stylesheet"
-          href="${pageContext.request.contextPath}/assets/css/forgotpassword.css">
+<link rel="stylesheet" href="assets/css/forgotpassword.css">
 
 </head>
 
 <body>
 
-    <main class="forgot-page">
+	<div class="forgot-page">
 
-        <div class="forgot-card">
+		<div class="forgot-card">
 
+			<div class="brand">
 
-            <!-- BRAND -->
+				<div class="brand-logo">M</div>
 
-            <div class="brand">
+				<div class="brand-name">MovieBook</div>
 
-                <div class="brand-logo">
-                    M
-                </div>
-
-                <span class="brand-name">
-                    MovieBook
-                </span>
-
-            </div>
+			</div>
 
 
-            <!-- ICON -->
-
-            <div class="forgot-icon">
-                🔐
-            </div>
+			<div class="forgot-icon">🔐</div>
 
 
-            <!-- HEADER -->
+			<div class="forgot-header">
 
-            <div class="forgot-header">
+				<h1>Forgot Password?</h1>
 
-                <h1>
-                    Forgot Password?
-                </h1>
+				<p>Enter your email address to reset your password.</p>
 
-                <p>
-                    Enter your registered email address
-                    to continue.
-                </p>
-
-            </div>
+			</div>
 
 
-            <!-- ERROR -->
+			<div class="error-message" id="emailError">
 
-            <%
-                String error =
-                    (String) request.getAttribute("error");
+				<span class="error-icon">!</span> <span id="emailErrorText"></span>
 
-                if (error != null) {
-            %>
-
-            <div class="error-message">
-
-                <span class="error-icon">
-                    !
-                </span>
-
-                <span>
-                    <%= error %>
-                </span>
-
-            </div>
-
-            <%
-                }
-            %>
+			</div>
 
 
-            <!-- EMAIL FORM -->
-
-            <form
-                action="${pageContext.request.contextPath}/forgotpassword"
-                method="post">
+			<form id="forgotPasswordForm">
 
 
-                <div class="form-group">
+				<!-- EMAIL -->
 
-                    <label for="email">
-                        Email address
-                    </label>
+				<div class="form-group">
 
-                    <div class="input-wrapper">
-
-                        <span class="input-icon">
-                            @
-                        </span>
-
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            placeholder="Enter your registered email"
-                            autocomplete="email"
-                            required>
-
-                    </div>
-
-                </div>
+					<label for="email"> Email Address </label>
 
 
-                <button
-                    type="submit"
-                    class="continue-button">
-
-                    Continue
-
-                </button>
-
-            </form>
+					<div class="email-row">
 
 
-            <!-- BACK TO LOGIN -->
+						<div class="email-input-wrapper">
 
-            <div class="back-login">
+							<span class="input-icon"> ✉ </span> <input type="email"
+								id="email" name="email" placeholder="Enter your email address"
+								autocomplete="email">
 
-                <a
-                    href="${pageContext.request.contextPath}/login.jsp">
-
-                    ← Back to Login
-
-                </a>
-
-            </div>
+						</div>
 
 
-            <!-- SECURITY -->
+						<button type="button" id="verifyEmailButton"
+							class="verify-email-button" disabled>Verify Email</button>
 
-            <div class="security">
 
-                🔒 Your account information is securely handled.
+					</div>
 
-            </div>
 
-        </div>
+					<div class="field-error" id="emailFieldError"></div>
 
-    </main>
+
+				</div>
+
+
+
+				<!-- OTP TRAY -->
+
+				<div class="otp-tray" id="otpTray">
+
+
+					<div class="otp-header">
+
+
+						<div>
+
+							<strong> Enter Verification Code </strong> <small> We
+								sent a 4-digit verification code to your email. </small>
+
+						</div>
+
+
+						<div class="otp-verified-icon" id="otpVerifiedIcon">✓</div>
+
+
+					</div>
+
+
+
+					<div class="otp-input-row">
+
+
+						<input type="text" id="otp" maxlength="4" inputmode="numeric"
+							autocomplete="one-time-code" placeholder="••••">
+
+
+						<button type="button" id="verifyOtpButton"
+							class="verify-otp-button" disabled>Verify</button>
+
+
+					</div>
+
+
+
+					<div class="otp-message" id="otpMessage"></div>
+
+
+
+					<div class="resend-area">
+
+
+						<span id="resendText"> Resend available in 60 seconds </span>
+
+
+						<button type="button" id="resendOtpButton" disabled>
+
+							Resend Code</button>
+
+
+					</div>
+
+
+				</div>
+
+
+
+				<!-- CONTINUE -->
+
+				<button type="submit" id="continueButton" class="continue-button"
+					disabled>Continue</button>
+
+
+			</form>
+
+
+
+			<div class="back-login">
+
+				<a href="login.jsp"> ← Back to Login </a>
+
+			</div>
+
+
+			<div class="security">Your information is secure and protected.
+
+			</div>
+
+
+		</div>
+
+	</div>
+
+
+	<script src="assets/js/forgotpassword.js"></script>
 
 </body>
-
 </html>

@@ -2,6 +2,7 @@ package com.movieticket.controller.auth;
 
 import com.movieticket.dao.UserDAO;
 import com.movieticket.model.UserBean;
+import com.movieticket.util.EmailService;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -15,7 +16,6 @@ import java.io.IOException;
 public class RegisterServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-
 	private UserDAO userDAO;
 
 	@Override
@@ -28,38 +28,33 @@ public class RegisterServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		// Get data from registration form
-
 		String name = request.getParameter("name");
-
 		String email = request.getParameter("email");
-
 		String password = request.getParameter("password");
-
 		String phone = request.getParameter("phone");
 
 		// Create UserBean
-
 		UserBean user = new UserBean();
-
 		user.setName(name);
-
 		user.setEmail(email);
-
 		user.setPassword(password);
-
 		user.setPhone(phone);
 
 		// Normal users register with USER role
-
 		user.setRole("USER");
-
 		user.setStatus(true);
 
 		// Save user in database
-
 		boolean registered = userDAO.registerUser(user);
 
 		if (registered) {
+
+			// Send welcome email ONLY after successful registration
+			try {
+				EmailService.sendWelcomeEmail(email, name, request.getContextPath());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
 			response.sendRedirect(request.getContextPath() + "/register.jsp?success=1");
 

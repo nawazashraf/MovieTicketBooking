@@ -1,6 +1,7 @@
 package com.movieticket.controller.auth;
 
 import com.movieticket.dao.UserDAO;
+
 import com.movieticket.model.UserBean;
 
 import jakarta.servlet.ServletException;
@@ -13,6 +14,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebServlet("/login")
+
 public class LoginServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -21,9 +23,7 @@ public class LoginServlet extends HttpServlet {
 
 	@Override
 	public void init() {
-
 		userDAO = new UserDAO();
-
 	}
 
 	@Override
@@ -56,7 +56,15 @@ public class LoginServlet extends HttpServlet {
 
 			// Login successful
 
-			response.sendRedirect(request.getContextPath() + "/home");
+			if (user.isStatus()) {
+
+				response.sendRedirect(request.getContextPath() + "/home");
+
+			} else {
+
+				response.sendRedirect(request.getContextPath() + "/profile");
+
+			}
 
 		} else {
 
@@ -71,7 +79,9 @@ public class LoginServlet extends HttpServlet {
 			request.setAttribute("showForgotPassword", true);
 
 			request.getRequestDispatcher("/login.jsp").forward(request, response);
+
 		}
+
 	}
 
 	@Override
@@ -79,6 +89,7 @@ public class LoginServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		response.sendRedirect(request.getContextPath() + "/login.jsp");
+
 	}
 
 }

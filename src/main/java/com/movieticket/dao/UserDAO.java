@@ -40,11 +40,12 @@ public class UserDAO {
 		}
 	}
 
-	// Login user using email and password
 
+
+	// Login user using email and password
 	public UserBean loginUser(String email, String password) {
 
-		String sql = "SELECT * FROM users " + "WHERE email = ? AND password = ? AND status = TRUE";
+		String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
 
 		try (Connection connection = DBConnection.getConnection();
 				PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -64,10 +65,10 @@ public class UserDAO {
 				user.setPassword(resultSet.getString("password"));
 				user.setPhone(resultSet.getString("phone"));
 				user.setRole(resultSet.getString("role"));
+
 				user.setStatus(resultSet.getBoolean("status"));
 
 				Timestamp createdAt = resultSet.getTimestamp("created_at");
-
 				user.setCreatedAt(createdAt);
 
 				return user;
@@ -76,6 +77,7 @@ public class UserDAO {
 		} catch (SQLException e) {
 
 			e.printStackTrace();
+
 		}
 
 		return null;

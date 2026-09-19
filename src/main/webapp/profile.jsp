@@ -20,9 +20,11 @@
 
 </head>
 
+
 <body data-context-path="<%=request.getContextPath()%>">
 
 	<%@ include file="/common/navbar.jsp"%>
+
 
 	<%
 	String updateSuccess = (String) request.getAttribute("updateSuccess");
@@ -32,7 +34,9 @@
 	UserBean user = (UserBean) request.getAttribute("user");
 
 	if (user == null) {
+
 		user = (UserBean) session.getAttribute("user");
+
 	}
 
 	Boolean accountInactive = (Boolean) session.getAttribute("accountInactive");
@@ -40,8 +44,8 @@
 
 
 	<!-- =========================================================
-	     SUCCESS POPUP
-	========================================================= -->
+         SUCCESS POPUP
+    ========================================================= -->
 
 	<%
 	if (updateSuccess != null) {
@@ -74,8 +78,8 @@
 
 
 	<!-- =========================================================
-	     ERROR POPUP
-	========================================================= -->
+         ERROR POPUP
+    ========================================================= -->
 
 	<%
 	if (updateError != null) {
@@ -110,8 +114,8 @@
 
 
 	<!-- =========================================================
-	     INACTIVE ACCOUNT NOTICE
-	========================================================= -->
+         INACTIVE ACCOUNT NOTICE
+    ========================================================= -->
 
 	<%
 	if (Boolean.TRUE.equals(accountInactive)) {
@@ -143,8 +147,8 @@
 
 
 	<!-- =========================================================
-	     PROFILE PAGE
-	========================================================= -->
+         PROFILE PAGE
+    ========================================================= -->
 
 	<div class="profile-page">
 
@@ -174,8 +178,8 @@
 
 
 			<!-- =====================================================
-			     MAIN PROFILE CARD
-			===================================================== -->
+                 MAIN PROFILE CARD
+            ===================================================== -->
 
 			<div class="profile-card">
 
@@ -184,6 +188,8 @@
 
 				<div class="profile-banner"></div>
 
+
+				<!-- IDENTITY -->
 
 				<div class="identity-section">
 
@@ -206,10 +212,9 @@
 									<%=user.getName()%>
 								</h2>
 
+
 								<div class="identity-email">
-
 									<%=user.getEmail()%>
-
 								</div>
 
 
@@ -220,7 +225,7 @@
 									%>
 
 									<span class="status-badge status-active"> <span
-										class="status-dot"></span> Active
+										class="status-dot"> </span> Active
 
 									</span>
 
@@ -229,7 +234,7 @@
 									%>
 
 									<span class="status-badge status-inactive"> <span
-										class="status-dot"></span> Inactive
+										class="status-dot"> </span> Inactive
 
 									</span>
 
@@ -266,13 +271,14 @@
 
 
 				<!-- =================================================
-				     ACCOUNT INFORMATION
-				================================================= -->
+                     ACCOUNT INFORMATION
+                ================================================= -->
 
 				<div class="profile-content">
 
 
 					<section class="profile-section">
+
 
 						<div class="section-heading">
 
@@ -323,23 +329,9 @@
 								<div class="information-label">PHONE NUMBER</div>
 
 								<div class="information-value">
+
 									+91
 									<%=user.getPhone()%>
-								</div>
-
-							</div>
-
-
-							<!-- ROLE -->
-
-							<div class="information-item">
-
-								<div class="information-label">ACCOUNT ROLE</div>
-
-								<div class="information-value">
-
-									<span class="role-badge"> <%=user.getRole()%>
-									</span>
 
 								</div>
 
@@ -352,10 +344,11 @@
 
 
 					<!-- =================================================
-					     ACCOUNT STATUS
-					================================================= -->
+                         ACCOUNT STATUS
+                    ================================================= -->
 
 					<section class="profile-section">
+
 
 						<div class="section-heading">
 
@@ -425,10 +418,11 @@
 
 
 					<!-- =================================================
-					     ACCOUNT ACTION
-					================================================= -->
+                         ACCOUNT ACTION
+                    ================================================= -->
 
 					<section class="profile-actions">
+
 
 						<div>
 
@@ -442,6 +436,7 @@
 						<a href="<%=request.getContextPath()%>/logout" class="logout-btn">
 
 							Logout </a>
+
 
 					</section>
 
@@ -480,8 +475,8 @@
 
 
 	<!-- =========================================================
-	     EDIT PROFILE DRAWER
-	========================================================= -->
+         EDIT PROFILE DRAWER
+    ========================================================= -->
 
 	<%
 	if (user != null && user.isStatus()) {
@@ -525,6 +520,7 @@
 
 				<div class="drawer-profile-summary">
 
+
 					<div class="drawer-avatar">
 
 						<%=user.getName() != null ? user.getName().substring(0, 1).toUpperCase() : "U"%>
@@ -540,13 +536,16 @@
 
 					</div>
 
+
 				</div>
 
 
 				<div class="drawer-divider"></div>
 
 
-				<!-- FORM -->
+				<!-- =================================================
+                     FORM
+                ================================================= -->
 
 				<form action="<%=request.getContextPath()%>/update-profile"
 					method="post" id="editProfileForm" class="drawer-form">
@@ -608,36 +607,74 @@
 					</div>
 
 
-					<!-- ROLE -->
+					<!-- =================================================
+                         NEW PASSWORD
+                    ================================================= -->
 
 					<div class="drawer-field">
 
-						<label> Account Role </label>
+						<label for="editPassword"> New Password </label>
 
-						<div class="drawer-readonly">
+						<div class="password-input-wrapper">
 
-							<span class="readonly-icon"> ● </span> <span
-								class="readonly-value"> <%=user.getRole()%>
-							</span> <span class="readonly-badge"> SYSTEM </span>
+							<input type="password" id="editPassword" name="password"
+								autocomplete="new-password"
+								placeholder="Leave blank to keep current password">
+
+							<button type="button" class="password-toggle"
+								onclick="toggleEditPassword('editPassword', this)">
+
+								Show</button>
+
+						</div>
+
+
+						<!-- PASSWORD STRENGTH -->
+
+						<div id="editPasswordStrength" class="password-strength"
+							style="display: none;">
+
+							<div class="password-strength-bar">
+
+								<div id="editPasswordStrengthFill"
+									class="password-strength-fill"></div>
+
+							</div>
+
+
+							<div id="editPasswordStrengthText" class="password-strength-text">
+							</div>
 
 						</div>
 
 					</div>
 
 
-					<!-- NOTICE -->
+					<!-- =================================================
+                         CONFIRM PASSWORD
+                    ================================================= -->
 
-					<div class="drawer-notice">
+					<div class="drawer-field">
 
-						<div class="notice-icon">✓</div>
+						<label for="editConfirmPassword"> Confirm New Password </label>
 
-						<div>
+						<div class="password-input-wrapper">
 
-							<strong> Secure profile update </strong>
+							<input type="password" id="editConfirmPassword"
+								name="confirmPassword" autocomplete="new-password"
+								placeholder="Re-enter new password">
 
-							<p>Email and account role are managed by the system.</p>
+							<button type="button" class="password-toggle"
+								onclick="toggleEditPassword('editConfirmPassword', this)">
+
+								Show</button>
 
 						</div>
+
+
+						<!-- PASSWORD MATCH -->
+
+						<div id="editPasswordMatch" class="password-match"></div>
 
 					</div>
 
@@ -650,7 +687,8 @@
 							onclick="closeEditProfile()">Cancel</button>
 
 
-						<button type="submit" class="drawer-save">
+						<button type="submit" class="drawer-save"
+							id="editProfileSaveButton">
 
 							<span> Save Changes </span> <span class="save-arrow"> → </span>
 
@@ -660,6 +698,7 @@
 
 
 				</form>
+
 
 			</div>
 
@@ -674,8 +713,8 @@
 
 
 	<!-- =========================================================
-	     ACTIVATION POPUP
-	========================================================= -->
+         ACTIVATION POPUP
+    ========================================================= -->
 
 	<%
 	if (user != null && !user.isStatus()) {
@@ -766,10 +805,12 @@
 
 
 	<!-- =========================================================
-	     PROFILE JS
-	========================================================= -->
+         PROFILE JS
+    ========================================================= -->
 
-	<script src="${pageContext.request.contextPath}/assets/js/profile.js"></script>
+	<script src="${pageContext.request.contextPath}/assets/js/profile.js">
+		
+	</script>
 
 
 </body>

@@ -320,18 +320,6 @@ body.drawer-open {
 	word-break: break-word;
 }
 
-.role-badge {
-	display: inline-block;
-	padding: 5px 9px;
-	background: #f1f3f5;
-	border: 1px solid #dfe2e5;
-	border-radius: 5px;
-	color: #50555b;
-	font-size: 10px;
-	font-weight: 700;
-	text-transform: uppercase;
-}
-
 /* =========================================================
    PROFILE MESSAGE
    ========================================================= */
@@ -659,7 +647,6 @@ body.drawer-open {
 
 /* =========================================================
    DRAWER BODY
-   NON-SCROLLABLE
    ========================================================= */
 .drawer-body {
 	flex: 1;
@@ -849,7 +836,7 @@ body.drawer-open {
 }
 
 /* =========================================================
-   READONLY FIELD
+   READONLY EMAIL FIELD
    ========================================================= */
 .drawer-readonly {
 	min-height: 41px;
@@ -898,45 +885,92 @@ body.drawer-open {
 }
 
 /* =========================================================
-   DRAWER NOTICE
+   PASSWORD INPUT
    ========================================================= */
-.drawer-notice {
-	display: flex;
-	gap: 9px;
-	padding: 10px;
-	margin-top: 2px;
-	background: #f8f9fa;
-	border: 1px solid #e4e7ea;
+.password-input-wrapper {
+	position: relative;
+	width: 100%;
+}
+
+.password-input-wrapper input {
+	width: 100%;
+	height: 41px;
+	padding: 0 65px 0 11px;
+	border: 1px solid #d9dde3;
 	border-radius: 7px;
-	flex-shrink: 0;
+	background: #fff;
+	color: #20242a;
+	font-size: 12px;
+	outline: none;
+	transition: all 0.2s ease;
 }
 
-.notice-icon {
-	width: 24px;
-	height: 24px;
-	min-width: 24px;
-	border-radius: 50%;
-	background: #ecfdf3;
-	color: #15803d;
-	display: flex;
-	align-items: center;
-	justify-content: center;
+.password-input-wrapper input::placeholder {
+	color: #a5aab0;
+}
+
+.password-input-wrapper input:focus {
+	border-color: #e50914;
+	box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.08);
+}
+
+/* =========================================================
+   PASSWORD SHOW / HIDE
+   ========================================================= */
+.password-toggle {
+	position: absolute;
+	right: 9px;
+	top: 50%;
+	transform: translateY(-50%);
+	border: none;
+	background: transparent;
+	color: #e50914;
 	font-size: 10px;
-	font-weight: 800;
+	font-weight: 700;
+	cursor: pointer;
+	padding: 5px;
 }
 
-.drawer-notice strong {
-	display: block;
-	color: #41464c;
-	font-size: 10px;
-	margin-bottom: 3px;
+.password-toggle:hover {
+	color: #b80710;
 }
 
-.drawer-notice p {
-	margin: 0;
-	color: #858b92;
+/* =========================================================
+   PASSWORD STRENGTH
+   ========================================================= */
+.password-strength {
+	margin-top: 7px;
+}
+
+.password-strength-bar {
+	width: 100%;
+	height: 5px;
+	background: #e9ecef;
+	border-radius: 10px;
+	overflow: hidden;
+}
+
+.password-strength-fill {
+	height: 100%;
+	width: 0%;
+	border-radius: 10px;
+	transition: width 0.25s ease;
+}
+
+.password-strength-text {
+	margin-top: 4px;
 	font-size: 9px;
-	line-height: 1.4;
+	font-weight: 600;
+}
+
+/* =========================================================
+   PASSWORD MATCH
+   ========================================================= */
+.password-match {
+	min-height: 14px;
+	margin-top: 4px;
+	font-size: 9px;
+	font-weight: 600;
 }
 
 /* =========================================================
@@ -1063,17 +1097,6 @@ body.drawer-open {
 .inactive-ok-button:hover {
 	background: #000;
 	transform: translateY(-1px);
-}
-
-keyframes popupIn {from { opacity:0;
-	transform: translateY(10px) scale(0.98);
-}
-
-to {
-	opacity: 1;
-	transform: translateY(0) scale(1);
-}
-
 }
 
 /* =========================================================
@@ -1404,6 +1427,19 @@ to {
 	animation: profileUpdatePopupOut 0.3s ease forwards;
 }
 
+/* =========================================================
+   ANIMATIONS
+   ========================================================= */
+keyframes popupIn {from { opacity:0;
+	transform: translateY(10px) scale(0.98);
+}
+
+to {
+	opacity: 1;
+	transform: translateY(0) scale(1);
+}
+
+}
 keyframes profileUpdatePopupIn {from { opacity:0;
 	transform: translateX(35px);
 }
@@ -1427,7 +1463,7 @@ to {
 
 /* =========================================================
    PROFILE UPDATE ERROR POPUP
-========================================================= */
+   ========================================================= */
 .profile-update-error-card {
 	border-color: #f1c4c8;
 	border-left-color: #dc3545;
@@ -1601,17 +1637,25 @@ to {
 	.drawer-input-wrapper input {
 		font-size: 11px;
 	}
-	.drawer-notice {
-		padding: 8px;
-	}
-	.drawer-notice p {
-		font-size: 8px;
-	}
 	.drawer-actions {
 		padding-top: 11px;
 	}
-	.drawer-cancel, .drawer-save {
-		padding: 8px 14px;
+
+	/* PASSWORD */
+	.password-input-wrapper input {
+		height: 39px;
+		padding: 0 60px 0 10px;
+		font-size: 11px;
+	}
+	.password-toggle {
+		right: 7px;
+		font-size: 9px;
+	}
+	.password-strength-text {
+		font-size: 8px;
+	}
+	.password-match {
+		font-size: 8px;
 	}
 }
 
@@ -1687,9 +1731,6 @@ to {
 	.drawer-field small, .field-hint {
 		display: none;
 	}
-	.drawer-notice {
-		display: none;
-	}
 	.drawer-actions {
 		flex-direction: row;
 		gap: 7px;
@@ -1701,6 +1742,27 @@ to {
 		justify-content: center;
 		padding: 8px 10px;
 		font-size: 10px;
+	}
+
+	/* PASSWORD */
+	.password-input-wrapper input {
+		height: 36px;
+		padding: 0 55px 0 9px;
+		font-size: 10px;
+	}
+	.password-toggle {
+		right: 5px;
+		font-size: 8px;
+		padding: 4px;
+	}
+	.password-strength {
+		margin-top: 5px;
+	}
+	.password-strength-text {
+		font-size: 8px;
+	}
+	.password-match {
+		font-size: 8px;
 	}
 
 	/* ACTIVATION */
@@ -1735,8 +1797,14 @@ to {
 	.phone-prefix, .phone-input-group input {
 		height: 36px;
 	}
-	.drawer-notice {
-		padding: 8px;
+	.password-input-wrapper input {
+		height: 36px;
+	}
+	.password-strength {
+		margin-top: 5px;
+	}
+	.password-match {
+		margin-top: 3px;
 	}
 	.drawer-actions {
 		padding-top: 8px;

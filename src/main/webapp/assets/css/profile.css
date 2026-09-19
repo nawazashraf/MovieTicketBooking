@@ -1,5 +1,104 @@
 @charset "UTF-8";
 
+/* =========================================================
+   INACTIVE ACCOUNT POPUP
+   ========================================================= */
+.inactive-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.35);
+	backdrop-filter: blur(7px);
+	-webkit-backdrop-filter: blur(7px);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 99999;
+}
+
+.inactive-popup {
+	width: 430px;
+	max-width: calc(100% - 40px);
+	background: #ffffff;
+	border-radius: 14px;
+	padding: 35px 30px 30px;
+	text-align: center;
+	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+	animation: inactivePopupShow 0.2s ease;
+}
+
+.inactive-icon {
+	width: 58px;
+	height: 58px;
+	margin: 0 auto 18px;
+	border-radius: 50%;
+	background: #fff3cd;
+	color: #856404;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 32px;
+	font-weight: 700;
+	border: 1px solid #ffe69c;
+}
+
+.inactive-popup h2 {
+	margin: 0 0 12px;
+	font-size: 24px;
+	font-weight: 700;
+	color: #20242b;
+}
+
+.inactive-popup p {
+	margin: 0 auto 25px;
+	max-width: 350px;
+	font-size: 14px;
+	line-height: 1.6;
+	color: #6b7280;
+}
+
+.inactive-ok-button {
+	min-width: 100px;
+	height: 42px;
+	padding: 0 25px;
+	border: none;
+	border-radius: 7px;
+	background: #212529;
+	color: #ffffff;
+	font-size: 14px;
+	font-weight: 700;
+	cursor: pointer;
+	transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.inactive-ok-button:hover {
+	background: #000000;
+}
+
+.inactive-ok-button:active {
+	transform: scale(0.98);
+}
+
+.inactive-overlay-hidden {
+	display: none;
+}
+
+keyframes inactivePopupShow {from { opacity:0;
+	transform: scale(0.95);
+}
+
+to {
+	opacity: 1;
+	transform: scale(1);
+}
+
+}
+
+/* =========================================================
+   MAIN PAGE
+   ========================================================= */
 * {
 	box-sizing: border-box;
 }
@@ -11,9 +110,9 @@ body {
 	color: #1f2937;
 }
 
-/* =========================
-       MAIN PAGE
-       ========================= */
+/* =========================================================
+   MAIN PAGE
+   ========================================================= */
 .profile-page {
 	width: 100%;
 	min-height: calc(100vh - 60px);
@@ -26,9 +125,9 @@ body {
 	margin: 0 auto;
 }
 
-/* =========================
-       PAGE HEADER
-       ========================= */
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
 .page-header {
 	margin-bottom: 28px;
 }
@@ -47,9 +146,9 @@ body {
 	color: #737983;
 }
 
-/* =========================
-       MAIN PROFILE CARD
-       ========================= */
+/* =========================================================
+   MAIN PROFILE CARD
+   ========================================================= */
 .profile-card {
 	background: #ffffff;
 	border: 1px solid #e4e6ea;
@@ -58,18 +157,18 @@ body {
 	box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
 }
 
-/* =========================
-       CLEAN TOP AREA
-       ========================= */
+/* =========================================================
+   CLEAN TOP AREA
+   ========================================================= */
 .profile-banner {
 	height: 35px;
 	background: #ffffff;
 	border-bottom: 1px solid #eeeeee;
 }
 
-/* =========================
-       IDENTITY SECTION
-       ========================= */
+/* =========================================================
+   IDENTITY SECTION
+   ========================================================= */
 .identity-section {
 	padding: 25px 35px 30px;
 	position: relative;
@@ -89,9 +188,9 @@ body {
 	margin-top: 0;
 }
 
-/* =========================
-       PROFILE AVATAR
-       ========================= */
+/* =========================================================
+   PROFILE AVATAR
+   ========================================================= */
 .profile-avatar {
 	width: 82px;
 	height: 82px;
@@ -108,9 +207,9 @@ body {
 	box-shadow: 0 3px 12px rgba(0, 0, 0, 0.14);
 }
 
-/* =========================
-       USER IDENTITY
-       ========================= */
+/* =========================================================
+   USER IDENTITY
+   ========================================================= */
 .identity-info h2 {
 	margin: 0;
 	font-size: 22px;
@@ -124,9 +223,9 @@ body {
 	color: #7a818c;
 }
 
-/* =========================
-       STATUS BADGE
-       ========================= */
+/* =========================================================
+   STATUS BADGE
+   ========================================================= */
 .status-badge {
 	display: inline-flex;
 	align-items: center;
@@ -177,16 +276,16 @@ body {
 	font-weight: bold;
 }
 
-/* =========================
-       CONTENT
-       ========================= */
+/* =========================================================
+   CONTENT
+   ========================================================= */
 .profile-content {
 	padding: 32px 35px 38px;
 }
 
-/* =========================
-       SECTION
-       ========================= */
+/* =========================================================
+   SECTION
+   ========================================================= */
 .profile-section {
 	margin-bottom: 34px;
 }
@@ -212,9 +311,9 @@ body {
 	color: #8a9099;
 }
 
-/* =========================
-       ACCOUNT OVERVIEW
-       ========================= */
+/* =========================================================
+   ACCOUNT OVERVIEW
+   ========================================================= */
 .overview-grid {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
@@ -246,9 +345,9 @@ body {
 	word-break: break-word;
 }
 
-/* =========================
-       INFORMATION GRID
-       ========================= */
+/* =========================================================
+   INFORMATION GRID
+   ========================================================= */
 .information-grid {
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
@@ -272,9 +371,9 @@ body {
 	border-bottom: none;
 }
 
-/* =========================
-       LABEL
-       ========================= */
+/* =========================================================
+   LABEL
+   ========================================================= */
 .information-label {
 	display: block;
 	margin-bottom: 8px;
@@ -285,9 +384,9 @@ body {
 	letter-spacing: 0.5px;
 }
 
-/* =========================
-       VALUE
-       ========================= */
+/* =========================================================
+   VALUE
+   ========================================================= */
 .information-value {
 	display: block;
 	color: #30343b;
@@ -296,9 +395,9 @@ body {
 	word-break: break-word;
 }
 
-/* =========================
-       ROLE BADGE
-       ========================= */
+/* =========================================================
+   ROLE BADGE
+   ========================================================= */
 .role-badge {
 	display: inline-block;
 	padding: 5px 10px;
@@ -312,9 +411,9 @@ body {
 	letter-spacing: 0.3px;
 }
 
-/* =========================
-       ACCOUNT ACCESS
-       ========================= */
+/* =========================================================
+   ACCOUNT ACCESS
+   ========================================================= */
 .security-panel {
 	display: flex;
 	align-items: center;
@@ -331,9 +430,9 @@ body {
 	gap: 13px;
 }
 
-/* =========================
-       ACCESS ICON
-       ========================= */
+/* =========================================================
+   ACCESS ICON
+   ========================================================= */
 .security-icon {
 	width: 38px;
 	height: 38px;
@@ -354,9 +453,9 @@ body {
 	color: #dc2626;
 }
 
-/* =========================
-       ACCESS TEXT
-       ========================= */
+/* =========================================================
+   ACCESS TEXT
+   ========================================================= */
 .security-text strong {
 	display: block;
 	margin-bottom: 4px;
@@ -370,9 +469,9 @@ body {
 	font-size: 12px;
 }
 
-/* =========================
-       ACCESS STATUS
-       ========================= */
+/* =========================================================
+   ACCESS STATUS
+   ========================================================= */
 .security-status-active {
 	color: #15803d;
 	font-size: 12px;
@@ -385,9 +484,9 @@ body {
 	font-weight: 700;
 }
 
-/* =========================
-       EMPTY PROFILE
-       ========================= */
+/* =========================================================
+   EMPTY PROFILE
+   ========================================================= */
 .empty-profile {
 	background: #ffffff;
 	border: 1px solid #e4e6ea;
@@ -409,9 +508,9 @@ body {
 	color: #808691;
 }
 
-/* =========================
-       ACCOUNT ACTIONS
-       ========================= */
+/* =========================================================
+   ACCOUNT ACTIONS
+   ========================================================= */
 .profile-actions {
 	margin-top: 28px;
 	padding: 22px 25px;
@@ -437,9 +536,9 @@ body {
 	color: #8a9099;
 }
 
-/* =========================
-       LOGOUT BUTTON
-       ========================= */
+/* =========================================================
+   LOGOUT BUTTON
+   ========================================================= */
 .logout-btn {
 	display: inline-flex;
 	align-items: center;
@@ -463,9 +562,9 @@ body {
 	color: #ffffff;
 }
 
-/* =========================
-       RESPONSIVE
-       ========================= */
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
 @media ( max-width : 800px) {
 	.profile-page {
 		padding: 25px 15px 50px;
@@ -525,5 +624,14 @@ body {
 	}
 	.logout-btn {
 		width: 100%;
+	}
+	.inactive-popup {
+		padding: 30px 22px 25px;
+	}
+	.inactive-popup h2 {
+		font-size: 21px;
+	}
+	.inactive-popup p {
+		font-size: 13px;
 	}
 }

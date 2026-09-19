@@ -39,7 +39,7 @@
 			<div class="brand-main">
 
 				<h1>
-					Your movie night <span>starts here.</span>
+					Your movie night <span>starts here.</span>i want if user in active 
 				</h1>
 
 				<p>Sign in to continue booking movie tickets, choose your

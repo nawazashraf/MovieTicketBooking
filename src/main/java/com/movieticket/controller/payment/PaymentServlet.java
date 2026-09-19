@@ -20,8 +20,14 @@ import com.google.zxing.common.BitMatrix;
 
 import com.movieticket.dao.BookingDAO;
 import com.movieticket.dao.PaymentDAO;
+import com.movieticket.dao.TicketDAO;
+
 import com.movieticket.model.BookingBean;
 import com.movieticket.model.PaymentBean;
+import com.movieticket.model.TicketBean;
+
+import com.movieticket.util.EmailService;
+import com.movieticket.util.PdfService;
 
 @WebServlet("/payment")
 public class PaymentServlet extends HttpServlet {
@@ -51,11 +57,8 @@ public class PaymentServlet extends HttpServlet {
 			response.setContentType("text/plain;charset=UTF-8");
 
 			if (payment != null) {
-
 				response.getWriter().print(payment.getPaymentStatus());
-
 			} else {
-
 				response.getWriter().print("PENDING");
 			}
 
@@ -248,10 +251,41 @@ public class PaymentServlet extends HttpServlet {
 				boolean bookingConfirmed = bookingDAO.confirmBookingAndSeats(bookingId);
 
 				if (!bookingConfirmed) {
-
 					paymentSuccess = false;
 				}
 			}
+
+			/*
+			 * ================================================= SEND EMAIL AFTER SUCCESSFUL
+			 * QR PAYMENT =================================================
+			 */
+
+			if (paymentSuccess) {
+
+				HttpSession session = request.getSession(false);
+
+				if (session != null && session.getAttribute("user") != null) {
+
+					TicketDAO ticketDAO = new TicketDAO();
+
+					TicketBean ticket = ticketDAO.getTicketByBookingId(bookingId);
+
+					if (ticket != null) {
+
+						byte[] pdfBytes = PdfService.generateTicketPdf(ticket);
+
+						if (pdfBytes != null) {
+
+							EmailService.sendTicketEmail(ticket, session, pdfBytes);
+						}
+					}
+				}
+			}
+
+			/*
+			 * ================================================= SUCCESS / FAILURE PAGE
+			 * =================================================
+			 */
 
 			response.setContentType("text/html;charset=UTF-8");
 
@@ -259,52 +293,50 @@ public class PaymentServlet extends HttpServlet {
 
 				response.getWriter().println(
 
-						"<!DOCTYPE html>" + "<html>" + "<head>" + "<meta charset='UTF-8'>" +
+						"<!DOCTYPE html>" + "<html>" + "<head>" + "<meta charset='UTF-8'>" + "<meta name='viewport' "
+								+ "content='width=device-width, initial-scale=1.0'>"
+								+ "<title>Payment Successful</title>"
 
-								"<meta name='viewport' " + "content='width=device-width, " + "initial-scale=1.0'>" +
+								+ "<style>"
 
-								"<title>Payment Successful</title>" +
+								+ "*{box-sizing:border-box;}"
 
-								"<style>" +
-
-								"*{box-sizing:border-box;}" +
-
-								"body{" + "margin:0;" + "padding:20px;" + "min-height:100vh;" + "background:#f5f5f5;"
+								+ "body{" + "margin:0;" + "padding:20px;" + "min-height:100vh;" + "background:#f5f5f5;"
 								+ "font-family:Arial,Helvetica,sans-serif;" + "display:flex;" + "align-items:center;"
-								+ "justify-content:center;" + "}" +
+								+ "justify-content:center;" + "}"
 
-								".success-card{" + "width:100%;" + "max-width:400px;" + "background:white;"
+								+ ".success-card{" + "width:100%;" + "max-width:400px;" + "background:white;"
 								+ "border-radius:16px;" + "padding:30px 25px;" + "text-align:center;"
-								+ "box-shadow:0 5px 25px rgba(0,0,0,.12);" + "}" +
+								+ "box-shadow:0 5px 25px rgba(0,0,0,.12);" + "}"
 
-								".icon{" + "width:65px;" + "height:65px;" + "margin:0 auto 15px;" + "border-radius:50%;"
-								+ "background:#198754;" + "color:white;" + "font-size:35px;" + "display:flex;"
-								+ "align-items:center;" + "justify-content:center;" + "}" +
+								+ ".icon{" + "width:65px;" + "height:65px;" + "margin:0 auto 15px;"
+								+ "border-radius:50%;" + "background:#198754;" + "color:white;" + "font-size:35px;"
+								+ "display:flex;" + "align-items:center;" + "justify-content:center;" + "}"
 
-								".title{" + "font-size:24px;" + "font-weight:bold;" + "color:#222;"
-								+ "margin-bottom:8px;" + "}" +
+								+ ".title{" + "font-size:24px;" + "font-weight:bold;" + "color:#222;"
+								+ "margin-bottom:8px;" + "}"
 
-								".message{" + "font-size:14px;" + "color:#777;" + "}" +
+								+ ".message{" + "font-size:14px;" + "color:#777;" + "}"
 
-								"</style>" +
+								+ "</style>"
 
-								"</head>" +
+								+ "</head>"
 
-								"<body>" +
+								+ "<body>"
 
-								"<div class='success-card'>" +
+								+ "<div class='success-card'>"
 
-								"<div class='icon'>✓</div>" +
+								+ "<div class='icon'>✓</div>"
 
-								"<div class='title'>" + "Payment Successful" + "</div>" +
+								+ "<div class='title'>" + "Payment Successful" + "</div>"
 
-								"<div class='message'>" + "Your payment has been completed successfully." + "</div>" +
+								+ "<div class='message'>" + "Your payment has been completed successfully." + "</div>"
 
-								"</div>" +
+								+ "</div>"
 
-								"</body>" +
+								+ "</body>"
 
-								"</html>");
+								+ "</html>");
 
 			} else {
 

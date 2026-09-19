@@ -58,9 +58,13 @@ public class LoginServlet extends HttpServlet {
 
 			if (user.isStatus()) {
 
+				session.removeAttribute("accountInactive");
+
 				response.sendRedirect(request.getContextPath() + "/home");
 
 			} else {
+
+				session.setAttribute("accountInactive", true);
 
 				response.sendRedirect(request.getContextPath() + "/profile");
 

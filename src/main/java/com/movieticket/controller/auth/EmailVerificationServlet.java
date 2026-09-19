@@ -20,7 +20,6 @@ public class EmailVerificationServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	private static final long RESEND_TIME = 60 * 1000;
-
 	private final SecureRandom random = new SecureRandom();
 
 	@Override
@@ -54,12 +53,11 @@ public class EmailVerificationServlet extends HttpServlet {
 
 		} else if ("activateResend".equals(action)) {
 
-			activateSend(request, response);
+			activateResend(request, response);
 
 		} else {
 
 			response.getWriter().write("{\"success\":false,\"message\":\"Invalid request.\"}");
-
 		}
 	}
 
@@ -255,8 +253,6 @@ public class EmailVerificationServlet extends HttpServlet {
 
 	// ==================== ACCOUNT ACTIVATION - VERIFY OTP ====================
 
-	// ==================== ACCOUNT ACTIVATION - VERIFY OTP ====================
-
 	private void activateVerify(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		HttpSession session = request.getSession(false);
@@ -320,10 +316,6 @@ public class EmailVerificationServlet extends HttpServlet {
 
 			session.setAttribute("userRole", updatedUser.getRole());
 
-			// ====================================================
-			// ACCOUNT ACTIVATED EMAIL
-			// ====================================================
-
 			try {
 
 				EmailService.sendAccountActivatedEmail(updatedUser.getEmail(), updatedUser.getName());
@@ -331,13 +323,12 @@ public class EmailVerificationServlet extends HttpServlet {
 			} catch (Exception e) {
 
 				e.printStackTrace();
-
 			}
 		}
 
 		session.removeAttribute("emailVerification");
 
-		session.removeAttribute("accountInactive");
+		session.setAttribute("accountInactive", false);
 
 		response.getWriter().write("{\"success\":true,\"message\":\"Account activated successfully.\"}");
 	}

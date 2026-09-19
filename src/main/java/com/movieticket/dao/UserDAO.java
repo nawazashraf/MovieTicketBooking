@@ -227,4 +227,23 @@ public class UserDAO {
 			return false;
 		}
 	}
+	
+	// Activate account
+	public boolean activateAccount(String id) {
+
+		String sql = "UPDATE users SET status = 1 WHERE id = ?";
+
+		try (Connection connection = DBConnection.getConnection();
+				PreparedStatement statement = connection.prepareStatement(sql)) {
+
+			statement.setString(1, id);
+
+			return statement.executeUpdate() > 0;
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+			return false;
+		}
+	}
 }

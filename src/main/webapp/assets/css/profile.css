@@ -85,6 +85,7 @@
 	display: none;
 }
 
+
 keyframes inactivePopupShow {from { opacity:0;
 	transform: scale(0.95);
 }
@@ -111,7 +112,7 @@ body {
 }
 
 /* =========================================================
-   MAIN PAGE
+   PROFILE PAGE
    ========================================================= */
 .profile-page {
 	width: 100%;
@@ -537,6 +538,24 @@ body {
 }
 
 /* =========================================================
+   ACTIVATE ACCOUNT BUTTON
+   ========================================================= */
+.activate-account-btn {
+	border: none;
+	padding: 11px 20px;
+	border-radius: 8px;
+	background: #198754;
+	color: #ffffff;
+	font-size: 14px;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.activate-account-btn:hover {
+	background: #157347;
+}
+
+/* =========================================================
    LOGOUT BUTTON
    ========================================================= */
 .logout-btn {
@@ -563,7 +582,435 @@ body {
 }
 
 /* =========================================================
-   RESPONSIVE
+   ACCOUNT ACTIVATION POPUP
+   ========================================================= */
+.activation-overlay {
+	position: fixed;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	display: none;
+	align-items: center;
+	justify-content: center;
+	padding: 20px;
+	background: rgba(0, 0, 0, 0.25);
+	backdrop-filter: blur(7px);
+	-webkit-backdrop-filter: blur(7px);
+	z-index: 99998;
+}
+
+/* =========================================================
+   ACTIVATION CARD
+   ========================================================= */
+.activation-card {
+	width: 100%;
+	max-width: 430px;
+	padding: 40px 42px;
+	background: #ffffff;
+	border: 1px solid #e5e7eb;
+	border-radius: 16px;
+	box-shadow: 0 18px 50px rgba(0, 0, 0, 0.10);
+	text-align: center;
+	animation: activationPopupShow 0.25s ease;
+}
+
+/* =========================================================
+   BRAND
+   ========================================================= */
+.activation-brand {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	margin-bottom: 24px;
+}
+
+.activation-brand-logo {
+	width: 32px;
+	height: 32px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 7px;
+	background: #e50914;
+	color: #ffffff;
+	font-size: 18px;
+	font-weight: 700;
+}
+
+.activation-brand-name {
+	color: #222222;
+	font-size: 18px;
+	font-weight: 700;
+}
+
+/* =========================================================
+   ACTIVATION ICON
+   ========================================================= */
+.activation-icon {
+	width: 58px;
+	height: 58px;
+	margin: 0 auto 18px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+	background: #fff1f2;
+	color: #e50914;
+	font-size: 25px;
+}
+
+/* =========================================================
+   ACTIVATION HEADER
+   ========================================================= */
+.activation-header {
+	margin-bottom: 20px;
+}
+
+.activation-header h1 {
+	margin: 0;
+	color: #222222;
+	font-size: 24px;
+	font-weight: 700;
+}
+
+.activation-header p {
+	margin: 8px 0 0;
+	color: #777777;
+	font-size: 12px;
+	line-height: 1.5;
+}
+
+/* =========================================================
+   ACTIVATION MESSAGE
+   ========================================================= */
+.activation-message {
+	min-height: 17px;
+	margin-bottom: 10px;
+	color: #777777;
+	font-size: 10px;
+	font-weight: 600;
+	line-height: 1.5;
+}
+
+.activation-message.success {
+	color: #16803c;
+}
+
+.activation-message.error {
+	color: #e50914;
+}
+
+/* =========================================================
+   SEND VERIFICATION CODE
+   ========================================================= */
+.activation-send-btn {
+	width: 100%;
+	height: 44px;
+	border: none;
+	border-radius: 7px;
+	background: #e50914;
+	color: #ffffff;
+	font-size: 12px;
+	font-weight: 700;
+	cursor: pointer;
+	transition: background 0.2s ease;
+}
+
+.activation-send-btn:hover {
+	background: #c70812;
+}
+
+/* =========================================================
+   OTP TRAY
+   ========================================================= */
+.activation-otp-tray {
+	width: 100%;
+	margin-top: 12px;
+	padding: 15px;
+	border: 1px solid #e2e4e8;
+	border-radius: 9px;
+	background: #fafafa;
+	text-align: left;
+	animation: otpSlideDown 0.25s ease;
+}
+
+/* =========================================================
+   OTP HEADER
+   ========================================================= */
+.activation-otp-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	margin-bottom: 12px;
+}
+
+.activation-otp-header strong {
+	display: block;
+	color: #222222;
+	font-size: 12px;
+}
+
+.activation-otp-header small {
+	display: block;
+	margin-top: 4px;
+	color: #888888;
+	font-size: 10px;
+	line-height: 1.4;
+}
+
+/* =========================================================
+   VERIFIED ICON
+   ========================================================= */
+.activation-verified-icon {
+	width: 24px;
+	height: 24px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	border-radius: 50%;
+	background: #12b76a;
+	color: #ffffff;
+	font-size: 13px;
+	font-weight: 700;
+}
+
+/* =========================================================
+   OTP INPUT ROW
+   ========================================================= */
+.activation-otp-input-row {
+	display: flex;
+	align-items: stretch;
+	gap: 8px;
+}
+
+/* =========================================================
+   OTP INPUT
+   ========================================================= */
+#activationOtp {
+	width: 100%;
+	height: 42px;
+	flex: 1;
+	min-width: 0;
+	padding: 0 12px;
+	border: 1px solid #d8dadd;
+	border-radius: 7px;
+	outline: none;
+	background: #ffffff;
+	color: #222222;
+	font-size: 16px;
+	font-weight: 700;
+	letter-spacing: 6px;
+	text-align: center;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#activationOtp:focus {
+	border-color: #e50914;
+	box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.07);
+}
+
+#activationOtp::placeholder {
+	color: #aaaaaa;
+	letter-spacing: 2px;
+	font-size: 13px;
+	font-weight: 400;
+}
+
+/* =========================================================
+   VERIFY OTP
+   ========================================================= */
+.activation-verify-btn {
+	width: 90px;
+	flex-shrink: 0;
+	height: 42px;
+	border: none;
+	border-radius: 7px;
+	background: #222222;
+	color: #ffffff;
+	font-size: 11px;
+	font-weight: 700;
+	cursor: pointer;
+	transition: background 0.2s ease;
+}
+
+.activation-verify-btn:hover {
+	background: #000000;
+}
+
+.activation-verify-btn:disabled {
+	opacity: 0.45;
+	cursor: not-allowed;
+}
+
+/* =========================================================
+   RESEND AREA
+   ========================================================= */
+.activation-resend-area {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	margin-top: 10px;
+	padding-top: 10px;
+	border-top: 1px solid #eeeeee;
+}
+
+.activation-resend-area span {
+	color: #999999;
+	font-size: 10px;
+}
+
+/* =========================================================
+   RESEND BUTTON
+   ========================================================= */
+.activation-resend-btn {
+	width: auto;
+	padding: 0;
+	border: none;
+	background: transparent;
+	color: #e50914;
+	font-size: 10px;
+	font-weight: 700;
+	cursor: pointer;
+}
+
+.activation-resend-btn:hover {
+	text-decoration: underline;
+}
+
+.activation-resend-btn:disabled {
+	color: #aaaaaa;
+	cursor: not-allowed;
+	text-decoration: none;
+}
+
+/* =========================================================
+   CANCEL BUTTON
+   ========================================================= */
+.activation-close-btn {
+	width: 100%;
+	height: 40px;
+	margin-top: 14px;
+	border: 1px solid #e50914;
+	border-radius: 7px;
+	background: #ffffff;
+	color: #e50914;
+	font-size: 11px;
+	font-weight: 700;
+	cursor: pointer;
+	transition: background 0.2s ease, color 0.2s ease, border-color 0.2s
+		ease;
+}
+
+.activation-close-btn:hover {
+	background: #fff1f2;
+	color: #c70812;
+	border-color: #c70812;
+}
+
+/* =========================================================
+   ACTIVATION ANIMATIONS
+   ========================================================= */
+
+keyframes activationPopupShow {from { opacity:0;
+	transform: translateY(-8px) scale(0.98);
+}
+
+to {
+	opacity: 1;
+	transform: translateY(0) scale(1);
+}
+
+}
+
+keyframes otpSlideDown {from { opacity:0;
+	transform: translateY(-8px);
+}
+
+to {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+}
+
+/* =========================================================
+   ACTIVATION POPUP TABLET
+   ========================================================= */
+@media ( max-width : 600px) {
+	.activation-overlay {
+		padding: 15px;
+	}
+	.activation-card {
+		max-width: 430px;
+		padding: 35px 30px;
+	}
+}
+
+/* =========================================================
+   ACTIVATION POPUP MOBILE
+   ========================================================= */
+@media ( max-width : 500px) {
+	.activation-overlay {
+		padding: 15px;
+	}
+	.activation-card {
+		padding: 30px 22px;
+		border-radius: 14px;
+	}
+	.activation-header h1 {
+		font-size: 21px;
+	}
+	.activation-header p {
+		font-size: 11px;
+	}
+	.activation-otp-input-row {
+		flex-direction: column;
+	}
+	.activation-verify-btn {
+		width: 100%;
+		height: 42px;
+	}
+	.activation-resend-area {
+		flex-direction: column;
+		align-items: center;
+		gap: 7px;
+	}
+	#activationOtp {
+		height: 42px;
+		font-size: 15px;
+		letter-spacing: 5px;
+	}
+	.activation-close-btn {
+		height: 42px;
+	}
+}
+
+/* =========================================================
+   ACTIVATION POPUP SMALL MOBILE
+   ========================================================= */
+@media ( max-width : 380px) {
+	.activation-card {
+		padding: 25px 18px;
+	}
+	.activation-header h1 {
+		font-size: 20px;
+	}
+	.activation-header p {
+		font-size: 11px;
+	}
+	.activation-icon {
+		width: 54px;
+		height: 54px;
+		font-size: 23px;
+	}
+}
+
+/* =========================================================
+   RESPONSIVE PROFILE PAGE
    ========================================================= */
 @media ( max-width : 800px) {
 	.profile-page {

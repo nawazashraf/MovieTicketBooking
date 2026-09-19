@@ -28,7 +28,6 @@ public class AccountStatusFilter implements Filter {
 		HttpServletResponse res = (HttpServletResponse) response;
 
 		String contextPath = req.getContextPath();
-
 		String path = req.getRequestURI().substring(contextPath.length());
 
 		HttpSession session = req.getSession(false);
@@ -70,7 +69,8 @@ public class AccountStatusFilter implements Filter {
 				|| path.equals("/ticket.jsp") || path.equals("/ticket") || path.equals("/login")
 				|| path.equals("/logout") || path.equals("/profile") || path.equals("/register")
 				|| path.equals("/bookings") || path.equals("/home") || path.equals("/movies/details")
-				|| path.equals("/movies") || path.equals("/movies/search") || path.equals("/shows")) {
+				|| path.equals("/movies") || path.equals("/movies/search") || path.equals("/shows")
+				|| path.equals("/emailVerification")) {
 
 			chain.doFilter(request, response);
 			return;
@@ -129,9 +129,6 @@ public class AccountStatusFilter implements Filter {
 		 * ============================================================
 		 *
 		 * User is inactive.
-		 *
-		 * Store a session flag so that the profile page knows that the user was
-		 * redirected here because of an inactive account.
 		 */
 
 		if (!user.isStatus()) {
@@ -139,7 +136,6 @@ public class AccountStatusFilter implements Filter {
 			session.setAttribute("accountInactive", true);
 
 			res.sendRedirect(contextPath + "/profile");
-
 			return;
 		}
 
@@ -152,5 +148,4 @@ public class AccountStatusFilter implements Filter {
 
 		chain.doFilter(request, response);
 	}
-
 }

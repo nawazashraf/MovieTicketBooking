@@ -10,14 +10,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+import com.movieticket.dao.UserDAO;
 import com.movieticket.model.EmailVerificationBean;
+import com.movieticket.model.UserBean;
 import com.movieticket.util.EmailService;
 
 @WebServlet("/emailVerification")
 public class EmailVerificationServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-
 	private static final long RESEND_TIME = 60 * 1000;
 
 	private final SecureRandom random = new SecureRandom();
@@ -43,9 +44,22 @@ public class EmailVerificationServlet extends HttpServlet {
 
 			resendOtp(request, response);
 
+		} else if ("activateSend".equals(action)) {
+
+			activateSend(request, response);
+
+		} else if ("activateVerify".equals(action)) {
+
+			activateVerify(request, response);
+
+		} else if ("activateResend".equals(action)) {
+
+			activateSend(request, response);
+
 		} else {
 
 			response.getWriter().write("{\"success\":false,\"message\":\"Invalid request.\"}");
+
 		}
 	}
 
@@ -140,7 +154,7 @@ public class EmailVerificationServlet extends HttpServlet {
 
 		if (oldVerification == null) {
 
-			response.getWriter().write("{\"success\":false,\"message\":\"Please verify your email first.\"}");
+			response.getWriter().write("{\"success\":false,\"message\":\"Please request a verification code first.\"}");
 
 			return;
 		}
@@ -166,6 +180,219 @@ public class EmailVerificationServlet extends HttpServlet {
 		try {
 
 			EmailService.sendOtpEmail(newVerification.getEmail(), otp);
+
+			session.setAttribute("emailVerification", newVerification);
+
+			response.getWriter().write("{\"success\":true,\"message\":\"New verification code sent.\"}");
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+			response.getWriter().write("{\"success\":false,\"message\":\"Unable to send verification code.\"}");
+		}
+	}
+
+	// ==================== ACCOUNT ACTIVATION - SEND OTP ====================
+
+	private void activateSend(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		HttpSession session = request.getSession(false);
+
+		if (session == null || session.getAttribute("userId") == null) {
+
+			response.getWriter().write("{\"success\":false,\"message\":\"Please login first.\"}");
+
+			return;
+		}
+
+		String userId = String.valueOf(session.getAttribute("userId"));
+
+		UserDAO userDAO = new UserDAO();
+
+		UserBean user = userDAO.getUserById(userId);
+
+		if (user == null) {
+
+			response.getWriter().write("{\"success\":false,\"message\":\"User not found.\"}");
+
+			return;
+		}
+
+		String email = user.getEmail();
+
+		if (email == null || email.trim().isEmpty()) {
+
+			response.getWriter().write("{\"success\":false,\"message\":\"Registered email not found.\"}");
+
+			return;
+		}
+
+		email = email.trim();
+
+		String otp = generateOtp();
+
+		long currentTime = System.currentTimeMillis();
+
+		EmailVerificationBean verification = new EmailVerificationBean(email, otp, currentTime);
+
+		try {
+
+			EmailService.sendOtpEmail(email, otp);
+
+			session.setAttribute("emailVerification", verification);
+
+			response.getWriter()
+					.write("{\"success\":true,\"message\":\"Verification code sent to your registered email.\"}");
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+			response.getWriter().write("{\"success\":false,\"message\":\"Unable to send verification code.\"}");
+		}
+	}
+
+	// ==================== ACCOUNT ACTIVATION - VERIFY OTP ====================
+
+	private void activateVerify(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		HttpSession session = request.getSession(false);
+
+		if (session == null || session.getAttribute("userId") == null) {
+
+			response.getWriter().write("{\"success\":false,\"message\":\"Please login first.\"}");
+
+			return;
+		}
+
+		String enteredOtp = request.getParameter("otp");
+
+		if (enteredOtp == null || enteredOtp.trim().isEmpty()) {
+
+			response.getWriter().write("{\"success\":false,\"message\":\"Please enter the verification code.\"}");
+
+			return;
+		}
+
+		EmailVerificationBean verification = (EmailVerificationBean) session.getAttribute("emailVerification");
+
+		if (verification == null) {
+
+			response.getWriter().write("{\"success\":false,\"message\":\"Please request a verification code first.\"}");
+
+			return;
+		}
+
+		enteredOtp = enteredOtp.trim();
+
+		if (!verification.getOtp().equals(enteredOtp)) {
+
+			response.getWriter().write("{\"success\":false,\"message\":\"Verification code does not match.\"}");
+
+			return;
+		}
+
+		String userId = String.valueOf(session.getAttribute("userId"));
+
+		UserDAO userDAO = new UserDAO();
+
+		boolean activated = userDAO.activateAccount(userId);
+
+		if (!activated) {
+
+			response.getWriter().write("{\"success\":false,\"message\":\"Unable to activate account.\"}");
+
+			return;
+		}
+
+		verification.setVerified(true);
+
+		UserBean updatedUser = userDAO.getUserById(userId);
+
+		if (updatedUser != null) {
+
+			session.setAttribute("user", updatedUser);
+
+			session.setAttribute("userName", updatedUser.getName());
+
+			session.setAttribute("userRole", updatedUser.getRole());
+		}
+
+		session.removeAttribute("emailVerification");
+
+		session.removeAttribute("accountInactive");
+
+		response.getWriter().write("{\"success\":true,\"message\":\"Account activated successfully.\"}");
+	}
+
+	// ==================== ACCOUNT ACTIVATION - RESEND OTP ====================
+
+	private void activateResend(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		HttpSession session = request.getSession(false);
+
+		if (session == null || session.getAttribute("userId") == null) {
+
+			response.getWriter().write("{\"success\":false,\"message\":\"Please login first.\"}");
+
+			return;
+		}
+
+		String userId = String.valueOf(session.getAttribute("userId"));
+
+		UserDAO userDAO = new UserDAO();
+
+		UserBean user = userDAO.getUserById(userId);
+
+		if (user == null) {
+
+			response.getWriter().write("{\"success\":false,\"message\":\"User not found.\"}");
+
+			return;
+		}
+
+		String email = user.getEmail();
+
+		if (email == null || email.trim().isEmpty()) {
+
+			response.getWriter().write("{\"success\":false,\"message\":\"Registered email not found.\"}");
+
+			return;
+		}
+
+		EmailVerificationBean oldVerification = (EmailVerificationBean) session.getAttribute("emailVerification");
+
+		if (oldVerification == null) {
+
+			response.getWriter().write("{\"success\":false,\"message\":\"Please request a verification code first.\"}");
+
+			return;
+		}
+
+		long currentTime = System.currentTimeMillis();
+
+		long elapsed = currentTime - oldVerification.getGeneratedAt();
+
+		if (elapsed < RESEND_TIME) {
+
+			long remaining = (RESEND_TIME - elapsed) / 1000;
+
+			response.getWriter().write("{\"success\":false,\"message\":\"Please wait " + remaining
+					+ " seconds before requesting another code.\"}");
+
+			return;
+		}
+
+		email = email.trim();
+
+		String otp = generateOtp();
+
+		EmailVerificationBean newVerification = new EmailVerificationBean(email, otp, currentTime);
+
+		try {
+
+			EmailService.sendOtpEmail(email, otp);
 
 			session.setAttribute("emailVerification", newVerification);
 

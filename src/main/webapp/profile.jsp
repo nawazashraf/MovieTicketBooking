@@ -21,7 +21,8 @@
 
 </head>
 
-<body>
+
+<body data-context-path="<%=request.getContextPath()%>">
 
 	<%@ include file="/common/navbar.jsp"%>
 
@@ -38,8 +39,8 @@
 
 
 	<!-- =========================================================
-	     INACTIVE ACCOUNT POPUP
-	     ========================================================= -->
+     INACTIVE ACCOUNT POPUP
+     ========================================================= -->
 
 	<div id="inactiveOverlay" class="inactive-overlay">
 
@@ -65,8 +66,8 @@
 
 
 	<!-- =========================================================
-	     PROFILE PAGE
-	     ========================================================= -->
+     PROFILE PAGE
+     ========================================================= -->
 
 	<div class="profile-page">
 
@@ -123,11 +124,15 @@
 							<div class="identity-info">
 
 								<h2>
+
 									<%=user.getName()%>
+
 								</h2>
 
 								<p>
+
 									<%=user.getEmail()%>
+
 								</p>
 
 							</div>
@@ -143,6 +148,7 @@
 							<%
 							if (user.isStatus()) {
 							%>
+
 
 							<div class="status-badge status-active">
 
@@ -373,6 +379,7 @@
 
 							<div class="security-left">
 
+
 								<%
 								if (user.isStatus()) {
 								%>
@@ -409,6 +416,7 @@
 								}
 								%>
 
+
 							</div>
 
 
@@ -425,7 +433,20 @@
 							%>
 
 
-							<div class="security-status-inactive">INACTIVE</div>
+							<div>
+
+								<div class="security-status-inactive">INACTIVE</div>
+
+
+								<form action="<%=request.getContextPath()%>/activate-account"
+									method="get" style="margin-top: 12px;">
+
+									<button type="button" class="activate-account-btn"
+										onclick="openActivationPopup()">Activate Account</button>
+
+								</form>
+
+							</div>
 
 
 							<%
@@ -492,11 +513,142 @@
 	</div>
 
 
-	<!-- =========================================================
-	     POPUP JAVASCRIPT
-	     ========================================================= -->
+	<%
+	if (user != null && !user.isStatus()) {
+	%>
 
-	<script src="${pageContext.request.contextPath}/assets/js/profile.js"></script>
+
+	<!-- =========================================================
+     ACCOUNT ACTIVATION POPUP
+     ========================================================= -->
+
+	<div id="activationOverlay" class="activation-overlay">
+
+
+		<div class="activation-card">
+
+
+			<!-- BRAND -->
+
+			<div class="activation-brand">
+
+				<div class="activation-brand-logo">M</div>
+
+				<div class="activation-brand-name">MovieBook</div>
+
+			</div>
+
+
+			<!-- ICON -->
+
+			<div class="activation-icon">✉</div>
+
+
+			<!-- HEADER -->
+
+			<div class="activation-header">
+
+				<h1>Activate Account</h1>
+
+				<p>Verify your registered email address to activate your
+					account.</p>
+
+			</div>
+
+
+			<!-- MESSAGE -->
+
+			<div id="activationMessage" class="activation-message"></div>
+
+
+			<!-- SEND VERIFICATION CODE -->
+
+			<div id="activationSendSection">
+
+				<button type="button" class="activation-send-btn"
+					onclick="sendActivationOtp()">Send Verification Code</button>
+
+			</div>
+
+
+			<!-- OTP SECTION -->
+
+			<div id="activationOtpSection" class="activation-otp-tray"
+				style="display: none;">
+
+
+				<div class="activation-otp-header">
+
+
+					<div>
+
+						<strong> Enter Verification Code </strong> <small> We sent
+							a 4-digit verification code to your registered email. </small>
+
+					</div>
+
+
+					<div class="activation-verified-icon">✓</div>
+
+
+				</div>
+
+
+				<div class="activation-otp-input-row">
+
+
+					<input type="text" id="activationOtp" maxlength="4"
+						inputmode="numeric" autocomplete="one-time-code"
+						placeholder="••••">
+
+
+					<button type="button" class="activation-verify-btn"
+						onclick="verifyActivationOtp()">Verify</button>
+
+
+				</div>
+
+
+				<!-- RESEND TIMER -->
+
+				<div class="activation-resend-area">
+
+					<span id="activationResendText"> Resend available in 60
+						seconds </span>
+
+					<button type="button" id="activationResendButton"
+						class="activation-resend-btn" onclick="resendActivationOtp()"
+						disabled>Resend Code</button>
+
+				</div>
+
+
+			</div>
+
+
+			<!-- CANCEL -->
+
+			<button type="button" class="activation-close-btn"
+				onclick="closeActivationPopup()">Cancel</button>
+
+
+		</div>
+
+	</div>
+
+
+	<%
+	}
+	%>
+
+
+	<!-- =========================================================
+     PROFILE JAVASCRIPT
+     ========================================================= -->
+
+	<script src="${pageContext.request.contextPath}/assets/js/profile.js">
+		
+	</script>
 
 
 </body>

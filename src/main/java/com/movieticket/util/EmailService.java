@@ -1369,4 +1369,218 @@ public class EmailService {
 		System.out.println("Password changed email sent to: " + receiverEmail);
 	}
 
+	// ============================================================
+	// ACCOUNT ACTIVATED EMAIL
+	// ============================================================
+
+	public static void sendAccountActivatedEmail(String receiverEmail, String customerName) throws Exception {
+
+		Properties properties = new Properties();
+
+		InputStream input = DBConnection.class.getClassLoader().getResourceAsStream("db.properties");
+
+		properties.load(input);
+
+		String SENDER_EMAIL = properties.getProperty("SENDER_EMAIL");
+
+		String SENDER_PASSWORD = properties.getProperty("SENDER_PASSWORD");
+
+		properties.put("mail.smtp.host", "smtp.gmail.com");
+		properties.put("mail.smtp.port", "587");
+		properties.put("mail.smtp.auth", "true");
+		properties.put("mail.smtp.starttls.enable", "true");
+
+		Session session = Session.getInstance(properties, new Authenticator() {
+
+			@Override
+			protected PasswordAuthentication getPasswordAuthentication() {
+
+				return new PasswordAuthentication(SENDER_EMAIL, SENDER_PASSWORD);
+			}
+		});
+
+		Message message = new MimeMessage(session);
+
+		message.setFrom(new InternetAddress(SENDER_EMAIL));
+
+		message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(receiverEmail));
+
+		message.setSubject("MovieBook • Account Activated Successfully");
+
+		String html =
+
+				"<!DOCTYPE html>" + "<html>" + "<head>" + "<meta charset='UTF-8'>" + "<meta name='viewport' "
+						+ "content='width=device-width,initial-scale=1.0'>" + "</head>"
+
+						+ "<body style='margin:0;padding:0;" + "background:#f3f4f6;"
+						+ "font-family:Arial,Helvetica,sans-serif;" + "color:#111827;'>"
+
+						+ "<table width='100%' cellpadding='0' cellspacing='0' "
+						+ "style='padding:40px 15px;background:#f3f4f6;'>"
+
+						+ "<tr>" + "<td align='center'>"
+
+						+ "<table width='600' cellpadding='0' cellspacing='0' " + "style='max-width:600px;width:100%;"
+						+ "background:#ffffff;" + "border-radius:14px;" + "overflow:hidden;"
+						+ "border:1px solid #e5e7eb;'>"
+
+						// =================================================
+						// HEADER
+						// =================================================
+
+						+ "<tr>" + "<td style='background:#111827;padding:24px 30px;'>"
+
+						+ "<div style='font-size:24px;" + "font-weight:bold;color:#ffffff;'>"
+
+						+ "<span style='color:#e50914;'>M</span> MovieBook"
+
+						+ "</div>"
+
+						+ "</td>" + "</tr>"
+
+						// =================================================
+						// CONTENT
+						// =================================================
+
+						+ "<tr>" + "<td style='padding:38px 32px;'>"
+
+						// SUCCESS ICON
+
+						+ "<div style='width:54px;height:54px;" + "background:#dcfce7;" + "border-radius:50%;"
+						+ "line-height:54px;" + "text-align:center;" + "font-size:26px;" + "color:#15803d;"
+						+ "font-weight:bold;'>"
+
+						+ "✓"
+
+						+ "</div>"
+
+						// HEADING
+
+						+ "<h1 style='font-size:26px;" + "margin:20px 0 10px;" + "color:#111827;'>"
+
+						+ "Account Activated"
+
+						+ "</h1>"
+
+						// GREETING
+
+						+ "<p style='font-size:14px;" + "line-height:1.8;" + "color:#6b7280;'>"
+
+						+ "Hi " + customerName + ","
+
+						+ "</p>"
+
+						// MESSAGE
+
+						+ "<p style='font-size:14px;" + "line-height:1.8;" + "color:#6b7280;'>"
+
+						+ "Your MovieBook account has been successfully " + "verified and activated."
+
+						+ "</p>"
+
+						// ACCOUNT CARD
+
+						+ "<table width='100%' cellpadding='0' cellspacing='0' " + "style='margin:25px 0;"
+						+ "background:#f9fafb;" + "border:1px solid #e5e7eb;" + "border-radius:10px;'>"
+
+						+ "<tr>" + "<td style='padding:18px;'>"
+
+						+ "<div style='font-size:11px;" + "color:#9ca3af;" + "font-weight:bold;"
+						+ "letter-spacing:1px;'>"
+
+						+ "ACCOUNT EMAIL"
+
+						+ "</div>"
+
+						+ "<div style='font-size:14px;" + "font-weight:bold;" + "color:#111827;" + "margin-top:7px;'>"
+
+						+ receiverEmail
+
+						+ "</div>"
+
+						+ "</td>" + "</tr>"
+
+						+ "</table>"
+
+						// STATUS CARD
+
+						+ "<table width='100%' cellpadding='0' cellspacing='0' " + "style='background:#f0fdf4;"
+						+ "border:1px solid #bbf7d0;" + "border-radius:10px;'>"
+
+						+ "<tr>" + "<td style='padding:18px;'>"
+
+						+ "<div style='font-size:13px;" + "font-weight:bold;" + "color:#166534;"
+						+ "margin-bottom:7px;'>"
+
+						+ "Account Status"
+
+						+ "</div>"
+
+						+ "<div style='font-size:12px;" + "line-height:1.7;" + "color:#166534;'>"
+
+						+ "Your account is now active. " + "You can browse movies, select seats and "
+						+ "book your favourite shows."
+
+						+ "</div>"
+
+						+ "</td>" + "</tr>"
+
+						+ "</table>"
+
+						// SECURITY REMINDER
+
+						+ "<div style='border-top:1px solid #e5e7eb;" + "padding-top:22px;" + "margin-top:25px;'>"
+
+						+ "<div style='font-size:13px;" + "font-weight:bold;" + "color:#374151;'>"
+
+						+ "Security reminder"
+
+						+ "</div>"
+
+						+ "<p style='font-size:12px;" + "color:#6b7280;" + "line-height:1.7;" + "margin-bottom:0;'>"
+
+						+ "MovieBook will never ask you to share your " + "password or verification codes by email."
+
+						+ "</p>"
+
+						+ "</div>"
+
+						+ "</td>" + "</tr>"
+
+						// =================================================
+						// FOOTER
+						// =================================================
+
+						+ "<tr>" + "<td style='background:#f9fafb;" + "border-top:1px solid #e5e7eb;" + "padding:22px;"
+						+ "text-align:center;'>"
+
+						+ "<div style='font-size:11px;" + "color:#9ca3af;" + "line-height:1.6;'>"
+
+						+ "This is an automated email."
+
+						+ "</div>"
+
+						+ "<div style='font-size:11px;" + "color:#9ca3af;" + "margin-top:5px;'>"
+
+						+ "© MovieBook. All rights reserved."
+
+						+ "</div>"
+
+						+ "</td>" + "</tr>"
+
+						+ "</table>"
+
+						+ "</td>" + "</tr>"
+
+						+ "</table>"
+
+						+ "</body>" + "</html>";
+
+		message.setContent(html, "text/html; charset=UTF-8");
+
+		Transport.send(message);
+
+		System.out.println("Account activation email sent to: " + receiverEmail);
+	}
+
 }

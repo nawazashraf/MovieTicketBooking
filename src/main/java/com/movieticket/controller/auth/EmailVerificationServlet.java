@@ -255,6 +255,8 @@ public class EmailVerificationServlet extends HttpServlet {
 
 	// ==================== ACCOUNT ACTIVATION - VERIFY OTP ====================
 
+	// ==================== ACCOUNT ACTIVATION - VERIFY OTP ====================
+
 	private void activateVerify(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		HttpSession session = request.getSession(false);
@@ -317,6 +319,20 @@ public class EmailVerificationServlet extends HttpServlet {
 			session.setAttribute("userName", updatedUser.getName());
 
 			session.setAttribute("userRole", updatedUser.getRole());
+
+			// ====================================================
+			// ACCOUNT ACTIVATED EMAIL
+			// ====================================================
+
+			try {
+
+				EmailService.sendAccountActivatedEmail(updatedUser.getEmail(), updatedUser.getName());
+
+			} catch (Exception e) {
+
+				e.printStackTrace();
+
+			}
 		}
 
 		session.removeAttribute("emailVerification");

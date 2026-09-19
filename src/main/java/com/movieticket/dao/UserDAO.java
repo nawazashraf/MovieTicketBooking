@@ -177,7 +177,7 @@ public class UserDAO {
 
 		return false;
 	}
-	
+
 	// Update user profile
 
 	public boolean updateProfile(String userId, String name, String phone) {
@@ -199,7 +199,36 @@ public class UserDAO {
 
 		return false;
 	}
+	
+	// Update user profile with password
 
+	public boolean updateProfile(String userId, String name, String phone, String password) {
+
+		String sql = "UPDATE users SET name = ?, phone = ?, password = ? WHERE id = ?";
+
+		try (Connection connection = DBConnection.getConnection();
+
+				PreparedStatement statement = connection.prepareStatement(sql)) {
+
+			statement.setString(1, name);
+
+			statement.setString(2, phone);
+
+			statement.setString(3, password);
+
+			statement.setString(4, userId);
+
+			return statement.executeUpdate() > 0;
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+		}
+
+		return false;
+
+	}
 
 	// Activate account
 	public boolean activateAccount(String id) {

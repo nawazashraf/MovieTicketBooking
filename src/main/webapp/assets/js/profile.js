@@ -2,8 +2,8 @@ let activationResendTimer = null;
 
 
 /* =========================================================
-   INACTIVE ACCOUNT POPUP
-   ========================================================= */
+   INACTIVE POPUP
+========================================================= */
 
 function closeInactivePopup() {
 
@@ -22,17 +22,146 @@ function closeInactivePopup() {
 
 
 /* =========================================================
+   EDIT PROFILE DRAWER
+========================================================= */
+
+function openEditProfile() {
+
+	const overlay =
+		document.getElementById("editProfileOverlay");
+
+	if (!overlay) {
+		return;
+	}
+
+	overlay.classList.add("open");
+
+	document.body.style.overflow = "hidden";
+
+	setTimeout(function() {
+
+		const name =
+			document.getElementById("editName");
+
+		if (name) {
+
+			name.focus();
+			name.select();
+
+		}
+
+	}, 300);
+
+}
+
+
+function closeEditProfile(event) {
+
+	if (event &&
+		event.target &&
+		event.target.id !== "editProfileOverlay") {
+
+		return;
+
+	}
+
+	const overlay =
+		document.getElementById("editProfileOverlay");
+
+	if (!overlay) {
+		return;
+	}
+
+	overlay.classList.remove("open");
+
+	document.body.style.overflow = "";
+
+}
+
+
+/* =========================================================
+   ESCAPE KEY
+========================================================= */
+
+document.addEventListener("keydown", function(event) {
+
+	if (event.key !== "Escape") {
+		return;
+	}
+
+	const overlay =
+		document.getElementById("editProfileOverlay");
+
+	if (overlay &&
+		overlay.classList.contains("open")) {
+
+		closeEditProfile();
+
+	}
+
+	const activation =
+		document.getElementById("activationOverlay");
+
+	if (activation &&
+		activation.style.display === "flex") {
+
+		closeActivationPopup();
+
+	}
+
+});
+
+
+/* =========================================================
+   PHONE INPUT
+========================================================= */
+
+document.addEventListener("DOMContentLoaded", function() {
+
+	const phone =
+		document.getElementById("editPhone");
+
+	if (phone) {
+
+		phone.addEventListener(
+			"input",
+			function() {
+
+				this.value =
+					this.value.replace(/\D/g, "");
+
+				if (this.value.length > 10) {
+
+					this.value =
+						this.value.substring(0, 10);
+
+				}
+
+			}
+		);
+
+	}
+
+});
+
+
+/* =========================================================
    ACTIVATION POPUP
-   ========================================================= */
+========================================================= */
 
 function openActivationPopup() {
 
 	const overlay =
-		document.getElementById("activationOverlay");
+		document.getElementById(
+			"activationOverlay"
+		);
 
 	if (overlay) {
 
 		overlay.style.display = "flex";
+
+		document.body.style.overflow =
+			"hidden";
 
 	}
 
@@ -42,11 +171,16 @@ function openActivationPopup() {
 function closeActivationPopup() {
 
 	const overlay =
-		document.getElementById("activationOverlay");
+		document.getElementById(
+			"activationOverlay"
+		);
 
 	if (overlay) {
 
 		overlay.style.display = "none";
+
+		document.body.style.overflow =
+			"";
 
 	}
 
@@ -55,7 +189,7 @@ function closeActivationPopup() {
 
 /* =========================================================
    SEND ACTIVATION OTP
-   ========================================================= */
+========================================================= */
 
 function sendActivationOtp() {
 
@@ -72,9 +206,12 @@ function sendActivationOtp() {
 			".activation-send-btn"
 		);
 
-	message.textContent =
-		"Sending verification code...";
+	if (message) {
 
+		message.textContent =
+			"Sending verification code...";
+
+	}
 
 	if (sendButton) {
 
@@ -98,43 +235,64 @@ function sendActivationOtp() {
 		}
 	)
 
+		.then(function(response) {
 
-		.then(response =>
-			response.json()
-		)
+			return response.json();
 
+		})
 
-		.then(data => {
+		.then(function(data) {
 
-			message.textContent =
-				data.message;
+			if (message) {
+
+				message.textContent =
+					data.message;
+
+			}
 
 
 			if (data.success) {
 
-				document.getElementById(
-					"activationSendSection"
-				).style.display = "none";
+				const sendSection =
+					document.getElementById(
+						"activationSendSection"
+					);
 
+				const otpSection =
+					document.getElementById(
+						"activationOtpSection"
+					);
 
-				document.getElementById(
-					"activationOtpSection"
-				).style.display = "block";
+				const otp =
+					document.getElementById(
+						"activationOtp"
+					);
 
+				if (sendSection) {
 
-				document.getElementById(
-					"activationOtp"
-				).value = "";
+					sendSection.style.display =
+						"none";
 
+				}
 
-				document.getElementById(
-					"activationOtp"
-				).focus();
+				if (otpSection) {
 
+					otpSection.style.display =
+						"block";
+
+				}
+
+				if (otp) {
+
+					otp.value = "";
+					otp.focus();
+
+				}
 
 				startActivationResendTimer();
 
-			} else {
+			}
+			else {
 
 				if (sendButton) {
 
@@ -146,14 +304,16 @@ function sendActivationOtp() {
 
 		})
 
-
-		.catch(error => {
+		.catch(function(error) {
 
 			console.error(error);
 
-			message.textContent =
-				"Unable to send verification code.";
+			if (message) {
 
+				message.textContent =
+					"Unable to send verification code.";
+
+			}
 
 			if (sendButton) {
 
@@ -168,20 +328,26 @@ function sendActivationOtp() {
 
 /* =========================================================
    VERIFY ACTIVATION OTP
-   ========================================================= */
+========================================================= */
 
 function verifyActivationOtp() {
 
-	const otp =
+	const otpElement =
 		document.getElementById(
 			"activationOtp"
-		).value.trim();
-
+		);
 
 	const message =
 		document.getElementById(
 			"activationMessage"
 		);
+
+	if (!otpElement || !message) {
+		return;
+	}
+
+	const otp =
+		otpElement.value.trim();
 
 
 	if (otp === "") {
@@ -195,36 +361,29 @@ function verifyActivationOtp() {
 
 
 	fetch(
-
 		(document.body.dataset.contextPath || "") +
 		"/emailVerification",
-
 		{
-
 			method: "POST",
 
 			headers: {
-
 				"Content-Type":
 					"application/x-www-form-urlencoded"
-
 			},
 
 			body:
 				"action=activateVerify&otp=" +
 				encodeURIComponent(otp)
-
 		}
-
 	)
 
+		.then(function(response) {
 
-		.then(response =>
-			response.json()
-		)
+			return response.json();
 
+		})
 
-		.then(data => {
+		.then(function(data) {
 
 			message.textContent =
 				data.message;
@@ -242,10 +401,10 @@ function verifyActivationOtp() {
 						"activationResendButton"
 					);
 
-
 				if (resendButton) {
 
-					resendButton.disabled = true;
+					resendButton.disabled =
+						true;
 
 				}
 
@@ -255,11 +414,10 @@ function verifyActivationOtp() {
 						"activationResendText"
 					);
 
-
 				if (resendText) {
 
 					resendText.textContent =
-						"Email verified successfully.";
+						"Account activated successfully.";
 
 				}
 
@@ -274,8 +432,7 @@ function verifyActivationOtp() {
 
 		})
 
-
-		.catch(error => {
+		.catch(function(error) {
 
 			console.error(error);
 
@@ -289,7 +446,7 @@ function verifyActivationOtp() {
 
 /* =========================================================
    RESEND ACTIVATION OTP
-   ========================================================= */
+========================================================= */
 
 function resendActivationOtp() {
 
@@ -312,8 +469,12 @@ function resendActivationOtp() {
 	}
 
 
-	message.textContent =
-		"Requesting new verification code...";
+	if (message) {
+
+		message.textContent =
+			"Requesting new verification code...";
+
+	}
 
 
 	if (resendButton) {
@@ -324,59 +485,60 @@ function resendActivationOtp() {
 
 
 	fetch(
-
 		(document.body.dataset.contextPath || "") +
 		"/emailVerification",
-
 		{
-
 			method: "POST",
 
 			headers: {
-
 				"Content-Type":
 					"application/x-www-form-urlencoded"
-
 			},
 
 			body:
 				"action=activateResend"
-
 		}
-
 	)
 
+		.then(function(response) {
 
-		.then(response =>
-			response.json()
-		)
+			return response.json();
 
+		})
 
-		.then(data => {
+		.then(function(data) {
 
-			message.textContent =
-				data.message;
+			if (message) {
+
+				message.textContent =
+					data.message;
+
+			}
 
 
 			if (data.success) {
 
-				document.getElementById(
-					"activationOtp"
-				).value = "";
+				const otp =
+					document.getElementById(
+						"activationOtp"
+					);
 
+				if (otp) {
 
-				document.getElementById(
-					"activationOtp"
-				).focus();
+					otp.value = "";
+					otp.focus();
 
+				}
 
 				startActivationResendTimer();
 
-			} else {
+			}
+			else {
 
 				if (resendButton) {
 
-					resendButton.disabled = false;
+					resendButton.disabled =
+						false;
 
 				}
 
@@ -385,7 +547,6 @@ function resendActivationOtp() {
 					document.getElementById(
 						"activationResendText"
 					);
-
 
 				if (resendText) {
 
@@ -398,13 +559,16 @@ function resendActivationOtp() {
 
 		})
 
-
-		.catch(error => {
+		.catch(function(error) {
 
 			console.error(error);
 
-			message.textContent =
-				"Unable to resend verification code.";
+			if (message) {
+
+				message.textContent =
+					"Unable to resend verification code.";
+
+			}
 
 
 			if (resendButton) {
@@ -419,7 +583,6 @@ function resendActivationOtp() {
 					"activationResendText"
 				);
 
-
 			if (resendText) {
 
 				resendText.textContent =
@@ -433,9 +596,8 @@ function resendActivationOtp() {
 
 
 /* =========================================================
-   60 SECOND ACTIVATION RESEND TIMER
-   SAME LOGIC AS FORGOT PASSWORD
-   ========================================================= */
+   RESEND TIMER
+========================================================= */
 
 function startActivationResendTimer() {
 
@@ -446,7 +608,6 @@ function startActivationResendTimer() {
 		document.getElementById(
 			"activationResendButton"
 		);
-
 
 	const resendText =
 		document.getElementById(
@@ -496,7 +657,6 @@ function startActivationResendTimer() {
 				resendText.textContent =
 					"You can request a new code.";
 
-
 				return;
 
 			}
@@ -507,7 +667,106 @@ function startActivationResendTimer() {
 				seconds +
 				" seconds";
 
-
 		}, 1000);
 
 }
+
+
+/* =========================================================
+   PROFILE UPDATE SUCCESS POPUP
+========================================================= */
+
+function closeProfileUpdatePopup() {
+
+	const popup =
+		document.getElementById(
+			"profileUpdatePopup"
+		);
+
+	if (!popup) {
+		return;
+	}
+
+	popup.classList.add("hide");
+
+	setTimeout(function() {
+
+		if (popup) {
+
+			popup.remove();
+
+		}
+
+	}, 300);
+
+}
+
+
+/* =========================================================
+   PROFILE UPDATE ERROR POPUP
+========================================================= */
+
+function closeProfileUpdateErrorPopup() {
+
+	const popup =
+		document.getElementById(
+			"profileUpdateErrorPopup"
+		);
+
+	if (!popup) {
+		return;
+	}
+
+	popup.classList.add("hide");
+
+	setTimeout(function() {
+
+		if (popup) {
+
+			popup.remove();
+
+		}
+
+	}, 300);
+
+}
+
+
+/* =========================================================
+   PROFILE UPDATE POPUPS
+========================================================= */
+
+document.addEventListener("DOMContentLoaded", function() {
+
+	const successPopup =
+		document.getElementById(
+			"profileUpdatePopup"
+		);
+
+	if (successPopup) {
+
+		setTimeout(function() {
+
+			closeProfileUpdatePopup();
+
+		}, 4000);
+
+	}
+
+
+	const errorPopup =
+		document.getElementById(
+			"profileUpdateErrorPopup"
+		);
+
+	if (errorPopup) {
+
+		setTimeout(function() {
+
+			closeProfileUpdateErrorPopup();
+
+		}, 4000);
+
+	}
+
+});

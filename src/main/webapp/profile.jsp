@@ -4,7 +4,6 @@
 <%@ page import="com.movieticket.model.UserBean"%>
 
 <!DOCTYPE html>
-
 <html>
 
 <head>
@@ -21,26 +20,104 @@
 
 </head>
 
-
 <body data-context-path="<%=request.getContextPath()%>">
 
 	<%@ include file="/common/navbar.jsp"%>
 
-
 	<%
+	String updateSuccess = (String) request.getAttribute("updateSuccess");
+
+	String updateError = (String) request.getAttribute("updateError");
+
 	UserBean user = (UserBean) request.getAttribute("user");
 
+	if (user == null) {
+		user = (UserBean) session.getAttribute("user");
+	}
+
 	Boolean accountInactive = (Boolean) session.getAttribute("accountInactive");
-
-	if (accountInactive != null && accountInactive) {
-
-		session.removeAttribute("accountInactive");
 	%>
 
 
 	<!-- =========================================================
-     INACTIVE ACCOUNT POPUP
-     ========================================================= -->
+	     SUCCESS POPUP
+	========================================================= -->
+
+	<%
+	if (updateSuccess != null) {
+	%>
+
+	<div id="profileUpdatePopup" class="profile-update-popup">
+
+		<div class="profile-update-card">
+
+			<div class="profile-update-icon">✓</div>
+
+			<div class="profile-update-content">
+
+				<h3>Profile Updated</h3>
+
+				<p>Your profile has been updated successfully.</p>
+
+			</div>
+
+			<button type="button" class="profile-update-close"
+				onclick="closeProfileUpdatePopup()">×</button>
+
+		</div>
+
+	</div>
+
+	<%
+	}
+	%>
+
+
+	<!-- =========================================================
+	     ERROR POPUP
+	========================================================= -->
+
+	<%
+	if (updateError != null) {
+	%>
+
+	<div id="profileUpdateErrorPopup" class="profile-update-popup">
+
+		<div class="profile-update-card profile-update-error-card">
+
+			<div class="profile-update-icon profile-update-error-icon">!</div>
+
+			<div class="profile-update-content">
+
+				<h3>Update Failed</h3>
+
+				<p>
+					<%=updateError%>
+				</p>
+
+			</div>
+
+			<button type="button" class="profile-update-close"
+				onclick="closeProfileUpdateErrorPopup()">×</button>
+
+		</div>
+
+	</div>
+
+	<%
+	}
+	%>
+
+
+	<!-- =========================================================
+	     INACTIVE ACCOUNT NOTICE
+	========================================================= -->
+
+	<%
+	if (Boolean.TRUE.equals(accountInactive)) {
+
+		session.removeAttribute("accountInactive");
+	%>
 
 	<div id="inactiveOverlay" class="inactive-overlay">
 
@@ -50,15 +127,15 @@
 
 			<h2>Account Inactive</h2>
 
-			<p>Your account is currently inactive.</p>
+			<p>Your account is currently inactive. Some features are
+				temporarily restricted.</p>
 
 			<button type="button" class="inactive-ok-button"
-				onclick="closeInactivePopup()">OK</button>
+				onclick="closeInactivePopup()">Continue</button>
 
 		</div>
 
 	</div>
-
 
 	<%
 	}
@@ -66,8 +143,8 @@
 
 
 	<!-- =========================================================
-     PROFILE PAGE
-     ========================================================= -->
+	     PROFILE PAGE
+	========================================================= -->
 
 	<div class="profile-page">
 
@@ -78,9 +155,15 @@
 
 			<div class="page-header">
 
-				<h1>My Profile</h1>
+				<div>
 
-				<p>View and manage your account information</p>
+					<div class="page-header-label">ACCOUNT</div>
+
+					<h1>My Profile</h1>
+
+					<p>Manage your account information and preferences.</p>
+
+				</div>
 
 			</div>
 
@@ -90,17 +173,17 @@
 			%>
 
 
-			<!-- PROFILE CARD -->
+			<!-- =====================================================
+			     MAIN PROFILE CARD
+			===================================================== -->
 
 			<div class="profile-card">
 
 
-				<!-- CLEAN WHITE TOP -->
+				<!-- HEADER -->
 
 				<div class="profile-banner"></div>
 
-
-				<!-- IDENTITY -->
 
 				<div class="identity-section">
 
@@ -110,70 +193,71 @@
 						<div class="identity-left">
 
 
-							<!-- AVATAR -->
-
 							<div class="profile-avatar">
 
-								<%=user.getName().substring(0, 1)%>
+								<%=user.getName() != null ? user.getName().substring(0, 1).toUpperCase() : "U"%>
 
 							</div>
 
-
-							<!-- USER DETAILS -->
 
 							<div class="identity-info">
 
 								<h2>
-
 									<%=user.getName()%>
-
 								</h2>
 
-								<p>
+								<div class="identity-email">
 
 									<%=user.getEmail()%>
 
-								</p>
+								</div>
+
+
+								<div class="identity-status-row">
+
+									<%
+									if (user.isStatus()) {
+									%>
+
+									<span class="status-badge status-active"> <span
+										class="status-dot"></span> Active
+
+									</span>
+
+									<%
+									} else {
+									%>
+
+									<span class="status-badge status-inactive"> <span
+										class="status-dot"></span> Inactive
+
+									</span>
+
+									<%
+									}
+									%>
+
+								</div>
 
 							</div>
-
 
 						</div>
 
 
-						<!-- ACCOUNT STATUS -->
+						<%
+						if (user.isStatus()) {
+						%>
 
-						<div>
+						<button type="button" class="edit-profile-button"
+							onclick="openEditProfile()">
 
-							<%
-							if (user.isStatus()) {
-							%>
+							<span class="edit-icon"> ✎ </span> Edit Profile
 
+						</button>
 
-							<div class="status-badge status-active">
-
-								<span class="status-icon"> ✓ </span> Active Account
-
-							</div>
-
-
-							<%
-							} else {
-							%>
-
-
-							<div class="status-badge status-inactive">
-
-								<span class="status-icon"> ✕ </span> Inactive Account
-
-							</div>
-
-
-							<%
-							}
-							%>
-
-						</div>
+						<%
+						}
+						%>
 
 
 					</div>
@@ -181,77 +265,24 @@
 				</div>
 
 
-				<!-- PROFILE CONTENT -->
+				<!-- =================================================
+				     ACCOUNT INFORMATION
+				================================================= -->
 
 				<div class="profile-content">
 
 
-					<!-- ACCOUNT OVERVIEW -->
+					<section class="profile-section">
 
-					<div class="profile-section">
+						<div class="section-heading">
 
-						<div class="section-header">
+							<div>
 
-							<h3>Account Overview</h3>
+								<h3>Account Information</h3>
 
-							<p>Summary of your account information</p>
-
-						</div>
-
-
-						<div class="overview-grid">
-
-
-							<!-- STATUS -->
-
-							<div class="overview-box">
-
-								<span class="overview-box-label"> Account Status </span> <span
-									class="overview-box-value"> <%=user.isStatus() ? "Active" : "Inactive"%>
-
-								</span>
+								<p>Your registered account details</p>
 
 							</div>
-
-
-							<!-- ROLE -->
-
-							<div class="overview-box">
-
-								<span class="overview-box-label"> Account Role </span> <span
-									class="overview-box-value"> <%=user.getRole()%>
-
-								</span>
-
-							</div>
-
-
-							<!-- EMAIL -->
-
-							<div class="overview-box">
-
-								<span class="overview-box-label"> Registered Email </span> <span
-									class="overview-box-value"> <%=user.getEmail()%>
-
-								</span>
-
-							</div>
-
-
-						</div>
-
-					</div>
-
-
-					<!-- PERSONAL INFORMATION -->
-
-					<div class="profile-section">
-
-						<div class="section-header">
-
-							<h3>Personal Information</h3>
-
-							<p>Basic information associated with your account</p>
 
 						</div>
 
@@ -263,22 +294,11 @@
 
 							<div class="information-item">
 
-								<span class="information-label"> Full Name </span> <span
-									class="information-value"> <%=user.getName()%>
+								<div class="information-label">FULL NAME</div>
 
-								</span>
-
-							</div>
-
-
-							<!-- PHONE -->
-
-							<div class="information-item">
-
-								<span class="information-label"> Phone Number </span> <span
-									class="information-value"> <%=user.getPhone()%>
-
-								</span>
+								<div class="information-value">
+									<%=user.getName()%>
+								</div>
 
 							</div>
 
@@ -287,10 +307,25 @@
 
 							<div class="information-item">
 
-								<span class="information-label"> Email Address </span> <span
-									class="information-value"> <%=user.getEmail()%>
+								<div class="information-label">EMAIL ADDRESS</div>
 
-								</span>
+								<div class="information-value">
+									<%=user.getEmail()%>
+								</div>
+
+							</div>
+
+
+							<!-- PHONE -->
+
+							<div class="information-item">
+
+								<div class="information-label">PHONE NUMBER</div>
+
+								<div class="information-value">
+									+91
+									<%=user.getPhone()%>
+								</div>
 
 							</div>
 
@@ -299,176 +334,107 @@
 
 							<div class="information-item">
 
-								<span class="information-label"> Account Role </span> <span
-									class="information-value"> <span class="role-badge">
+								<div class="information-label">ACCOUNT ROLE</div>
 
-										<%=user.getRole()%>
+								<div class="information-value">
 
-								</span>
-
-								</span>
-
-							</div>
-
-
-						</div>
-
-					</div>
-
-
-					<!-- CONTACT INFORMATION -->
-
-					<div class="profile-section">
-
-						<div class="section-header">
-
-							<h3>Contact Information</h3>
-
-							<p>Registered communication details</p>
-
-						</div>
-
-
-						<div class="information-grid">
-
-
-							<!-- EMAIL -->
-
-							<div class="information-item">
-
-								<span class="information-label"> Email Address </span> <span
-									class="information-value"> <%=user.getEmail()%>
-
-								</span>
-
-							</div>
-
-
-							<!-- PHONE -->
-
-							<div class="information-item">
-
-								<span class="information-label"> Phone Number </span> <span
-									class="information-value"> <%=user.getPhone()%>
-
-								</span>
-
-							</div>
-
-
-						</div>
-
-					</div>
-
-
-					<!-- ACCOUNT ACCESS -->
-
-					<div class="profile-section">
-
-						<div class="section-header">
-
-							<h3>Account & Access</h3>
-
-							<p>Current access level and account state</p>
-
-						</div>
-
-
-						<div class="security-panel">
-
-
-							<div class="security-left">
-
-
-								<%
-								if (user.isStatus()) {
-								%>
-
-
-								<div class="security-icon security-icon-active">✓</div>
-
-
-								<div class="security-text">
-
-									<strong> Account Access </strong> <span> Your account is
-										currently enabled and available. </span>
+									<span class="role-badge"> <%=user.getRole()%>
+									</span>
 
 								</div>
 
-
-								<%
-								} else {
-								%>
-
-
-								<div class="security-icon security-icon-inactive">✕</div>
-
-
-								<div class="security-text">
-
-									<strong> Account Access </strong> <span> Your account is
-										currently inactive and access is restricted. </span>
-
-								</div>
-
-
-								<%
-								}
-								%>
-
-
 							</div>
 
 
-							<%
-							if (user.isStatus()) {
-							%>
+						</div>
+
+					</section>
 
 
-							<div class="security-status-active">ACTIVE</div>
+					<!-- =================================================
+					     ACCOUNT STATUS
+					================================================= -->
 
+					<section class="profile-section">
 
-							<%
-							} else {
-							%>
-
+						<div class="section-heading">
 
 							<div>
 
-								<div class="security-status-inactive">INACTIVE</div>
+								<h3>Account Status</h3>
 
-
-								<form action="<%=request.getContextPath()%>/activate-account"
-									method="get" style="margin-top: 12px;">
-
-									<button type="button" class="activate-account-btn"
-										onclick="openActivationPopup()">Activate Account</button>
-
-								</form>
+								<p>Current access status of your account</p>
 
 							</div>
 
+						</div>
 
-							<%
-							}
-							%>
 
+						<%
+						if (user.isStatus()) {
+						%>
+
+
+						<div class="security-panel security-active">
+
+							<div class="security-icon">✓</div>
+
+							<div class="security-info">
+
+								<strong> Account Active </strong> <span> Your account is
+									active and booking features are available. </span>
+
+							</div>
+
+							<div class="security-status">ACTIVE</div>
 
 						</div>
 
-					</div>
+
+						<%
+						} else {
+						%>
 
 
-					<!-- ACCOUNT ACTIONS -->
+						<div class="security-panel security-inactive">
 
-					<div class="profile-actions">
+							<div class="security-icon">!</div>
+
+							<div class="security-info">
+
+								<strong> Account Inactive </strong> <span> Booking
+									features are restricted until your account is activated. </span>
+
+							</div>
+
+							<div class="security-status">INACTIVE</div>
+
+						</div>
 
 
-						<div class="action-info">
+						<button type="button" class="activate-account-btn"
+							onclick="openActivationPopup()">Activate Account</button>
 
-							<h3>Account Actions</h3>
 
-							<p>Manage your current MovieBook session.</p>
+						<%
+						}
+						%>
+
+
+					</section>
+
+
+					<!-- =================================================
+					     ACCOUNT ACTION
+					================================================= -->
+
+					<section class="profile-actions">
+
+						<div>
+
+							<h3>Account Session</h3>
+
+							<p>Sign out from your current account</p>
 
 						</div>
 
@@ -477,8 +443,7 @@
 
 							Logout </a>
 
-
-					</div>
+					</section>
 
 
 				</div>
@@ -491,14 +456,15 @@
 			%>
 
 
-			<!-- USER INFORMATION NOT AVAILABLE -->
+			<!-- EMPTY PROFILE -->
 
 			<div class="empty-profile">
 
-				<h2>User Information Unavailable</h2>
+				<div class="empty-icon">!</div>
 
-				<p>We could not retrieve your account information at this time.
-				</p>
+				<h2>Profile Unavailable</h2>
+
+				<p>We could not load your profile information.</p>
 
 			</div>
 
@@ -513,14 +479,208 @@
 	</div>
 
 
+	<!-- =========================================================
+	     EDIT PROFILE DRAWER
+	========================================================= -->
+
 	<%
-	if (user != null && !user.isStatus()) {
+	if (user != null && user.isStatus()) {
+	%>
+
+
+	<div id="editProfileOverlay" class="drawer-overlay"
+		onclick="closeEditProfile(event)">
+
+
+		<div class="profile-drawer" onclick="event.stopPropagation()">
+
+
+			<!-- DRAWER HEADER -->
+
+			<div class="drawer-header">
+
+				<div>
+
+					<div class="drawer-eyebrow">ACCOUNT SETTINGS</div>
+
+					<h2>Edit Profile</h2>
+
+					<p>Update your personal information</p>
+
+				</div>
+
+
+				<button type="button" class="drawer-close"
+					onclick="closeEditProfile()">×</button>
+
+			</div>
+
+
+			<!-- DRAWER BODY -->
+
+			<div class="drawer-body">
+
+
+				<!-- PROFILE SUMMARY -->
+
+				<div class="drawer-profile-summary">
+
+					<div class="drawer-avatar">
+
+						<%=user.getName() != null ? user.getName().substring(0, 1).toUpperCase() : "U"%>
+
+					</div>
+
+
+					<div>
+
+						<strong> <%=user.getName()%>
+						</strong> <span> <%=user.getEmail()%>
+						</span>
+
+					</div>
+
+				</div>
+
+
+				<div class="drawer-divider"></div>
+
+
+				<!-- FORM -->
+
+				<form action="<%=request.getContextPath()%>/update-profile"
+					method="post" id="editProfileForm" class="drawer-form">
+
+
+					<!-- NAME -->
+
+					<div class="drawer-field">
+
+						<label for="editName"> Full Name </label>
+
+						<div class="drawer-input-wrapper">
+
+							<span class="field-prefix"> A </span> <input type="text"
+								id="editName" name="name" value="<%=user.getName()%>"
+								autocomplete="name" required>
+
+						</div>
+
+					</div>
+
+
+					<!-- PHONE -->
+
+					<div class="drawer-field">
+
+						<label for="editPhone"> Phone Number </label>
+
+						<div class="phone-input-group">
+
+							<span class="phone-prefix"> +91 </span> <input type="tel"
+								id="editPhone" name="phone" value="<%=user.getPhone()%>"
+								maxlength="10" pattern="[0-9]{10}" inputmode="numeric"
+								autocomplete="tel" placeholder="Enter 10 digit number" required>
+
+						</div>
+
+						<small class="field-hint"> 10-digit mobile number </small>
+
+					</div>
+
+
+					<!-- EMAIL -->
+
+					<div class="drawer-field">
+
+						<label> Email Address </label>
+
+						<div class="drawer-readonly">
+
+							<span class="readonly-icon"> @ </span> <span
+								class="readonly-value"> <%=user.getEmail()%>
+							</span> <span class="readonly-badge"> VERIFIED </span>
+
+						</div>
+
+						<small> Email address cannot be changed. </small>
+
+					</div>
+
+
+					<!-- ROLE -->
+
+					<div class="drawer-field">
+
+						<label> Account Role </label>
+
+						<div class="drawer-readonly">
+
+							<span class="readonly-icon"> ● </span> <span
+								class="readonly-value"> <%=user.getRole()%>
+							</span> <span class="readonly-badge"> SYSTEM </span>
+
+						</div>
+
+					</div>
+
+
+					<!-- NOTICE -->
+
+					<div class="drawer-notice">
+
+						<div class="notice-icon">✓</div>
+
+						<div>
+
+							<strong> Secure profile update </strong>
+
+							<p>Email and account role are managed by the system.</p>
+
+						</div>
+
+					</div>
+
+
+					<!-- ACTIONS -->
+
+					<div class="drawer-actions">
+
+						<button type="button" class="drawer-cancel"
+							onclick="closeEditProfile()">Cancel</button>
+
+
+						<button type="submit" class="drawer-save">
+
+							<span> Save Changes </span> <span class="save-arrow"> → </span>
+
+						</button>
+
+					</div>
+
+
+				</form>
+
+			</div>
+
+		</div>
+
+	</div>
+
+
+	<%
+	}
 	%>
 
 
 	<!-- =========================================================
-     ACCOUNT ACTIVATION POPUP
-     ========================================================= -->
+	     ACTIVATION POPUP
+	========================================================= -->
+
+	<%
+	if (user != null && !user.isStatus()) {
+	%>
+
 
 	<div id="activationOverlay" class="activation-overlay">
 
@@ -528,40 +688,28 @@
 		<div class="activation-card">
 
 
-			<!-- BRAND -->
+			<button type="button" class="activation-close"
+				onclick="closeActivationPopup()">×</button>
+
 
 			<div class="activation-brand">
 
-				<div class="activation-brand-logo">M</div>
+				<div class="activation-logo">M</div>
 
-				<div class="activation-brand-name">MovieBook</div>
-
-			</div>
-
-
-			<!-- ICON -->
-
-			<div class="activation-icon">✉</div>
-
-
-			<!-- HEADER -->
-
-			<div class="activation-header">
-
-				<h1>Activate Account</h1>
-
-				<p>Verify your registered email address to activate your
-					account.</p>
+				<strong> MovieBook </strong>
 
 			</div>
 
 
-			<!-- MESSAGE -->
-
-			<div id="activationMessage" class="activation-message"></div>
+			<div class="activation-icon">@</div>
 
 
-			<!-- SEND VERIFICATION CODE -->
+			<h2>Activate Account</h2>
+
+
+			<p id="activationMessage" class="activation-message">Verify your
+				email address to activate your account.</p>
+
 
 			<div id="activationSendSection">
 
@@ -571,50 +719,27 @@
 			</div>
 
 
-			<!-- OTP SECTION -->
-
-			<div id="activationOtpSection" class="activation-otp-tray"
-				style="display: none;">
+			<div id="activationOtpSection" style="display: none;">
 
 
-				<div class="activation-otp-header">
+				<div class="otp-tray">
 
-
-					<div>
-
-						<strong> Enter Verification Code </strong> <small> We sent
-							a 4-digit verification code to your registered email. </small>
-
-					</div>
-
-
-					<div class="activation-verified-icon">✓</div>
-
+					<label for="activationOtp"> Verification Code </label> <input
+						type="text" id="activationOtp" maxlength="4" inputmode="numeric"
+						autocomplete="one-time-code" placeholder="••••">
 
 				</div>
 
 
-				<div class="activation-otp-input-row">
+				<button type="button" class="activation-verify-btn"
+					onclick="verifyActivationOtp()">Verify &amp; Activate</button>
 
-
-					<input type="text" id="activationOtp" maxlength="4"
-						inputmode="numeric" autocomplete="one-time-code"
-						placeholder="••••">
-
-
-					<button type="button" class="activation-verify-btn"
-						onclick="verifyActivationOtp()">Verify</button>
-
-
-				</div>
-
-
-				<!-- RESEND TIMER -->
 
 				<div class="activation-resend-area">
 
 					<span id="activationResendText"> Resend available in 60
 						seconds </span>
+
 
 					<button type="button" id="activationResendButton"
 						class="activation-resend-btn" onclick="resendActivationOtp()"
@@ -626,9 +751,7 @@
 			</div>
 
 
-			<!-- CANCEL -->
-
-			<button type="button" class="activation-close-btn"
+			<button type="button" class="activation-cancel-btn"
 				onclick="closeActivationPopup()">Cancel</button>
 
 
@@ -643,12 +766,10 @@
 
 
 	<!-- =========================================================
-     PROFILE JAVASCRIPT
-     ========================================================= -->
+	     PROFILE JS
+	========================================================= -->
 
-	<script src="${pageContext.request.contextPath}/assets/js/profile.js">
-		
-	</script>
+	<script src="${pageContext.request.contextPath}/assets/js/profile.js"></script>
 
 
 </body>

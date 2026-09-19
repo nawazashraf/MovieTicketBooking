@@ -16,6 +16,7 @@ import java.io.IOException;
 public class RegisterServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
+
 	private UserDAO userDAO;
 
 	@Override
@@ -27,32 +28,61 @@ public class RegisterServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		// Get data from registration form
 		String name = request.getParameter("name");
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		String phone = request.getParameter("phone");
 
-		// Create UserBean
+        // Format The Name
+		if (name != null) {
+
+			name = name.trim();
+
+			String[] words = name.toLowerCase().split("\\s+");
+
+			StringBuilder formattedName = new StringBuilder();
+
+			for (String word : words) {
+
+				if (!word.isEmpty()) {
+
+					formattedName.append(Character.toUpperCase(word.charAt(0)));
+
+					if (word.length() > 1) {
+						formattedName.append(word.substring(1));
+					}
+
+					formattedName.append(" ");
+				}
+			}
+
+			name = formattedName.toString().trim();
+		}
+
+		// Always save email in lowercase
+		if (email != null) {
+			email = email.trim().toLowerCase();
+		}
+
 		UserBean user = new UserBean();
+
 		user.setName(name);
 		user.setEmail(email);
 		user.setPassword(password);
 		user.setPhone(phone);
-
-		// Normal users register with USER role
 		user.setRole("USER");
 		user.setStatus(true);
 
-		// Save user in database
 		boolean registered = userDAO.registerUser(user);
 
 		if (registered) {
 
-			// Send welcome email ONLY after successful registration
 			try {
+
 				EmailService.sendWelcomeEmail(email, name, request.getContextPath());
+
 			} catch (Exception e) {
+
 				e.printStackTrace();
 			}
 

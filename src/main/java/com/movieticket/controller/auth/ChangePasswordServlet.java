@@ -1,7 +1,7 @@
-
 package com.movieticket.controller.auth;
 
 import com.movieticket.dao.UserDAO;
+import com.movieticket.model.UserBean;
 import com.movieticket.util.EmailService;
 
 import jakarta.servlet.ServletException;
@@ -34,8 +34,7 @@ public class ChangePasswordServlet extends HttpServlet {
 		HttpSession session = request.getSession(false);
 
 		/*
-		 * ======================================== FORGOT PASSWORD FLOW
-		 * ========================================
+		 * FORGOT PASSWORD FLOW
 		 */
 
 		if (session != null && session.getAttribute("forgotUserId") != null) {
@@ -55,13 +54,27 @@ public class ChangePasswordServlet extends HttpServlet {
 		}
 
 		/*
-		 * ======================================== NORMAL LOGGED-IN CHANGE PASSWORD
-		 * FLOW ========================================
+		 * NORMAL LOGGED-IN FLOW
 		 */
 
 		if (session == null || session.getAttribute("userId") == null) {
 
 			response.sendRedirect(request.getContextPath() + "/login.jsp");
+
+			return;
+		}
+
+		String userId = String.valueOf(session.getAttribute("userId"));
+
+		UserBean user = userDAO.getUserById(userId);
+
+		/*
+		 * INACTIVE USER CANNOT CHANGE PASSWORD
+		 */
+
+		if (user == null || !user.isStatus()) {
+
+			response.sendRedirect(request.getContextPath() + "/profile");
 
 			return;
 		}
@@ -83,10 +96,6 @@ public class ChangePasswordServlet extends HttpServlet {
 		if (session != null && session.getAttribute("forgotUserId") != null) {
 
 			Boolean verified = (Boolean) session.getAttribute("forgotPasswordVerified");
-
-			/*
-			 * OTP MUST BE VERIFIED
-			 */
 
 			if (!Boolean.TRUE.equals(verified)) {
 
@@ -119,10 +128,6 @@ public class ChangePasswordServlet extends HttpServlet {
 				return;
 			}
 
-			/*
-			 * Same password validation style as registration page
-			 */
-
 			if (newPassword.length() < 8) {
 
 				request.setAttribute("error", "Password must contain at least 8 characters.");
@@ -132,20 +137,15 @@ public class ChangePasswordServlet extends HttpServlet {
 				return;
 			}
 
-			boolean changed = userDAO.resetPassword(userId, newPassword);
+			boolean changed = userDAO.updatePassword(userId, newPassword);
 
 			if (changed) {
 
 				/*
-				 * ======================================== AUTO ACTIVATE ACCOUNT AFTER
-				 * SUCCESSFUL PASSWORD RESET ========================================
+				 * FORGOT PASSWORD SUCCESS ALSO ACTIVATE ACCOUNT
 				 */
 
 				userDAO.activateAccount(userId);
-
-				/*
-				 * Send password changed email ONLY after successful update
-				 */
 
 				String forgotEmail = (String) session.getAttribute("forgotUserEmail");
 
@@ -183,8 +183,8 @@ public class ChangePasswordServlet extends HttpServlet {
 		}
 
 		/*
-		 * ======================================== NORMAL LOGGED-IN CHANGE PASSWORD
-		 * FLOW ========================================
+		 * ======================================== NORMAL LOGGED-IN ACTIVE USER
+		 * ========================================
 		 */
 
 		if (session == null || session.getAttribute("userId") == null) {
@@ -194,16 +194,30 @@ public class ChangePasswordServlet extends HttpServlet {
 			return;
 		}
 
-		String userId = (String) session.getAttribute("userId");
+		String userId = String.valueOf(session.getAttribute("userId"));
 
-		String currentPassword = request.getParameter("currentPassword");
+		UserBean user = userDAO.getUserById(userId);
+
+		/*
+		 * ONLY ACTIVE USERS CAN CHANGE PASSWORD
+		 */
+
+		if (user == null || !user.isStatus()) {
+
+			response.sendRedirect(request.getContextPath() + "/profile");
+
+			return;
+		}
+
+		/*
+		 * NO CURRENT PASSWORD
+		 */
 
 		String newPassword = request.getParameter("newPassword");
 
 		String confirmPassword = request.getParameter("confirmPassword");
 
-		if (currentPassword == null || newPassword == null || confirmPassword == null || currentPassword.isEmpty()
-				|| newPassword.isEmpty() || confirmPassword.isEmpty()) {
+		if (newPassword == null || confirmPassword == null || newPassword.isEmpty() || confirmPassword.isEmpty()) {
 
 			request.setAttribute("error", "All fields are required.");
 
@@ -221,35 +235,39 @@ public class ChangePasswordServlet extends HttpServlet {
 			return;
 		}
 
-		boolean changed = userDAO.changePassword(userId, currentPassword, newPassword);
+		if (newPassword.length() < 8) {
+
+			request.setAttribute("error", "Password must contain at least 8 characters.");
+
+			request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
+
+			return;
+		}
+
+		/*
+		 * CHANGE PASSWORD DIRECTLY
+		 */
+
+		boolean changed = userDAO.updatePassword(userId, newPassword);
 
 		if (changed) {
 
-			/*
-			 * Send password changed email ONLY after successful update
-			 */
-
-			com.movieticket.model.UserBean user = (com.movieticket.model.UserBean) session.getAttribute("user");
-
 			String changedAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a"));
 
-			if (user != null) {
+			try {
 
-				try {
+				EmailService.sendPasswordChangedEmail(user.getEmail(), user.getName(), changedAt);
 
-					EmailService.sendPasswordChangedEmail(user.getEmail(), user.getName(), changedAt);
+			} catch (Exception e) {
 
-				} catch (Exception e) {
-
-					e.printStackTrace();
-				}
+				e.printStackTrace();
 			}
 
 			response.sendRedirect(request.getContextPath() + "/profile");
 
 		} else {
 
-			request.setAttribute("error", "Current password is incorrect.");
+			request.setAttribute("error", "Password change failed. Please try again.");
 
 			request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
 		}

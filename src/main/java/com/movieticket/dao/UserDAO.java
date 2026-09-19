@@ -40,8 +40,6 @@ public class UserDAO {
 		}
 	}
 
-
-
 	// Login user using email and password
 	public UserBean loginUser(String email, String password) {
 
@@ -161,73 +159,48 @@ public class UserDAO {
 
 	// Update password
 
-	public boolean changePassword(String id, String currentPassword, String newPassword) {
+	public boolean updatePassword(String userId, String newPassword) {
 
-		String sql = "UPDATE users SET password = ? " + "WHERE id = ? AND password = ?";
+		String sql = "UPDATE users SET password = ? WHERE id = ?";
 
 		try (Connection connection = DBConnection.getConnection();
 				PreparedStatement statement = connection.prepareStatement(sql)) {
 
 			statement.setString(1, newPassword);
-			statement.setString(2, id);
-			statement.setString(3, currentPassword);
+			statement.setString(2, userId);
 
 			return statement.executeUpdate() > 0;
 
-		} catch (SQLException e) {
-
+		} catch (Exception e) {
 			e.printStackTrace();
-
-			return false;
 		}
-	}
 
+		return false;
+	}
+	
 	// Update user profile
 
-	public boolean updateProfile(String id, String name, String email, String phone) {
+	public boolean updateProfile(String userId, String name, String phone) {
 
-		String sql = "UPDATE users " + "SET name = ?, email = ?, phone = ? " + "WHERE id = ?";
+		String sql = "UPDATE users SET name = ?, phone = ? WHERE id = ?";
 
 		try (Connection connection = DBConnection.getConnection();
 				PreparedStatement statement = connection.prepareStatement(sql)) {
 
 			statement.setString(1, name);
-			statement.setString(2, email);
-			statement.setString(3, phone);
-			statement.setString(4, id);
+			statement.setString(2, phone);
+			statement.setString(3, userId);
 
 			return statement.executeUpdate() > 0;
 
-		} catch (SQLException e) {
-
+		} catch (Exception e) {
 			e.printStackTrace();
-
-			return false;
 		}
+
+		return false;
 	}
 
-	// Reset password without current password
 
-	public boolean resetPassword(String id, String newPassword) {
-
-		String sql = "UPDATE users SET password = ? " + "WHERE id = ?";
-
-		try (Connection connection = DBConnection.getConnection();
-				PreparedStatement statement = connection.prepareStatement(sql)) {
-
-			statement.setString(1, newPassword);
-			statement.setString(2, id);
-
-			return statement.executeUpdate() > 0;
-
-		} catch (SQLException e) {
-
-			e.printStackTrace();
-
-			return false;
-		}
-	}
-	
 	// Activate account
 	public boolean activateAccount(String id) {
 

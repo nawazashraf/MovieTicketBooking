@@ -1,3 +1,4 @@
+
 package com.movieticket.controller.auth;
 
 import com.movieticket.dao.UserDAO;
@@ -119,7 +120,7 @@ public class ChangePasswordServlet extends HttpServlet {
 			}
 
 			/*
-			 * Same password validation style as your registration page
+			 * Same password validation style as registration page
 			 */
 
 			if (newPassword.length() < 8) {
@@ -135,7 +136,16 @@ public class ChangePasswordServlet extends HttpServlet {
 
 			if (changed) {
 
-				// Send password changed email ONLY after successful update
+				/*
+				 * ======================================== AUTO ACTIVATE ACCOUNT AFTER
+				 * SUCCESSFUL PASSWORD RESET ========================================
+				 */
+
+				userDAO.activateAccount(userId);
+
+				/*
+				 * Send password changed email ONLY after successful update
+				 */
 
 				String forgotEmail = (String) session.getAttribute("forgotUserEmail");
 
@@ -148,7 +158,6 @@ public class ChangePasswordServlet extends HttpServlet {
 				} catch (Exception e) {
 
 					e.printStackTrace();
-
 				}
 
 				session.removeAttribute("forgotUserId");
@@ -216,7 +225,9 @@ public class ChangePasswordServlet extends HttpServlet {
 
 		if (changed) {
 
-			// Send password changed email ONLY after successful update
+			/*
+			 * Send password changed email ONLY after successful update
+			 */
 
 			com.movieticket.model.UserBean user = (com.movieticket.model.UserBean) session.getAttribute("user");
 
@@ -231,7 +242,6 @@ public class ChangePasswordServlet extends HttpServlet {
 				} catch (Exception e) {
 
 					e.printStackTrace();
-
 				}
 			}
 
@@ -243,7 +253,5 @@ public class ChangePasswordServlet extends HttpServlet {
 
 			request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
 		}
-
 	}
-
 }

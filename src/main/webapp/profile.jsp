@@ -4,6 +4,7 @@
 <%@ page import="com.movieticket.model.UserBean"%>
 
 <!DOCTYPE html>
+
 <html>
 
 <head>
@@ -34,9 +35,7 @@
 	UserBean user = (UserBean) request.getAttribute("user");
 
 	if (user == null) {
-
 		user = (UserBean) session.getAttribute("user");
-
 	}
 
 	Boolean accountInactive = (Boolean) session.getAttribute("accountInactive");
@@ -119,8 +118,6 @@
 
 	<%
 	if (Boolean.TRUE.equals(accountInactive)) {
-
-		session.removeAttribute("accountInactive");
 	%>
 
 	<div id="inactiveOverlay" class="inactive-overlay">
@@ -209,12 +206,16 @@
 							<div class="identity-info">
 
 								<h2>
+
 									<%=user.getName()%>
+
 								</h2>
 
 
 								<div class="identity-email">
+
 									<%=user.getEmail()%>
+
 								</div>
 
 
@@ -225,7 +226,7 @@
 									%>
 
 									<span class="status-badge status-active"> <span
-										class="status-dot"> </span> Active
+										class="status-dot"></span> Active
 
 									</span>
 
@@ -234,7 +235,7 @@
 									%>
 
 									<span class="status-badge status-inactive"> <span
-										class="status-dot"> </span> Inactive
+										class="status-dot"></span> Inactive
 
 									</span>
 
@@ -303,7 +304,9 @@
 								<div class="information-label">FULL NAME</div>
 
 								<div class="information-value">
+
 									<%=user.getName()%>
+
 								</div>
 
 							</div>
@@ -316,7 +319,9 @@
 								<div class="information-label">EMAIL ADDRESS</div>
 
 								<div class="information-value">
+
 									<%=user.getEmail()%>
+
 								</div>
 
 							</div>
@@ -531,7 +536,9 @@
 					<div>
 
 						<strong> <%=user.getName()%>
+
 						</strong> <span> <%=user.getEmail()%>
+
 						</span>
 
 					</div>
@@ -598,6 +605,7 @@
 
 							<span class="readonly-icon"> @ </span> <span
 								class="readonly-value"> <%=user.getEmail()%>
+
 							</span> <span class="readonly-badge"> VERIFIED </span>
 
 						</div>
@@ -721,7 +729,8 @@
 	%>
 
 
-	<div id="activationOverlay" class="activation-overlay">
+	<div id="activationOverlay" class="activation-overlay"
+		style="display: none;">
 
 
 		<div class="activation-card">

@@ -1,9 +1,10 @@
 let activationResendTimer = null;
 
 
-
 /* =========================================================
+
    INACTIVE POPUP
+
 ========================================================= */
 
 function closeInactivePopup() {
@@ -11,20 +12,20 @@ function closeInactivePopup() {
 	const overlay =
 		document.getElementById("inactiveOverlay");
 
-	if (overlay) {
-
-		overlay.classList.add(
-			"inactive-overlay-hidden"
-		);
-
+	if (!overlay) {
+		return;
 	}
 
+	overlay.style.display = "none";
+
+	document.body.style.overflow = "";
 }
 
 
-
 /* =========================================================
+
    EDIT PROFILE DRAWER
+
 ========================================================= */
 
 function openEditProfile() {
@@ -60,7 +61,6 @@ function openEditProfile() {
 }
 
 
-
 function closeEditProfile(event) {
 
 	if (event &&
@@ -87,9 +87,10 @@ function closeEditProfile(event) {
 }
 
 
-
 /* =========================================================
+
    ESCAPE KEY
+
 ========================================================= */
 
 document.addEventListener("keydown", function(event) {
@@ -123,9 +124,10 @@ document.addEventListener("keydown", function(event) {
 });
 
 
-
 /* =========================================================
+
    PHONE INPUT
+
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -157,15 +159,22 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
-
 /* =========================================================
+
    PASSWORD TOGGLE
+
 ========================================================= */
 
 function togglePassword(inputId, button) {
 
 	const input =
 		document.getElementById(inputId);
+
+	if (!input) {
+
+		return;
+
+	}
 
 	if (input.type === "password") {
 
@@ -185,7 +194,9 @@ function togglePassword(inputId, button) {
 
 
 /* =========================================================
+
    KEEP OLD JSP FUNCTION
+
 ========================================================= */
 
 function toggleEditPassword(inputId, button) {
@@ -195,65 +206,45 @@ function toggleEditPassword(inputId, button) {
 }
 
 
-
 /* =========================================================
+
    PASSWORD LOGIC
+
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", function() {
 
-
 	const newPassword =
-
 		document.getElementById("editPassword");
 
-
 	const confirmPassword =
-
 		document.getElementById("editConfirmPassword");
 
-
 	const strengthBar =
-
 		document.getElementById("editPasswordStrengthFill");
 
-
 	const strengthText =
-
 		document.getElementById("editPasswordStrengthText");
 
-
 	const strengthContainer =
-
 		document.getElementById("editPasswordStrength");
 
-
 	const matchMessage =
-
 		document.getElementById("editPasswordMatch");
 
-
 	const form =
-
 		document.getElementById("editProfileForm");
 
-
 	if (!newPassword ||
-
 		!confirmPassword ||
-
 		!strengthBar ||
-
 		!strengthText ||
-
 		!matchMessage ||
-
 		!form) {
 
 		return;
 
 	}
-
 
 
 	/* ========================================
@@ -263,41 +254,32 @@ document.addEventListener("DOMContentLoaded", function() {
 	function validatePassword() {
 
 		const value =
-
 			newPassword.value;
-
 
 		if (value === "") {
 
 			strengthText.textContent =
-
 				"";
 
 			return true;
 
 		}
 
-
 		if (value.length < 8) {
 
 			strengthText.textContent =
-
 				"Password must contain at least 8 characters.";
 
 			return false;
 
 		}
 
-
 		strengthText.textContent =
-
 			"";
-
 
 		return true;
 
 	}
-
 
 
 	/* ========================================
@@ -307,9 +289,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	function updatePasswordStrength() {
 
 		const value =
-
 			newPassword.value;
-
 
 		let strength = 0;
 
@@ -352,26 +332,20 @@ document.addEventListener("DOMContentLoaded", function() {
 		if (value.length === 0) {
 
 			strengthBar.style.width =
-
 				"0%";
 
 			strengthBar.style.background =
-
 				"";
 
 			strengthText.textContent =
-
 				"Use 8 or more characters";
-
 
 			if (strengthContainer) {
 
 				strengthContainer.style.display =
-
 					"none";
 
 			}
-
 
 			return;
 
@@ -381,7 +355,6 @@ document.addEventListener("DOMContentLoaded", function() {
 		if (strengthContainer) {
 
 			strengthContainer.style.display =
-
 				"block";
 
 		}
@@ -390,43 +363,34 @@ document.addEventListener("DOMContentLoaded", function() {
 		if (strength <= 2) {
 
 			strengthBar.style.width =
-
 				"35%";
 
 			strengthBar.style.background =
-
 				"#d92d20";
 
 			strengthText.textContent =
-
 				"Weak password";
 
 		} else if (strength <= 4) {
 
 			strengthBar.style.width =
-
 				"65%";
 
 			strengthBar.style.background =
-
 				"#f79009";
 
 			strengthText.textContent =
-
 				"Good password";
 
 		} else {
 
 			strengthBar.style.width =
-
 				"100%";
 
 			strengthBar.style.background =
-
 				"#12b76a";
 
 			strengthText.textContent =
-
 				"Strong password";
 
 		}
@@ -434,36 +398,28 @@ document.addEventListener("DOMContentLoaded", function() {
 	}
 
 
-
 	/* ========================================
 	   PASSWORD INPUT
 	======================================== */
 
 	newPassword.addEventListener(
-
 		"input",
-
 		function() {
 
 			updatePasswordStrength();
 
 		}
-
 	);
 
 
 	newPassword.addEventListener(
-
 		"blur",
-
 		function() {
 
 			validatePassword();
 
 		}
-
 	);
-
 
 
 	/* ========================================
@@ -471,9 +427,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	======================================== */
 
 	confirmPassword.addEventListener(
-
 		"input",
-
 		function() {
 
 			if (confirmPassword.value === "") {
@@ -483,27 +437,22 @@ document.addEventListener("DOMContentLoaded", function() {
 			} else if (
 
 				newPassword.value ===
-
 				confirmPassword.value
 
 			) {
 
 				matchMessage.textContent =
-
 					"Passwords match";
 
 				matchMessage.style.color =
-
 					"#16803c";
 
 			} else {
 
 				matchMessage.textContent =
-
 					"Passwords do not match";
 
 				matchMessage.style.color =
-
 					"#e50914";
 
 			}
@@ -513,31 +462,17 @@ document.addEventListener("DOMContentLoaded", function() {
 	);
 
 
-
 	/* ========================================
 	   FORM SUBMIT
 	======================================== */
 
 	form.addEventListener(
-
 		"submit",
-
 		function(event) {
 
-
-			/*
-
-			 * Both empty:
-			 * keep current password.
-
-			 */
-
 			if (
-
 				newPassword.value === "" &&
-
 				confirmPassword.value === ""
-
 			) {
 
 				return;
@@ -545,15 +480,7 @@ document.addEventListener("DOMContentLoaded", function() {
 			}
 
 
-			/*
-
-			 * One or both fields contain
-			 * a password.
-
-			 */
-
 			const passwordValid =
-
 				validatePassword();
 
 
@@ -569,21 +496,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 			if (
-
 				newPassword.value !==
-
 				confirmPassword.value
-
 			) {
 
 				event.preventDefault();
 
 				matchMessage.textContent =
-
 					"Passwords do not match";
 
 				matchMessage.style.color =
-
 					"#e50914";
 
 				confirmPassword.focus();
@@ -599,19 +521,17 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
-
 /* =========================================================
+
    ACTIVATION POPUP
+
 ========================================================= */
 
 function openActivationPopup() {
 
 	const overlay =
-
 		document.getElementById(
-
 			"activationOverlay"
-
 		);
 
 	if (overlay) {
@@ -619,7 +539,6 @@ function openActivationPopup() {
 		overlay.style.display = "flex";
 
 		document.body.style.overflow =
-
 			"hidden";
 
 	}
@@ -627,15 +546,11 @@ function openActivationPopup() {
 }
 
 
-
 function closeActivationPopup() {
 
 	const overlay =
-
 		document.getElementById(
-
 			"activationOverlay"
-
 		);
 
 	if (overlay) {
@@ -643,7 +558,6 @@ function closeActivationPopup() {
 		overlay.style.display = "none";
 
 		document.body.style.overflow =
-
 			"";
 
 	}
@@ -651,38 +565,31 @@ function closeActivationPopup() {
 }
 
 
-
 /* =========================================================
+
    SEND ACTIVATION OTP
+
 ========================================================= */
 
 function sendActivationOtp() {
 
 	const contextPath =
-
 		document.body.dataset.contextPath || "";
 
 	const message =
-
 		document.getElementById(
-
 			"activationMessage"
-
 		);
 
 	const sendButton =
-
 		document.querySelector(
-
 			".activation-send-btn"
-
 		);
 
 
 	if (message) {
 
 		message.textContent =
-
 			"Sending verification code...";
 
 	}
@@ -696,27 +603,18 @@ function sendActivationOtp() {
 
 
 	fetch(
-
 		contextPath + "/emailVerification",
-
 		{
-
 			method: "POST",
 
 			headers: {
-
 				"Content-Type":
-
 					"application/x-www-form-urlencoded"
-
 			},
 
 			body:
-
 				"action=activateSend"
-
 		}
-
 	)
 
 		.then(function(response) {
@@ -730,7 +628,6 @@ function sendActivationOtp() {
 			if (message) {
 
 				message.textContent =
-
 					data.message;
 
 			}
@@ -739,34 +636,24 @@ function sendActivationOtp() {
 			if (data.success) {
 
 				const sendSection =
-
 					document.getElementById(
-
 						"activationSendSection"
-
 					);
 
 				const otpSection =
-
 					document.getElementById(
-
 						"activationOtpSection"
-
 					);
 
 				const otp =
-
 					document.getElementById(
-
 						"activationOtp"
-
 					);
 
 
 				if (sendSection) {
 
 					sendSection.style.display =
-
 						"none";
 
 				}
@@ -775,7 +662,6 @@ function sendActivationOtp() {
 				if (otpSection) {
 
 					otpSection.style.display =
-
 						"block";
 
 				}
@@ -792,12 +678,12 @@ function sendActivationOtp() {
 
 				startActivationResendTimer();
 
+
 			} else {
 
 				if (sendButton) {
 
 					sendButton.disabled =
-
 						false;
 
 				}
@@ -814,7 +700,6 @@ function sendActivationOtp() {
 			if (message) {
 
 				message.textContent =
-
 					"Unable to send verification code.";
 
 			}
@@ -823,7 +708,6 @@ function sendActivationOtp() {
 			if (sendButton) {
 
 				sendButton.disabled =
-
 					false;
 
 			}
@@ -833,27 +717,22 @@ function sendActivationOtp() {
 }
 
 
-
 /* =========================================================
+
    VERIFY ACTIVATION OTP
+
 ========================================================= */
 
 function verifyActivationOtp() {
 
 	const otpElement =
-
 		document.getElementById(
-
 			"activationOtp"
-
 		);
 
 	const message =
-
 		document.getElementById(
-
 			"activationMessage"
-
 		);
 
 
@@ -865,14 +744,12 @@ function verifyActivationOtp() {
 
 
 	const otp =
-
 		otpElement.value.trim();
 
 
 	if (otp === "") {
 
 		message.textContent =
-
 			"Please enter the verification code.";
 
 		return;
@@ -881,31 +758,20 @@ function verifyActivationOtp() {
 
 
 	fetch(
-
 		(document.body.dataset.contextPath || "") +
-
 		"/emailVerification",
-
 		{
-
 			method: "POST",
 
 			headers: {
-
 				"Content-Type":
-
 					"application/x-www-form-urlencoded"
-
 			},
 
 			body:
-
 				"action=activateVerify&otp=" +
-
 				encodeURIComponent(otp)
-
 		}
-
 	)
 
 		.then(function(response) {
@@ -917,50 +783,39 @@ function verifyActivationOtp() {
 		.then(function(data) {
 
 			message.textContent =
-
 				data.message;
 
 
 			if (data.success) {
 
 				clearInterval(
-
 					activationResendTimer
-
 				);
 
 
 				const resendButton =
-
 					document.getElementById(
-
 						"activationResendButton"
-
 					);
 
 
 				if (resendButton) {
 
 					resendButton.disabled =
-
 						true;
 
 				}
 
 
 				const resendText =
-
 					document.getElementById(
-
 						"activationResendText"
-
 					);
 
 
 				if (resendText) {
 
 					resendText.textContent =
-
 						"Account activated successfully.";
 
 				}
@@ -981,7 +836,6 @@ function verifyActivationOtp() {
 			console.error(error);
 
 			message.textContent =
-
 				"Unable to verify the code.";
 
 		});
@@ -989,32 +843,26 @@ function verifyActivationOtp() {
 }
 
 
-
 /* =========================================================
+
    RESEND ACTIVATION OTP
+
 ========================================================= */
 
 function resendActivationOtp() {
 
 	const message =
-
 		document.getElementById(
-
 			"activationMessage"
-
 		);
 
 	const resendButton =
-
 		document.getElementById(
-
 			"activationResendButton"
-
 		);
 
 
 	if (resendButton &&
-
 		resendButton.disabled) {
 
 		return;
@@ -1025,7 +873,6 @@ function resendActivationOtp() {
 	if (message) {
 
 		message.textContent =
-
 			"Requesting new verification code...";
 
 	}
@@ -1039,29 +886,19 @@ function resendActivationOtp() {
 
 
 	fetch(
-
 		(document.body.dataset.contextPath || "") +
-
 		"/emailVerification",
-
 		{
-
 			method: "POST",
 
 			headers: {
-
 				"Content-Type":
-
 					"application/x-www-form-urlencoded"
-
 			},
 
 			body:
-
 				"action=activateResend"
-
 		}
-
 	)
 
 		.then(function(response) {
@@ -1075,7 +912,6 @@ function resendActivationOtp() {
 			if (message) {
 
 				message.textContent =
-
 					data.message;
 
 			}
@@ -1084,11 +920,8 @@ function resendActivationOtp() {
 			if (data.success) {
 
 				const otp =
-
 					document.getElementById(
-
 						"activationOtp"
-
 					);
 
 
@@ -1103,30 +936,26 @@ function resendActivationOtp() {
 
 				startActivationResendTimer();
 
+
 			} else {
 
 				if (resendButton) {
 
 					resendButton.disabled =
-
 						false;
 
 				}
 
 
 				const resendText =
-
 					document.getElementById(
-
 						"activationResendText"
-
 					);
 
 
 				if (resendText) {
 
 					resendText.textContent =
-
 						"You can request a new code.";
 
 				}
@@ -1143,7 +972,6 @@ function resendActivationOtp() {
 			if (message) {
 
 				message.textContent =
-
 					"Unable to resend verification code.";
 
 			}
@@ -1152,25 +980,20 @@ function resendActivationOtp() {
 			if (resendButton) {
 
 				resendButton.disabled =
-
 					false;
 
 			}
 
 
 			const resendText =
-
 				document.getElementById(
-
 					"activationResendText"
-
 				);
 
 
 			if (resendText) {
 
 				resendText.textContent =
-
 					"You can request a new code.";
 
 			}
@@ -1180,9 +1003,10 @@ function resendActivationOtp() {
 }
 
 
-
 /* =========================================================
+
    RESEND TIMER
+
 ========================================================= */
 
 function startActivationResendTimer() {
@@ -1191,24 +1015,17 @@ function startActivationResendTimer() {
 
 
 	const resendButton =
-
 		document.getElementById(
-
 			"activationResendButton"
-
 		);
 
 	const resendText =
-
 		document.getElementById(
-
 			"activationResendText"
-
 		);
 
 
 	if (!resendButton ||
-
 		!resendText) {
 
 		return;
@@ -1220,23 +1037,17 @@ function startActivationResendTimer() {
 
 
 	resendText.textContent =
-
 		"Resend available in " +
-
 		seconds +
-
 		" seconds";
 
 
 	clearInterval(
-
 		activationResendTimer
-
 	);
 
 
 	activationResendTimer =
-
 		setInterval(function() {
 
 			seconds--;
@@ -1245,19 +1056,15 @@ function startActivationResendTimer() {
 			if (seconds <= 0) {
 
 				clearInterval(
-
 					activationResendTimer
-
 				);
 
 
 				resendButton.disabled =
-
 					false;
 
 
 				resendText.textContent =
-
 					"You can request a new code.";
 
 				return;
@@ -1266,11 +1073,8 @@ function startActivationResendTimer() {
 
 
 			resendText.textContent =
-
 				"Resend available in " +
-
 				seconds +
-
 				" seconds";
 
 		}, 1000);
@@ -1278,19 +1082,17 @@ function startActivationResendTimer() {
 }
 
 
-
 /* =========================================================
+
    PROFILE UPDATE SUCCESS POPUP
+
 ========================================================= */
 
 function closeProfileUpdatePopup() {
 
 	const popup =
-
 		document.getElementById(
-
 			"profileUpdatePopup"
-
 		);
 
 
@@ -1317,19 +1119,17 @@ function closeProfileUpdatePopup() {
 }
 
 
-
 /* =========================================================
+
    PROFILE UPDATE ERROR POPUP
+
 ========================================================= */
 
 function closeProfileUpdateErrorPopup() {
 
 	const popup =
-
 		document.getElementById(
-
 			"profileUpdateErrorPopup"
-
 		);
 
 
@@ -1356,19 +1156,17 @@ function closeProfileUpdateErrorPopup() {
 }
 
 
-
 /* =========================================================
+
    PROFILE UPDATE POPUPS
+
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", function() {
 
 	const successPopup =
-
 		document.getElementById(
-
 			"profileUpdatePopup"
-
 		);
 
 
@@ -1384,11 +1182,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 	const errorPopup =
-
 		document.getElementById(
-
 			"profileUpdateErrorPopup"
-
 		);
 
 

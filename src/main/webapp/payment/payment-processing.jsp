@@ -81,7 +81,7 @@
 
 						window.location.href = "${pageContext.request.contextPath}/ticket?bookingId=${bookingId}";
 
-					}, 2500);
+					}, 500);
 
 		}
 	</script>

@@ -7,11 +7,12 @@
 <head>
 <meta charset="UTF-8">
 <title>Home Page</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/assets/css/common.css">
 
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/assets/css/movie.css">
+	href="${pageContext.request.contextPath}/assets/css/movie.css?v=2">
 
 
 </head>
@@ -25,8 +26,7 @@
 		<section class="movie-section">
 			<div class="section-header">
 				<h2>Now Showing</h2>
-				<a
-					href="${pageContext.request.contextPath}/movies">View All</a>
+				<a href="${pageContext.request.contextPath}/movies">View All</a>
 			</div>
 
 			<div class="movie-container">
@@ -52,8 +52,7 @@
 
 			<div class="section-header">
 				<h2>Coming Soon</h2>
-				<a
-					href="${pageContext.request.contextPath}/movies">View All</a>
+				<a href="${pageContext.request.contextPath}/movies">View All</a>
 			</div>
 
 			<div class="movie-container">
@@ -84,6 +83,13 @@
 		</section>
 
 	</div>
+	<div id="mobile-debug"></div>
+
+	<script>
+		document.getElementById("mobile-debug").innerHTML = "Width: "
+				+ window.innerWidth + "px | Height: " + window.innerHeight
+				+ "px | DPR: " + window.devicePixelRatio;
+	</script>
 
 </body>
 </html>

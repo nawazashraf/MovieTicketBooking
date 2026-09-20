@@ -15,6 +15,7 @@ html, body {
 	font-family: Arial, Helvetica, sans-serif;
 	background: #ffffff;
 	color: #333333;
+	overflow-x: hidden;
 }
 
 /* =========================================================
@@ -163,15 +164,6 @@ html, body {
 	justify-content: center;
 	width: max-content;
 	margin: 4px auto;
-
-	/*
-     * NO ROTATE
-     * NO SCALE
-     *
-     * Every row gets naturally wider
-     * because its center section contains
-     * one additional seat.
-     */
 }
 
 /* =========================================================
@@ -257,7 +249,7 @@ html, body {
 }
 
 /* =========================================================
-   AVAILABLE (fallback if type is missing)
+   AVAILABLE
 ========================================================= */
 .seat.available {
 	background: #ffffff;
@@ -273,7 +265,6 @@ html, body {
 
 /* =========================================================
    AVAILABLE BY TYPE
-   Colors match the legend swatches below.
 ========================================================= */
 .seat.premium.available {
 	background: #ffffff;
@@ -295,8 +286,6 @@ html, body {
 
 /* =========================================================
    SELECTED
-   Higher specificity than the type rules above so it always
-   wins once seat.js toggles this class, regardless of type.
 ========================================================= */
 .seat.selected, .seat.selected.premium, .seat.selected.regular, .seat.selected.recliner
 	{
@@ -492,14 +481,434 @@ html, body {
 }
 
 /* =========================================================
-   MOBILE / SMALL SCREEN
+   MOBILE
+   IMPORTANT:
+   Only the cinema seat map scrolls horizontally.
+   The entire page does NOT become 850px wide.
 ========================================================= */
 @media screen and (max-width: 850px) {
-	body {
-		min-width: 850px;
-		overflow-x: auto;
+	html, body {
+		width: 100%;
+		min-width: 0;
+		overflow-x: hidden;
 	}
+
+	/* -------------------------
+       HEADER
+    ------------------------- */
+	.header {
+		height: 55px;
+		padding: 0 15px;
+	}
+	.logo {
+		width: auto;
+		gap: 6px;
+	}
+	.logo-icon {
+		width: 24px;
+		height: 21px;
+	}
+	.logo-text {
+		font-size: 15px;
+	}
+	.movie-info {
+		position: static;
+		transform: none;
+		margin-left: auto;
+		text-align: right;
+	}
+	.movie-info h2 {
+		font-size: 14px;
+	}
+	.movie-info p {
+		margin-top: 2px;
+		font-size: 10px;
+	}
+
+	/* -------------------------
+       SHOW BAR
+    ------------------------- */
+	.show-bar {
+		height: 42px;
+		padding: 0 15px;
+	}
+	.show-left {
+		gap: 7px;
+	}
+	.calendar {
+		font-size: 14px;
+	}
+	.date {
+		font-size: 10px;
+	}
+	.time {
+		height: 24px;
+		padding: 0 9px;
+		font-size: 10px;
+	}
+
+	/* -------------------------
+       MAIN CONTAINER
+    ------------------------- */
+	.container {
+		width: 100%;
+		padding: 15px 0 105px;
+		overflow-x: auto;
+		overflow-y: hidden;
+	}
+	.seat-map-title {
+		margin-bottom: 12px;
+		font-size: 12px;
+	}
+
+	/* =====================================================
+       SEAT MAP VIEWPORT
+
+       This is the ONLY horizontally scrollable area.
+    ===================================================== */
+	.cinema-layout {
+		width: 100%;
+		overflow-x: auto;
+		overflow-y: hidden;
+		align-items: center;
+		justify-content: center;
+		padding: 5px 15px 15px;
+		-webkit-overflow-scrolling: touch;
+		scrollbar-width: none;
+	}
+	.cinema-layout::-webkit-scrollbar {
+		display: none;
+	}
+
+	/*
+       Keep each row at its natural width.
+       DO NOT squeeze the complete cinema into 360px.
+    */
+	.seat-row {
+		width: max-content;
+		max-width: none;
+		flex-shrink: 0;
+		margin: 4px auto;
+	}
+
+	/* -------------------------
+       ROW LABEL
+    ------------------------- */
+	.row-label {
+		width: 18px;
+		flex: 0 0 18px;
+		margin-right: 5px;
+		font-size: 8px;
+	}
+
+	/* -------------------------
+       SEAT GROUP
+    ------------------------- */
+	.seat-group {
+		gap: 3px;
+	}
+
+	/* -------------------------
+       AISLE
+    ------------------------- */
+	.aisle {
+		width: 14px;
+		flex: 0 0 14px;
+	}
+
+	/* -------------------------
+       SEATS
+    ------------------------- */
+	.seat {
+		width: 22px;
+		height: 21px;
+		flex: 0 0 22px;
+		font-size: 8px;
+		line-height: 19px;
+		border-radius: 4px 4px 2px 2px;
+	}
+
+	/* -------------------------
+       SCREEN
+    ------------------------- */
+	.screen-area {
+		margin-top: 20px;
+		width: 100%;
+	}
+	.screen {
+		width: 280px;
+		max-width: 75vw;
+		height: 14px;
+	}
+	.screen-text {
+		margin-top: 7px;
+		font-size: 9px;
+	}
+
+	/* -------------------------
+       LEGEND
+    ------------------------- */
+	.legend {
+		flex-wrap: wrap;
+		gap: 10px 15px;
+		padding: 0 15px;
+		margin-top: 12px;
+		font-size: 9px;
+	}
+	.legend-item {
+		gap: 4px;
+	}
+	.legend-box {
+		width: 11px;
+		height: 11px;
+	}
+
+	/* -------------------------
+       BOTTOM BOOKING BAR
+    ------------------------- */
 	.bottom {
-		min-width: 850px;
+		width: 100%;
+		min-width: 0;
+		height: 68px;
+		padding: 0 12px;
+	}
+	.bottom-left {
+		width: auto;
+		min-width: 70px;
+	}
+	.count {
+		font-size: 9px;
+		margin-bottom: 3px;
+	}
+	.total {
+		font-size: 11px;
+	}
+	.bottom-center {
+		min-width: 0;
+		padding: 0 8px;
+	}
+	.selected-list {
+		max-width: 100%;
+		font-size: 9px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	.bottom-right {
+		width: auto;
+	}
+	.continue {
+		width: 90px;
+		height: 30px;
+		font-size: 10px;
+	}
+	.continue-message {
+		display: none;
+	}
+}
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+@media screen and (max-width: 480px) {
+	.header {
+		padding: 0 10px;
+	}
+	.logo {
+		gap: 5px;
+	}
+	.logo-icon {
+		width: 22px;
+		height: 20px;
+		font-size: 8px;
+	}
+	.logo-text {
+		font-size: 14px;
+	}
+	.movie-info h2 {
+		font-size: 12px;
+	}
+	.movie-info p {
+		font-size: 9px;
+	}
+
+	/* Show bar */
+	.show-bar {
+		padding: 0 10px;
+	}
+	.date {
+		font-size: 9px;
+	}
+	.time {
+		padding: 0 8px;
+		font-size: 9px;
+	}
+
+	/* Seat map */
+	.cinema-layout {
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+	.seat-row {
+		margin: 3px auto;
+	}
+	.row-label {
+		width: 16px;
+		flex-basis: 16px;
+		margin-right: 4px;
+		font-size: 7px;
+	}
+	.seat-group {
+		gap: 2px;
+	}
+	.aisle {
+		width: 12px;
+		flex-basis: 12px;
+	}
+	.seat {
+		width: 21px;
+		height: 20px;
+		flex-basis: 21px;
+		font-size: 7px;
+		line-height: 18px;
+	}
+
+	/* Screen */
+	.screen {
+		width: 260px;
+		max-width: 72vw;
+	}
+
+	/* Legend */
+	.legend {
+		gap: 8px 12px;
+		padding: 0 10px;
+		font-size: 8px;
+	}
+	.legend-box {
+		width: 10px;
+		height: 10px;
+	}
+
+	/* Bottom */
+	.bottom {
+		padding: 0 8px;
+	}
+	.bottom-left {
+		min-width: 65px;
+	}
+	.count {
+		font-size: 8px;
+	}
+	.total {
+		font-size: 10px;
+	}
+	.bottom-center {
+		padding: 0 5px;
+	}
+	.selected-list {
+		font-size: 8px;
+	}
+	.continue {
+		width: 85px;
+		height: 29px;
+		font-size: 9px;
+	}
+}
+
+/* =========================================================
+   VERY SMALL PHONES - 360px
+========================================================= */
+@media screen and (max-width: 360px) {
+	.header {
+		height: 52px;
+	}
+	.logo-text {
+		font-size: 13px;
+	}
+	.movie-info h2 {
+		font-size: 11px;
+	}
+	.movie-info p {
+		font-size: 8px;
+	}
+
+	/* Show bar */
+	.show-bar {
+		height: 40px;
+	}
+
+	/* Seat map */
+	.cinema-layout {
+		padding-left: 8px;
+		padding-right: 8px;
+	}
+	.seat-row {
+		margin: 3px auto;
+	}
+	.row-label {
+		width: 15px;
+		flex-basis: 15px;
+		margin-right: 3px;
+		font-size: 7px;
+	}
+	.seat-group {
+		gap: 2px;
+	}
+	.aisle {
+		width: 10px;
+		flex-basis: 10px;
+	}
+	.seat {
+		width: 20px;
+		height: 19px;
+		flex-basis: 20px;
+		font-size: 7px;
+		line-height: 17px;
+		border-radius: 3px 3px 2px 2px;
+	}
+
+	/* Screen */
+	.screen {
+		width: 240px;
+		max-width: 70vw;
+		height: 12px;
+	}
+	.screen-text {
+		font-size: 8px;
+		margin-top: 6px;
+	}
+
+	/* Legend */
+	.legend {
+		gap: 7px 10px;
+		padding: 0 8px;
+		font-size: 8px;
+	}
+
+	/* Bottom bar */
+	.bottom {
+		height: 64px;
+		padding: 0 7px;
+	}
+	.bottom-left {
+		min-width: 60px;
+	}
+	.count {
+		font-size: 8px;
+	}
+	.total {
+		font-size: 10px;
+	}
+	.bottom-center {
+		padding: 0 4px;
+	}
+	.selected-list {
+		font-size: 8px;
+	}
+	.continue {
+		width: 80px;
+		height: 28px;
+		font-size: 9px;
 	}
 }

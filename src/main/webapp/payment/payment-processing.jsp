@@ -66,7 +66,7 @@
 
 				document.getElementById("processPaymentForm").submit();
 
-			}, 2500);
+			}, 500);
 
 		}
 

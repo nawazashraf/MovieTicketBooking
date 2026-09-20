@@ -17,27 +17,23 @@ public class AnalyticsDAO {
 		String sql = """
 				SELECT
 
-				    -- Total Revenue
 				    (
 				        SELECT COALESCE(SUM(amount), 0)
 				        FROM payments
 				        WHERE payment_status = 'SUCCESS'
 				    ) AS total_revenue,
 
-				    -- Total Bookings
 				    (
 				        SELECT COUNT(*)
 				        FROM bookings
 				    ) AS total_bookings,
 
-				    -- Confirmed Bookings
 				    (
 				        SELECT COUNT(*)
 				        FROM bookings
 				        WHERE booking_status = 'CONFIRMED'
 				    ) AS confirmed_bookings,
 
-				    -- Total Tickets Sold
 				    (
 				        SELECT COUNT(*)
 				        FROM booking_seats bs
@@ -46,14 +42,12 @@ public class AnalyticsDAO {
 				        WHERE b.booking_status = 'CONFIRMED'
 				    ) AS total_tickets_sold,
 
-				    -- Total Users
 				    (
 				        SELECT COUNT(*)
 				        FROM users
 				        WHERE role = 'USER'
 				    ) AS total_users,
 
-				    -- Revenue Today
 				    (
 				        SELECT COALESCE(SUM(amount), 0)
 				        FROM payments
@@ -61,7 +55,6 @@ public class AnalyticsDAO {
 				        AND DATE(paid_at) = CURDATE()
 				    ) AS revenue_today,
 
-				    -- Revenue This Month
 				    (
 				        SELECT COALESCE(SUM(amount), 0)
 				        FROM payments
@@ -71,16 +64,13 @@ public class AnalyticsDAO {
 				    ) AS revenue_this_month
 				""";
 
-		try {
-			Connection conn = DBConnection.getConnection();
-
-			PreparedStatement ps = conn.prepareStatement(sql);
-
-			ResultSet rs = ps.executeQuery();
-
-			AnalyticsBean analytics = new AnalyticsBean();
+		try (Connection conn = DBConnection.getConnection();
+				PreparedStatement ps = conn.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery()) {
 
 			if (rs.next()) {
+
+				AnalyticsBean analytics = new AnalyticsBean();
 
 				analytics.setTotalRevenue(rs.getBigDecimal("total_revenue"));
 

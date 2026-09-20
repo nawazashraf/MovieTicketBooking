@@ -33,37 +33,98 @@ public class RegisterServlet extends HttpServlet {
 		String password = request.getParameter("password");
 		String phone = request.getParameter("phone");
 
-        // Format The Name
-		if (name != null) {
+		// NAME VALIDATION AND FORMATTING
+		if (name == null || name.trim().isEmpty()) {
+			request.setAttribute("error", "Name is required.");
+			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			return;
+		}
 
-			name = name.trim();
+		name = name.trim();
 
-			String[] words = name.toLowerCase().split("\\s+");
+		// Only English letters and spaces
+		if (!name.matches("[A-Za-z ]+")) {
+			request.setAttribute("error", "Name can contain only letters and spaces.");
+			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			return;
+		}
 
-			StringBuilder formattedName = new StringBuilder();
+		// Remove extra spaces between words
+		name = name.replaceAll("\\s+", " ");
 
-			for (String word : words) {
+		// Minimum 2 characters
+		if (name.length() < 2) {
+			request.setAttribute("error", "Name must contain at least 2 characters.");
+			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			return;
+		}
 
-				if (!word.isEmpty()) {
+		// First letter of each word capital
+		String[] words = name.toLowerCase().split(" ");
+		StringBuilder formattedName = new StringBuilder();
 
-					formattedName.append(Character.toUpperCase(word.charAt(0)));
+		for (String word : words) {
+			if (!word.isEmpty()) {
+				formattedName.append(Character.toUpperCase(word.charAt(0)));
 
-					if (word.length() > 1) {
-						formattedName.append(word.substring(1));
-					}
-
-					formattedName.append(" ");
+				if (word.length() > 1) {
+					formattedName.append(word.substring(1));
 				}
+
+				formattedName.append(" ");
 			}
-
-			name = formattedName.toString().trim();
 		}
 
-		// Always save email in lowercase
-		if (email != null) {
-			email = email.trim().toLowerCase();
+		name = formattedName.toString().trim();
+
+		// EMAIL
+		if (email == null || email.trim().isEmpty()) {
+			request.setAttribute("error", "Email is required.");
+			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			return;
 		}
 
+		// Trim and always convert email to lowercase
+		email = email.trim().toLowerCase();
+
+		// EMAIL FORMAT
+		String emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+
+		if (!email.matches(emailRegex)) {
+			request.setAttribute("error", "Please enter a valid email address.");
+			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			return;
+		}
+
+		// PASSWORD
+		if (password == null || password.isEmpty()) {
+			request.setAttribute("error", "Password is required.");
+			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			return;
+		}
+
+		// Password must be greater than 7 characters
+		if (password.length() < 8) {
+			request.setAttribute("error", "Password must be at least 8 characters.");
+			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			return;
+		}
+
+		// PHONE
+		if (phone == null || phone.isEmpty()) {
+			request.setAttribute("error", "Phone number is required.");
+			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			return;
+		}
+
+		// Exactly 10 digits
+		if (!phone.matches("\\d{10}")) {
+			request.setAttribute("error", "Phone number must contain exactly 10 digits.");
+			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			return;
+		}
+
+		// CREATE USER
 		UserBean user = new UserBean();
 
 		user.setName(name);
@@ -78,11 +139,8 @@ public class RegisterServlet extends HttpServlet {
 		if (registered) {
 
 			try {
-
 				EmailService.sendWelcomeEmail(email, name, request.getContextPath());
-
 			} catch (Exception e) {
-
 				e.printStackTrace();
 			}
 

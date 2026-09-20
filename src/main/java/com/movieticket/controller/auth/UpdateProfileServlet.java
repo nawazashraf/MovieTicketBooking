@@ -34,9 +34,7 @@ public class UpdateProfileServlet extends HttpServlet {
 		HttpSession session = request.getSession(false);
 
 		if (session == null || session.getAttribute("userId") == null) {
-
 			response.sendRedirect(request.getContextPath() + "/login.jsp");
-
 			return;
 		}
 
@@ -45,9 +43,7 @@ public class UpdateProfileServlet extends HttpServlet {
 		UserBean user = userDAO.getUserById(userId);
 
 		if (user == null || !user.isStatus()) {
-
 			response.sendRedirect(request.getContextPath() + "/profile");
-
 			return;
 		}
 
@@ -55,6 +51,11 @@ public class UpdateProfileServlet extends HttpServlet {
 		String phone = request.getParameter("phone");
 		String password = request.getParameter("password");
 		String confirmPassword = request.getParameter("confirmPassword");
+
+		/*
+		 * ======================================== REQUIRED FIELDS
+		 * ========================================
+		 */
 
 		if (name == null || name.trim().isEmpty() || phone == null || phone.trim().isEmpty()) {
 
@@ -71,10 +72,44 @@ public class UpdateProfileServlet extends HttpServlet {
 		phone = phone.trim();
 
 		/*
-		 * Convert name to First Letter Capital for every word.
+		 * ======================================== NAME VALIDATION
+		 * ========================================
+		 *
+		 * Only English letters and single spaces.
+		 *
+		 * No: - dots - numbers - hyphens - underscores - special characters - emojis
 		 */
 
-		String[] words = name.toLowerCase().split("\\s+");
+		if (name.length() < 2 || name.length() > 50) {
+
+			request.setAttribute("updateError", "Name must be between 2 and 50 characters.");
+
+			request.setAttribute("user", user);
+
+			request.getRequestDispatcher("/profile.jsp").forward(request, response);
+
+			return;
+		}
+
+		if (!name.matches("[A-Za-z]+(?: [A-Za-z]+)*")) {
+
+			request.setAttribute("updateError", "Name can contain only letters and single spaces.");
+
+			request.setAttribute("user", user);
+
+			request.getRequestDispatcher("/profile.jsp").forward(request, response);
+
+			return;
+		}
+
+		/*
+		 * ======================================== FORMAT NAME
+		 * ========================================
+		 *
+		 * john doe -> John Doe JOHN DOE -> John Doe jOhN dOe -> John Doe
+		 */
+
+		String[] words = name.toLowerCase().split(" ");
 
 		StringBuilder formattedName = new StringBuilder();
 
@@ -85,7 +120,6 @@ public class UpdateProfileServlet extends HttpServlet {
 				formattedName.append(Character.toUpperCase(word.charAt(0)));
 
 				if (word.length() > 1) {
-
 					formattedName.append(word.substring(1));
 				}
 
@@ -95,9 +129,31 @@ public class UpdateProfileServlet extends HttpServlet {
 
 		name = formattedName.toString().trim();
 
+		/*
+		 * ======================================== PHONE VALIDATION
+		 * ========================================
+		 *
+		 * Exactly 10 digits.
+		 */
+
 		if (!phone.matches("\\d{10}")) {
 
 			request.setAttribute("updateError", "Phone number must contain exactly 10 digits.");
+
+			request.setAttribute("user", user);
+
+			request.getRequestDispatcher("/profile.jsp").forward(request, response);
+
+			return;
+		}
+
+		/*
+		 * Phone number should not start with 0.
+		 */
+
+		if (phone.startsWith("0")) {
+
+			request.setAttribute("updateError", "Please enter a valid 10-digit mobile number.");
 
 			request.setAttribute("user", user);
 
@@ -115,9 +171,13 @@ public class UpdateProfileServlet extends HttpServlet {
 
 		if (changePassword) {
 
-			if (confirmPassword == null || !password.equals(confirmPassword)) {
+			/*
+			 * No leading/trailing spaces.
+			 */
 
-				request.setAttribute("updateError", "Passwords do not match.");
+			if (!password.equals(password.trim())) {
+
+				request.setAttribute("updateError", "Password must not contain leading or trailing spaces.");
 
 				request.setAttribute("user", user);
 
@@ -126,9 +186,43 @@ public class UpdateProfileServlet extends HttpServlet {
 				return;
 			}
 
+			/*
+			 * Minimum 8 characters.
+			 */
+
 			if (password.length() < 8) {
 
 				request.setAttribute("updateError", "Password must contain at least 8 characters.");
+
+				request.setAttribute("user", user);
+
+				request.getRequestDispatcher("/profile.jsp").forward(request, response);
+
+				return;
+			}
+
+			/*
+			 * Maximum 128 characters.
+			 */
+
+			if (password.length() > 128) {
+
+				request.setAttribute("updateError", "Password cannot exceed 128 characters.");
+
+				request.setAttribute("user", user);
+
+				request.getRequestDispatcher("/profile.jsp").forward(request, response);
+
+				return;
+			}
+
+			/*
+			 * Confirm password.
+			 */
+
+			if (confirmPassword == null || !password.equals(confirmPassword)) {
+
+				request.setAttribute("updateError", "Passwords do not match.");
 
 				request.setAttribute("user", user);
 
@@ -164,9 +258,7 @@ public class UpdateProfileServlet extends HttpServlet {
 			UserBean updatedUser = userDAO.getUserById(userId);
 
 			session.setAttribute("user", updatedUser);
-
 			session.setAttribute("userName", updatedUser.getName());
-
 			session.setAttribute("userRole", updatedUser.getRole());
 
 			/*
@@ -183,7 +275,6 @@ public class UpdateProfileServlet extends HttpServlet {
 					EmailService.sendPasswordChangedEmail(updatedUser.getEmail(), updatedUser.getName(), changedAt);
 
 				} catch (Exception e) {
-
 					e.printStackTrace();
 				}
 			}

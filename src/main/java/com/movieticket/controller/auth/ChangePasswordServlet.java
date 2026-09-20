@@ -104,11 +104,15 @@ public class ChangePasswordServlet extends HttpServlet {
 				return;
 			}
 
-			String userId = (String) session.getAttribute("forgotUserId");
+			String userId = String.valueOf(session.getAttribute("forgotUserId"));
 
 			String newPassword = request.getParameter("newPassword");
 
 			String confirmPassword = request.getParameter("confirmPassword");
+
+			/*
+			 * REQUIRED
+			 */
 
 			if (newPassword == null || confirmPassword == null || newPassword.isEmpty() || confirmPassword.isEmpty()) {
 
@@ -119,14 +123,22 @@ public class ChangePasswordServlet extends HttpServlet {
 				return;
 			}
 
-			if (!newPassword.equals(confirmPassword)) {
+			/*
+			 * NO LEADING OR TRAILING SPACES
+			 */
 
-				request.setAttribute("error", "New password and confirm password do not match.");
+			if (!newPassword.equals(newPassword.trim())) {
+
+				request.setAttribute("error", "Password must not contain leading or trailing spaces.");
 
 				request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
 
 				return;
 			}
+
+			/*
+			 * PASSWORD LENGTH
+			 */
 
 			if (newPassword.length() < 8) {
 
@@ -136,6 +148,32 @@ public class ChangePasswordServlet extends HttpServlet {
 
 				return;
 			}
+
+			if (newPassword.length() > 128) {
+
+				request.setAttribute("error", "Password must not exceed 128 characters.");
+
+				request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
+
+				return;
+			}
+
+			/*
+			 * CONFIRM PASSWORD
+			 */
+
+			if (!newPassword.equals(confirmPassword)) {
+
+				request.setAttribute("error", "New password and confirm password do not match.");
+
+				request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
+
+				return;
+			}
+
+			/*
+			 * UPDATE PASSWORD
+			 */
 
 			boolean changed = userDAO.updatePassword(userId, newPassword);
 
@@ -210,12 +248,16 @@ public class ChangePasswordServlet extends HttpServlet {
 		}
 
 		/*
-		 * NO CURRENT PASSWORD
+		 * PASSWORD
 		 */
 
 		String newPassword = request.getParameter("newPassword");
 
 		String confirmPassword = request.getParameter("confirmPassword");
+
+		/*
+		 * REQUIRED
+		 */
 
 		if (newPassword == null || confirmPassword == null || newPassword.isEmpty() || confirmPassword.isEmpty()) {
 
@@ -226,18 +268,48 @@ public class ChangePasswordServlet extends HttpServlet {
 			return;
 		}
 
-		if (!newPassword.equals(confirmPassword)) {
+		/*
+		 * NO LEADING OR TRAILING SPACES
+		 */
 
-			request.setAttribute("error", "New password and confirm password do not match.");
+		if (!newPassword.equals(newPassword.trim())) {
+
+			request.setAttribute("error", "Password must not contain leading or trailing spaces.");
 
 			request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
 
 			return;
 		}
 
+		/*
+		 * PASSWORD LENGTH
+		 */
+
 		if (newPassword.length() < 8) {
 
 			request.setAttribute("error", "Password must contain at least 8 characters.");
+
+			request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
+
+			return;
+		}
+
+		if (newPassword.length() > 128) {
+
+			request.setAttribute("error", "Password must not exceed 128 characters.");
+
+			request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
+
+			return;
+		}
+
+		/*
+		 * CONFIRM PASSWORD
+		 */
+
+		if (!newPassword.equals(confirmPassword)) {
+
+			request.setAttribute("error", "New password and confirm password do not match.");
 
 			request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
 

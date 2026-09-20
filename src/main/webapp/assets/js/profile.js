@@ -1,10 +1,9 @@
+
 let activationResendTimer = null;
 
 
 /* =========================================================
-
    INACTIVE POPUP
-
 ========================================================= */
 
 function closeInactivePopup() {
@@ -19,13 +18,12 @@ function closeInactivePopup() {
 	overlay.style.display = "none";
 
 	document.body.style.overflow = "";
+
 }
 
 
 /* =========================================================
-
    EDIT PROFILE DRAWER
-
 ========================================================= */
 
 function openEditProfile() {
@@ -34,9 +32,7 @@ function openEditProfile() {
 		document.getElementById("editProfileOverlay");
 
 	if (!overlay) {
-
 		return;
-
 	}
 
 	overlay.classList.add("open");
@@ -49,11 +45,8 @@ function openEditProfile() {
 			document.getElementById("editName");
 
 		if (name) {
-
 			name.focus();
-
 			name.select();
-
 		}
 
 	}, 300);
@@ -75,9 +68,7 @@ function closeEditProfile(event) {
 		document.getElementById("editProfileOverlay");
 
 	if (!overlay) {
-
 		return;
-
 	}
 
 	overlay.classList.remove("open");
@@ -88,17 +79,13 @@ function closeEditProfile(event) {
 
 
 /* =========================================================
-
    ESCAPE KEY
-
 ========================================================= */
 
 document.addEventListener("keydown", function(event) {
 
 	if (event.key !== "Escape") {
-
 		return;
-
 	}
 
 	const overlay =
@@ -125,34 +112,91 @@ document.addEventListener("keydown", function(event) {
 
 
 /* =========================================================
-
-   PHONE INPUT
-
+   NAME + PHONE INPUT
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", function() {
 
+	const name =
+		document.getElementById("editName");
+
 	const phone =
 		document.getElementById("editPhone");
 
-	if (phone) {
 
-		phone.addEventListener(
-			"input",
-			function() {
+	/* ========================================
+	   NAME INPUT
+	======================================== */
+
+	if (name) {
+
+		name.addEventListener("input", function() {
+
+			this.value =
+				this.value.replace(/[^A-Za-z ]/g, "");
+
+			this.value =
+				this.value.replace(/\s{2,}/g, " ");
+
+			if (this.value.length > 50) {
 
 				this.value =
-					this.value.replace(/\D/g, "");
-
-				if (this.value.length > 10) {
-
-					this.value =
-						this.value.substring(0, 10);
-
-				}
+					this.value.substring(0, 50);
 
 			}
-		);
+
+		});
+
+
+		name.addEventListener("blur", function() {
+
+			let value =
+				this.value.trim();
+
+			if (value === "") {
+
+				this.value = "";
+
+				return;
+
+			}
+
+			this.value =
+				value
+					.toLowerCase()
+					.split(" ")
+					.map(function(word) {
+
+						return word.charAt(0).toUpperCase() +
+							word.substring(1);
+
+					})
+					.join(" ");
+
+		});
+
+	}
+
+
+	/* ========================================
+	   PHONE INPUT
+	======================================== */
+
+	if (phone) {
+
+		phone.addEventListener("input", function() {
+
+			this.value =
+				this.value.replace(/\D/g, "");
+
+			if (this.value.length > 10) {
+
+				this.value =
+					this.value.substring(0, 10);
+
+			}
+
+		});
 
 	}
 
@@ -160,9 +204,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 /* =========================================================
-
    PASSWORD TOGGLE
-
 ========================================================= */
 
 function togglePassword(inputId, button) {
@@ -171,9 +213,7 @@ function togglePassword(inputId, button) {
 		document.getElementById(inputId);
 
 	if (!input) {
-
 		return;
-
 	}
 
 	if (input.type === "password") {
@@ -194,9 +234,7 @@ function togglePassword(inputId, button) {
 
 
 /* =========================================================
-
    KEEP OLD JSP FUNCTION
-
 ========================================================= */
 
 function toggleEditPassword(inputId, button) {
@@ -207,12 +245,16 @@ function toggleEditPassword(inputId, button) {
 
 
 /* =========================================================
-
-   PASSWORD LOGIC
-
+   PASSWORD + PROFILE VALIDATION
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", function() {
+
+	const name =
+		document.getElementById("editName");
+
+	const phone =
+		document.getElementById("editPhone");
 
 	const newPassword =
 		document.getElementById("editPassword");
@@ -221,19 +263,30 @@ document.addEventListener("DOMContentLoaded", function() {
 		document.getElementById("editConfirmPassword");
 
 	const strengthBar =
-		document.getElementById("editPasswordStrengthFill");
+		document.getElementById(
+			"editPasswordStrengthFill"
+		);
 
 	const strengthText =
-		document.getElementById("editPasswordStrengthText");
+		document.getElementById(
+			"editPasswordStrengthText"
+		);
 
 	const strengthContainer =
-		document.getElementById("editPasswordStrength");
+		document.getElementById(
+			"editPasswordStrength"
+		);
 
 	const matchMessage =
-		document.getElementById("editPasswordMatch");
+		document.getElementById(
+			"editPasswordMatch"
+		);
 
 	const form =
-		document.getElementById("editProfileForm");
+		document.getElementById(
+			"editProfileForm"
+		);
+
 
 	if (!newPassword ||
 		!confirmPassword ||
@@ -248,6 +301,165 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 	/* ========================================
+	   ERROR ELEMENTS
+	======================================== */
+
+	const nameError =
+		document.getElementById("editNameError");
+
+	const phoneError =
+		document.getElementById("editPhoneError");
+
+	const passwordError =
+		document.getElementById("editPasswordError");
+
+	const confirmPasswordError =
+		document.getElementById(
+			"editConfirmPasswordError"
+		);
+
+
+	/* ========================================
+	   SHOW ERROR
+	======================================== */
+
+	function showError(element, message) {
+
+		if (!element) {
+			return;
+		}
+
+		element.textContent = message;
+
+		element.style.display = "block";
+
+		element.style.color = "#d92d20";
+
+	}
+
+
+	/* ========================================
+	   CLEAR ERROR
+	======================================== */
+
+	function clearError(element) {
+
+		if (!element) {
+			return;
+		}
+
+		element.textContent = "";
+
+		element.style.display = "none";
+
+	}
+
+
+	/* ========================================
+	   NAME VALIDATION
+	======================================== */
+
+	function validateName() {
+
+		if (!name) {
+			return true;
+		}
+
+		const value =
+			name.value.trim();
+
+		clearError(nameError);
+
+
+		if (value.length < 2 ||
+			value.length > 50) {
+
+			showError(
+				nameError,
+				"Name must contain between 2 and 50 characters."
+			);
+
+			return false;
+
+		}
+
+
+		if (!/^[A-Za-z]+(?: [A-Za-z]+)*$/.test(value)) {
+
+			showError(
+				nameError,
+				"Only English letters and single spaces are allowed."
+			);
+
+			return false;
+
+		}
+
+
+		name.value =
+			value
+				.toLowerCase()
+				.split(" ")
+				.map(function(word) {
+
+					return word.charAt(0).toUpperCase() +
+						word.substring(1);
+
+				})
+				.join(" ");
+
+
+		return true;
+
+	}
+
+
+	/* ========================================
+	   PHONE VALIDATION
+	======================================== */
+
+	function validatePhone() {
+
+		if (!phone) {
+			return true;
+		}
+
+		const value =
+			phone.value.trim();
+
+		clearError(phoneError);
+
+
+		if (!/^\d{10}$/.test(value)) {
+
+			showError(
+				phoneError,
+				"Phone number must contain exactly 10 digits."
+			);
+
+			return false;
+
+		}
+
+
+		if (value.startsWith("0")) {
+
+			showError(
+				phoneError,
+				"Phone number must not start with 0."
+			);
+
+			return false;
+
+		}
+
+
+		return true;
+
+	}
+
+
+	/* ========================================
 	   PASSWORD VALIDATION
 	======================================== */
 
@@ -256,26 +468,67 @@ document.addEventListener("DOMContentLoaded", function() {
 		const value =
 			newPassword.value;
 
-		if (value === "") {
+		clearError(passwordError);
 
-			strengthText.textContent =
-				"";
+
+		/*
+		 * Empty password means
+		 * keep existing password.
+		 */
+
+		if (value === "") {
 
 			return true;
 
 		}
 
-		if (value.length < 8) {
 
-			strengthText.textContent =
-				"Password must contain at least 8 characters.";
+		/*
+		 * Leading/trailing spaces.
+		 */
+
+		if (value !== value.trim()) {
+
+			showError(
+				passwordError,
+				"Password must not contain leading or trailing spaces."
+			);
 
 			return false;
 
 		}
 
-		strengthText.textContent =
-			"";
+
+		/*
+		 * Less than 8 characters.
+		 *
+		 * Do NOT show another error line.
+		 * The strength section already shows:
+		 * "Minimum 8 characters"
+		 */
+
+		if (value.length < 8) {
+
+			return false;
+
+		}
+
+
+		/*
+		 * Maximum 128 characters.
+		 */
+
+		if (value.length > 128) {
+
+			showError(
+				passwordError,
+				"Password cannot exceed 128 characters."
+			);
+
+			return false;
+
+		}
+
 
 		return true;
 
@@ -291,54 +544,15 @@ document.addEventListener("DOMContentLoaded", function() {
 		const value =
 			newPassword.value;
 
-		let strength = 0;
-
-
-		if (value.length >= 8) {
-
-			strength++;
-
-		}
-
-
-		if (/[A-Z]/.test(value)) {
-
-			strength++;
-
-		}
-
-
-		if (/[a-z]/.test(value)) {
-
-			strength++;
-
-		}
-
-
-		if (/[0-9]/.test(value)) {
-
-			strength++;
-
-		}
-
-
-		if (/[^A-Za-z0-9]/.test(value)) {
-
-			strength++;
-
-		}
-
 
 		if (value.length === 0) {
 
-			strengthBar.style.width =
-				"0%";
+			strengthBar.style.width = "0%";
 
-			strengthBar.style.background =
-				"";
+			strengthBar.style.background = "";
 
 			strengthText.textContent =
-				"Use 8 or more characters";
+				"Minimum 8 characters, maximum 128 characters";
 
 			if (strengthContainer) {
 
@@ -360,38 +574,35 @@ document.addEventListener("DOMContentLoaded", function() {
 		}
 
 
-		if (strength <= 2) {
+		if (value.length < 8) {
 
-			strengthBar.style.width =
-				"35%";
+			strengthBar.style.width = "35%";
 
 			strengthBar.style.background =
 				"#d92d20";
 
 			strengthText.textContent =
-				"Weak password";
+				"Minimum 8 characters";
 
-		} else if (strength <= 4) {
+		} else if (value.length < 12) {
 
-			strengthBar.style.width =
-				"65%";
+			strengthBar.style.width = "65%";
 
 			strengthBar.style.background =
 				"#f79009";
 
 			strengthText.textContent =
-				"Good password";
+				"Password length is valid";
 
 		} else {
 
-			strengthBar.style.width =
-				"100%";
+			strengthBar.style.width = "100%";
 
 			strengthBar.style.background =
 				"#12b76a";
 
 			strengthText.textContent =
-				"Strong password";
+				"Password length is valid";
 
 		}
 
@@ -408,6 +619,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
 			updatePasswordStrength();
 
+			validatePassword();
+
+			if (confirmPassword.value !== "") {
+
+				validateConfirmPassword();
+
+			}
+
 		}
 	);
 
@@ -423,43 +642,141 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 	/* ========================================
-	   CONFIRM PASSWORD
+	   CONFIRM PASSWORD VALIDATION
+	======================================== */
+
+	function validateConfirmPassword() {
+
+		const passwordValue =
+			newPassword.value;
+
+		const confirmValue =
+			confirmPassword.value;
+
+
+		/*
+		 * Clear BOTH possible error areas.
+		 *
+		 * The match message is now the
+		 * ONLY place showing password mismatch.
+		 */
+
+		clearError(confirmPasswordError);
+
+		matchMessage.textContent = "";
+
+		matchMessage.style.color = "";
+
+
+		/*
+		 * Both empty means
+		 * no password change.
+		 */
+
+		if (passwordValue === "" &&
+			confirmValue === "") {
+
+			return true;
+
+		}
+
+
+		/*
+		 * Confirm field empty.
+		 *
+		 * Do not show a second error line.
+		 */
+
+		if (confirmValue === "") {
+
+			return false;
+
+		}
+
+
+		/*
+		 * Passwords do not match.
+		 *
+		 * ONLY matchMessage is used.
+		 */
+
+		if (passwordValue !== confirmValue) {
+
+			matchMessage.textContent =
+				"Passwords do not match";
+
+			matchMessage.style.color =
+				"#d92d20";
+
+			return false;
+
+		}
+
+
+		/*
+		 * Passwords match.
+		 */
+
+		matchMessage.textContent =
+			"Passwords match";
+
+		matchMessage.style.color =
+			"#16803c";
+
+
+		return true;
+
+	}
+
+
+	/* ========================================
+	   CONFIRM PASSWORD INPUT
 	======================================== */
 
 	confirmPassword.addEventListener(
 		"input",
 		function() {
 
-			if (confirmPassword.value === "") {
-
-				matchMessage.textContent = "";
-
-			} else if (
-
-				newPassword.value ===
-				confirmPassword.value
-
-			) {
-
-				matchMessage.textContent =
-					"Passwords match";
-
-				matchMessage.style.color =
-					"#16803c";
-
-			} else {
-
-				matchMessage.textContent =
-					"Passwords do not match";
-
-				matchMessage.style.color =
-					"#e50914";
-
-			}
+			validateConfirmPassword();
 
 		}
-
 	);
+
+
+	/* ========================================
+	   NAME INPUT VALIDATION
+	======================================== */
+
+	if (name) {
+
+		name.addEventListener(
+			"blur",
+			function() {
+
+				validateName();
+
+			}
+		);
+
+	}
+
+
+	/* ========================================
+	   PHONE INPUT VALIDATION
+	======================================== */
+
+	if (phone) {
+
+		phone.addEventListener(
+			"blur",
+			function() {
+
+				validatePhone();
+
+			}
+		);
+
+	}
 
 
 	/* ========================================
@@ -470,21 +787,54 @@ document.addEventListener("DOMContentLoaded", function() {
 		"submit",
 		function(event) {
 
-			if (
-				newPassword.value === "" &&
-				confirmPassword.value === ""
-			) {
+
+			/* ========================================
+			   NAME
+			======================================== */
+
+			const validName =
+				validateName();
+
+
+			if (!validName) {
+
+				event.preventDefault();
+
+				name.focus();
 
 				return;
 
 			}
 
 
-			const passwordValid =
+			/* ========================================
+			   PHONE
+			======================================== */
+
+			const validPhone =
+				validatePhone();
+
+
+			if (!validPhone) {
+
+				event.preventDefault();
+
+				phone.focus();
+
+				return;
+
+			}
+
+
+			/* ========================================
+			   PASSWORD
+			======================================== */
+
+			const validPassword =
 				validatePassword();
 
 
-			if (!passwordValid) {
+			if (!validPassword) {
 
 				event.preventDefault();
 
@@ -495,18 +845,17 @@ document.addEventListener("DOMContentLoaded", function() {
 			}
 
 
-			if (
-				newPassword.value !==
-				confirmPassword.value
-			) {
+			/* ========================================
+			   CONFIRM PASSWORD
+			======================================== */
+
+			const validConfirmPassword =
+				validateConfirmPassword();
+
+
+			if (!validConfirmPassword) {
 
 				event.preventDefault();
-
-				matchMessage.textContent =
-					"Passwords do not match";
-
-				matchMessage.style.color =
-					"#e50914";
 
 				confirmPassword.focus();
 
@@ -514,17 +863,25 @@ document.addEventListener("DOMContentLoaded", function() {
 
 			}
 
-		}
 
+			/*
+			 * Everything is valid.
+			 */
+
+			name.value =
+				name.value.trim();
+
+			phone.value =
+				phone.value.trim();
+
+		}
 	);
 
 });
 
 
 /* =========================================================
-
    ACTIVATION POPUP
-
 ========================================================= */
 
 function openActivationPopup() {
@@ -566,9 +923,7 @@ function closeActivationPopup() {
 
 
 /* =========================================================
-
    SEND ACTIVATION OTP
-
 ========================================================= */
 
 function sendActivationOtp() {
@@ -718,9 +1073,7 @@ function sendActivationOtp() {
 
 
 /* =========================================================
-
    VERIFY ACTIVATION OTP
-
 ========================================================= */
 
 function verifyActivationOtp() {
@@ -844,9 +1197,7 @@ function verifyActivationOtp() {
 
 
 /* =========================================================
-
    RESEND ACTIVATION OTP
-
 ========================================================= */
 
 function resendActivationOtp() {
@@ -1004,15 +1355,12 @@ function resendActivationOtp() {
 
 
 /* =========================================================
-
    RESEND TIMER
-
 ========================================================= */
 
 function startActivationResendTimer() {
 
 	let seconds = 60;
-
 
 	const resendButton =
 		document.getElementById(
@@ -1083,9 +1431,7 @@ function startActivationResendTimer() {
 
 
 /* =========================================================
-
    PROFILE UPDATE SUCCESS POPUP
-
 ========================================================= */
 
 function closeProfileUpdatePopup() {
@@ -1097,9 +1443,7 @@ function closeProfileUpdatePopup() {
 
 
 	if (!popup) {
-
 		return;
-
 	}
 
 
@@ -1120,9 +1464,7 @@ function closeProfileUpdatePopup() {
 
 
 /* =========================================================
-
    PROFILE UPDATE ERROR POPUP
-
 ========================================================= */
 
 function closeProfileUpdateErrorPopup() {
@@ -1134,9 +1476,7 @@ function closeProfileUpdateErrorPopup() {
 
 
 	if (!popup) {
-
 		return;
-
 	}
 
 
@@ -1157,9 +1497,7 @@ function closeProfileUpdateErrorPopup() {
 
 
 /* =========================================================
-
    PROFILE UPDATE POPUPS
-
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -1198,3 +1536,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	}
 
 });
+ 
+
+ 
+

@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", function() {
 
 
@@ -144,9 +145,43 @@ document.addEventListener("DOMContentLoaded", function() {
 	/* ==================== NAME VALIDATION ==================== */
 
 
+	function formatName(value) {
+
+		value = value
+			.trim()
+			.replace(/\s+/g, " ");
+
+		if (value === "") {
+			return "";
+		}
+
+		const words = value
+			.toLowerCase()
+			.split(" ");
+
+		const formattedWords = [];
+
+		for (let word of words) {
+
+			if (word.length > 0) {
+
+				word =
+					word.charAt(0).toUpperCase() +
+					word.substring(1);
+
+				formattedWords.push(word);
+
+			}
+
+		}
+
+		return formattedWords.join(" ");
+	}
+
+
 	function validateName() {
 
-		const value =
+		let value =
 			name.value.trim();
 
 
@@ -160,20 +195,45 @@ document.addEventListener("DOMContentLoaded", function() {
 		}
 
 
-		if (value.length < 2) {
+		/* Only English letters and spaces */
+
+		if (!/^[A-Za-z ]+$/.test(value)) {
 
 			nameError.textContent =
-				"Please enter your full name.";
+				"Name can contain only letters and spaces.";
 
 			return false;
 
 		}
 
 
+		/* Remove extra spaces */
+
+		value =
+			value.replace(/\s+/g, " ");
+
+
+		/* Minimum 2 characters */
+
+		if (value.length < 2) {
+
+			nameError.textContent =
+				"Name must contain at least 2 characters.";
+
+			return false;
+
+		}
+
+
+		/* First letter of each word capital */
+
+		name.value =
+			formatName(value);
+
+
 		nameError.textContent = "";
 
 		return true;
-
 	}
 
 
@@ -190,7 +250,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 	function validateEmail() {
 
-		const value =
+		let value =
 			email.value.trim();
 
 
@@ -204,6 +264,15 @@ document.addEventListener("DOMContentLoaded", function() {
 			return false;
 
 		}
+
+
+		/* Always keep email lowercase */
+
+		value =
+			value.toLowerCase();
+
+		email.value =
+			value;
 
 
 		if (!isValidEmail(value)) {
@@ -223,7 +292,6 @@ document.addEventListener("DOMContentLoaded", function() {
 		verifyEmailButton.disabled = false;
 
 		return true;
-
 	}
 
 
@@ -260,7 +328,6 @@ document.addEventListener("DOMContentLoaded", function() {
 		phoneError.textContent = "";
 
 		return true;
-
 	}
 
 
@@ -287,7 +354,7 @@ document.addEventListener("DOMContentLoaded", function() {
 		if (value.length < 8) {
 
 			passwordError.textContent =
-				"Password must contain at least 8 characters.";
+				"Password must be at least 8 characters.";
 
 			return false;
 
@@ -297,7 +364,6 @@ document.addEventListener("DOMContentLoaded", function() {
 		passwordError.textContent = "";
 
 		return true;
-
 	}
 
 
@@ -413,6 +479,54 @@ document.addEventListener("DOMContentLoaded", function() {
 		"input",
 		function() {
 
+			/*
+			 * Keep only English letters and spaces.
+			 * Extra spaces are reduced to one.
+			 */
+
+			name.value =
+				name.value.replace(
+					/[^A-Za-z ]/g,
+					""
+				);
+
+			name.value =
+				name.value.replace(
+					/\s+/g,
+					" "
+				);
+
+
+			/*
+			 * Capitalize first letter of every word
+			 * while typing.
+			 */
+
+			if (name.value.trim() !== "") {
+
+				const words =
+					name.value
+						.toLowerCase()
+						.split(" ");
+
+				for (let i = 0; i < words.length; i++) {
+
+					if (words[i].length > 0) {
+
+						words[i] =
+							words[i].charAt(0).toUpperCase() +
+							words[i].substring(1);
+
+					}
+
+				}
+
+				name.value =
+					words.join(" ");
+
+			}
+
+
 			if (nameError.textContent !== "") {
 
 				validateName();
@@ -441,8 +555,14 @@ document.addEventListener("DOMContentLoaded", function() {
 		"input",
 		function() {
 
-			const value =
+			let value =
 				email.value.trim();
+
+
+			/* Always lowercase email */
+
+			email.value =
+				value.toLowerCase();
 
 
 			validateEmail();
@@ -457,7 +577,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 				verifyEmailButton.disabled =
-					!isValidEmail(value);
+					!isValidEmail(email.value.trim());
 
 
 				verifyEmailButton.textContent =
@@ -1200,7 +1320,6 @@ document.addEventListener("DOMContentLoaded", function() {
 						seconds +
 						" seconds";
 
-
 				},
 				1000
 			);
@@ -1281,6 +1400,7 @@ document.addEventListener("DOMContentLoaded", function() {
 				"Creating account...";
 
 		}
+
 	);
 
 

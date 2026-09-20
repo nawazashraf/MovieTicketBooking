@@ -33,6 +33,7 @@ Boolean forgotPassword = session.getAttribute("forgotUserId") != null;
 
 	<div class="success-overlay">
 
+		  
 		<div class="success-popup">
 
 			<div class="success-icon">✓</div>
@@ -45,6 +46,7 @@ Boolean forgotPassword = session.getAttribute("forgotUserId") != null;
 				class="login-button"> Go to Login </a>
 
 		</div>
+		
 
 	</div>
 
@@ -54,6 +56,7 @@ Boolean forgotPassword = session.getAttribute("forgotUserId") != null;
 
 	<main class="password-page">
 
+		  
 		<div class="password-card">
 
 
@@ -72,15 +75,11 @@ Boolean forgotPassword = session.getAttribute("forgotUserId") != null;
 			<div class="password-header">
 
 				<h1>
-
 					<%=forgotPassword ? "Reset Password" : "Change Password"%>
-
 				</h1>
 
 				<p>
-
 					<%=forgotPassword ? "Create a new password for your account." : "Update your account password securely."%>
-
 				</p>
 
 			</div>
@@ -123,12 +122,7 @@ Boolean forgotPassword = session.getAttribute("forgotUserId") != null;
 							placeholder="Enter current password" required>
 
 						<button type="button" class="show-password"
-							onclick="togglePassword(
-                                'currentPassword',
-                                this
-                            )">
-
-							Show</button>
+							onclick="togglePassword('currentPassword', this)">Show</button>
 
 					</div>
 
@@ -150,12 +144,7 @@ Boolean forgotPassword = session.getAttribute("forgotUserId") != null;
 							required>
 
 						<button type="button" class="show-password"
-							onclick="togglePassword(
-                                'newPassword',
-                                this
-                            )">
-
-							Show</button>
+							onclick="togglePassword('newPassword', this)">Show</button>
 
 					</div>
 
@@ -172,6 +161,9 @@ Boolean forgotPassword = session.getAttribute("forgotUserId") != null;
 
 					</div>
 
+
+					<small id="newPasswordError" class="field-error"></small>
+
 				</div>
 
 
@@ -186,12 +178,7 @@ Boolean forgotPassword = session.getAttribute("forgotUserId") != null;
 							required>
 
 						<button type="button" class="show-password"
-							onclick="togglePassword(
-                                'confirmPassword',
-                                this
-                            )">
-
-							Show</button>
+							onclick="togglePassword('confirmPassword', this)">Show</button>
 
 					</div>
 
@@ -206,7 +193,6 @@ Boolean forgotPassword = session.getAttribute("forgotUserId") != null;
 					<%=forgotPassword ? "Reset Password" : "Change Password"%>
 
 				</button>
-
 
 			</form>
 
@@ -224,9 +210,9 @@ Boolean forgotPassword = session.getAttribute("forgotUserId") != null;
 
 
 		</div>
+		
 
 	</main>
-
 
 	<script
 		src="${pageContext.request.contextPath}/assets/js/changepassword.js">

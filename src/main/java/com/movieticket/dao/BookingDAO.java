@@ -196,26 +196,31 @@ public class BookingDAO {
 				PreparedStatement ps1 = conn.prepareStatement(bookingSql);
 				PreparedStatement ps2 = conn.prepareStatement(seatSql)) {
 
-			// Update booking
-			ps1.setString(1, bookingId);
+			conn.setAutoCommit(false);
 
-			int bookingResult = ps1.executeUpdate();
+			try {
+				ps1.setString(1, bookingId);
 
-			if (bookingResult == 0) {
-				return false;
+				if (ps1.executeUpdate() == 0) {
+					conn.rollback();
+					return false;
+				}
+
+				ps2.setString(1, bookingId);
+				ps2.executeUpdate();
+
+				conn.commit();
+				return true;
+
+			} catch (Exception e) {
+				conn.rollback();
+				throw e;
 			}
-
-			// Update seats
-			ps2.setString(1, bookingId);
-			ps2.executeUpdate();
-
-			return true;
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			return false;
 		}
-
-		return false;
 	}
 
 	public BigDecimal getSeatPrice(String showSeatId) {
@@ -240,6 +245,89 @@ public class BookingDAO {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public List<BookingSeatBean> getSelectedSeatDetails(String[] showSeatIds) {
+
+		List<BookingSeatBean> seats = new ArrayList<>();
+
+		if (showSeatIds == null || showSeatIds.length == 0) {
+			return seats;
+		}
+
+		StringBuilder placeholders = new StringBuilder();
+
+		for (int i = 0; i < showSeatIds.length; i++) {
+			if (i > 0) {
+				placeholders.append(",");
+			}
+			placeholders.append("?");
+		}
+
+		String sql = """
+				SELECT id, price, status
+				FROM show_seats
+				WHERE id IN (%s)
+				""".formatted(placeholders);
+
+		try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+			for (int i = 0; i < showSeatIds.length; i++) {
+				ps.setString(i + 1, showSeatIds[i].trim());
+			}
+
+			try (ResultSet rs = ps.executeQuery()) {
+
+				while (rs.next()) {
+
+					BookingSeatBean seat = new BookingSeatBean();
+
+					seat.setShowSeatId(rs.getString("id"));
+					seat.setPrice(rs.getBigDecimal("price"));
+
+					seats.add(seat);
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return seats;
+	}
+
+	public boolean addBookingSeats(List<BookingSeatBean> seats) {
+
+		String sql = """
+				INSERT INTO booking_seats
+				(
+				    id,
+				    booking_id,
+				    show_seat_id,
+				    price
+				)
+				VALUES (?, ?, ?, ?)
+				""";
+
+		try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+			for (BookingSeatBean seat : seats) {
+
+				ps.setString(1, seat.getId());
+				ps.setString(2, seat.getBookingId());
+				ps.setString(3, seat.getShowSeatId());
+				ps.setBigDecimal(4, seat.getPrice());
+
+				ps.addBatch();
+			}
+
+			ps.executeBatch();
+			return true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	public List<BookingBean> getBookingsByUserId(String userId) {

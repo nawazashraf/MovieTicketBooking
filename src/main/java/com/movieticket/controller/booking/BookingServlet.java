@@ -2,6 +2,8 @@ package com.movieticket.controller.booking;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.servlet.ServletException;
@@ -29,9 +31,7 @@ public class BookingServlet extends HttpServlet {
 		HttpSession session = request.getSession(false);
 
 		if (session == null || session.getAttribute("user") == null) {
-
 			response.sendRedirect(request.getContextPath() + "/login.jsp");
-
 			return;
 		}
 
@@ -43,113 +43,88 @@ public class BookingServlet extends HttpServlet {
 			String selectedSeats = request.getParameter("selectedSeats");
 
 			if (showId == null || showId.trim().isEmpty()) {
-
 				response.getWriter().println("Show ID is missing");
 				return;
 			}
 
 			if (selectedSeats == null || selectedSeats.trim().isEmpty()) {
-
 				response.getWriter().println("No seats selected");
 				return;
 			}
 
 			String[] showSeatIds = selectedSeats.split(",");
 
-			System.out.println("Selected seats: " + selectedSeats);
+			// =========================================
+			// FETCH ALL SEAT PRICES - ONE QUERY
+			// =========================================
 
-			for (String showSeatId : showSeatIds) {
-				System.out.println("Show Seat ID: [" + showSeatId.trim() + "]");
+			BookingDAO bookingDAO = new BookingDAO();
+
+			List<BookingSeatBean> seats = bookingDAO.getSelectedSeatDetails(showSeatIds);
+
+			if (seats.size() != showSeatIds.length) {
+				response.getWriter().println("One or more seats are invalid.");
+				return;
 			}
 
-			BookingDAO dao = new BookingDAO();
+			// =========================================
+			// CALCULATE TOTAL
+			// =========================================
 
 			BigDecimal totalAmount = BigDecimal.ZERO;
 
-			for (String showSeatId : showSeatIds) {
-
-				showSeatId = showSeatId.trim();
-
-				BigDecimal price = dao.getSeatPrice(showSeatId);
-
-				if (price == null) {
-					response.getWriter().println("Invalid seat: " + showSeatId);
-					return;
-				}
-
-				totalAmount = totalAmount.add(price);
+			for (BookingSeatBean seat : seats) {
+				totalAmount = totalAmount.add(seat.getPrice());
 			}
+
 			// =========================================
 			// CREATE BOOKING
 			// =========================================
 
-			BookingBean booking = new BookingBean();
-
 			String bookingId = UUID.randomUUID().toString();
+
+			BookingBean booking = new BookingBean();
 
 			booking.setId(bookingId);
 
 			booking.setBookingReference("BOOK-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
 
 			booking.setUserId(userId);
-
 			booking.setShowId(showId);
-
 			booking.setTotalAmount(totalAmount);
-
 			booking.setBookingStatus("PENDING");
 
-			// =========================================
-			// DAO
-			// =========================================
-
-			// =========================================
-			// INSERT BOOKING
-			// =========================================
-
-			boolean bookingSaved = dao.createBooking(booking);
+			boolean bookingSaved = bookingDAO.createBooking(booking);
 
 			if (!bookingSaved) {
-
 				response.getWriter().println("Booking insert failed");
-
 				return;
 			}
 
 			// =========================================
-			// INSERT SEATS
+			// PREPARE BOOKING SEATS
 			// =========================================
 
-			for (String showSeatId : showSeatIds) {
-
-				showSeatId = showSeatId.trim();
-
-				BigDecimal price = dao.getSeatPrice(showSeatId);
-
-				if (price == null) {
-					response.getWriter().println("Invalid seat: " + showSeatId);
-					return;
-				}
-
-				BookingSeatBean seat = new BookingSeatBean();
+			for (BookingSeatBean seat : seats) {
 
 				seat.setId(UUID.randomUUID().toString());
-
 				seat.setBookingId(bookingId);
-
-				seat.setShowSeatId(showSeatId);
-
-				seat.setPrice(price);
-
-				boolean seatSaved = dao.addBookingSeat(seat);
-
-				if (!seatSaved) {
-
-					response.getWriter().println("Seat insert failed");
-
-					return;
-				}
 			}
+
+			// =========================================
+			// INSERT ALL SEATS - ONE BATCH
+			// =========================================
+
+			boolean seatsSaved = bookingDAO.addBookingSeats(seats);
+
+			if (!seatsSaved) {
+				response.getWriter().println("Seat insertion failed");
+				return;
+			}
+
+			// =========================================
+			// CREATE PAYMENT
+			// =========================================
 
 			PaymentBean payment = new PaymentBean();
 
@@ -163,9 +138,7 @@ public class BookingServlet extends HttpServlet {
 			boolean paymentCreated = paymentDAO.createPayment(payment);
 
 			if (!paymentCreated) {
-
 				response.getWriter().println("Payment creation failed");
-
 				return;
 			}
 

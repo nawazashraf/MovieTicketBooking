@@ -41,6 +41,7 @@ public class UserDAO {
 	}
 
 	// Login user using email and password
+
 	public UserBean loginUser(String email, String password) {
 
 		String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
@@ -51,31 +52,32 @@ public class UserDAO {
 			statement.setString(1, email);
 			statement.setString(2, password);
 
-			ResultSet resultSet = statement.executeQuery();
+			try (ResultSet resultSet = statement.executeQuery()) {
 
-			if (resultSet.next()) {
+				if (resultSet.next()) {
 
-				UserBean user = new UserBean();
+					UserBean user = new UserBean();
 
-				user.setId(resultSet.getString("id"));
-				user.setName(resultSet.getString("name"));
-				user.setEmail(resultSet.getString("email"));
-				user.setPassword(resultSet.getString("password"));
-				user.setPhone(resultSet.getString("phone"));
-				user.setRole(resultSet.getString("role"));
+					user.setId(resultSet.getString("id"));
+					user.setName(resultSet.getString("name"));
+					user.setEmail(resultSet.getString("email"));
+					user.setPassword(resultSet.getString("password"));
+					user.setPhone(resultSet.getString("phone"));
+					user.setRole(resultSet.getString("role"));
 
-				user.setStatus(resultSet.getBoolean("status"));
+					user.setStatus(resultSet.getBoolean("status"));
 
-				Timestamp createdAt = resultSet.getTimestamp("created_at");
-				user.setCreatedAt(createdAt);
+					Timestamp createdAt = resultSet.getTimestamp("created_at");
 
-				return user;
+					user.setCreatedAt(createdAt);
+
+					return user;
+				}
 			}
 
 		} catch (SQLException e) {
 
 			e.printStackTrace();
-
 		}
 
 		return null;
@@ -92,23 +94,25 @@ public class UserDAO {
 
 			statement.setString(1, id);
 
-			ResultSet resultSet = statement.executeQuery();
+			try (ResultSet resultSet = statement.executeQuery()) {
 
-			if (resultSet.next()) {
+				if (resultSet.next()) {
 
-				UserBean user = new UserBean();
+					UserBean user = new UserBean();
 
-				user.setId(resultSet.getString("id"));
-				user.setName(resultSet.getString("name"));
-				user.setEmail(resultSet.getString("email"));
-				user.setPassword(resultSet.getString("password"));
-				user.setPhone(resultSet.getString("phone"));
-				user.setRole(resultSet.getString("role"));
-				user.setStatus(resultSet.getBoolean("status"));
+					user.setId(resultSet.getString("id"));
+					user.setName(resultSet.getString("name"));
+					user.setEmail(resultSet.getString("email"));
+					user.setPassword(resultSet.getString("password"));
+					user.setPhone(resultSet.getString("phone"));
+					user.setRole(resultSet.getString("role"));
 
-				user.setCreatedAt(resultSet.getTimestamp("created_at"));
+					user.setStatus(resultSet.getBoolean("status"));
 
-				return user;
+					user.setCreatedAt(resultSet.getTimestamp("created_at"));
+
+					return user;
+				}
 			}
 
 		} catch (SQLException e) {
@@ -130,23 +134,25 @@ public class UserDAO {
 
 			statement.setString(1, email);
 
-			ResultSet resultSet = statement.executeQuery();
+			try (ResultSet resultSet = statement.executeQuery()) {
 
-			if (resultSet.next()) {
+				if (resultSet.next()) {
 
-				UserBean user = new UserBean();
+					UserBean user = new UserBean();
 
-				user.setId(resultSet.getString("id"));
-				user.setName(resultSet.getString("name"));
-				user.setEmail(resultSet.getString("email"));
-				user.setPassword(resultSet.getString("password"));
-				user.setPhone(resultSet.getString("phone"));
-				user.setRole(resultSet.getString("role"));
-				user.setStatus(resultSet.getBoolean("status"));
+					user.setId(resultSet.getString("id"));
+					user.setName(resultSet.getString("name"));
+					user.setEmail(resultSet.getString("email"));
+					user.setPassword(resultSet.getString("password"));
+					user.setPhone(resultSet.getString("phone"));
+					user.setRole(resultSet.getString("role"));
 
-				user.setCreatedAt(resultSet.getTimestamp("created_at"));
+					user.setStatus(resultSet.getBoolean("status"));
 
-				return user;
+					user.setCreatedAt(resultSet.getTimestamp("created_at"));
+
+					return user;
+				}
 			}
 
 		} catch (SQLException e) {
@@ -172,6 +178,7 @@ public class UserDAO {
 			return statement.executeUpdate() > 0;
 
 		} catch (Exception e) {
+
 			e.printStackTrace();
 		}
 
@@ -194,28 +201,25 @@ public class UserDAO {
 			return statement.executeUpdate() > 0;
 
 		} catch (Exception e) {
+
 			e.printStackTrace();
 		}
 
 		return false;
 	}
-	
+
 	// Update user profile with password
 
 	public boolean updateProfile(String userId, String name, String phone, String password) {
 
-		String sql = "UPDATE users SET name = ?, phone = ?, password = ? WHERE id = ?";
+		String sql = "UPDATE users " + "SET name = ?, phone = ?, password = ? " + "WHERE id = ?";
 
 		try (Connection connection = DBConnection.getConnection();
-
 				PreparedStatement statement = connection.prepareStatement(sql)) {
 
 			statement.setString(1, name);
-
 			statement.setString(2, phone);
-
 			statement.setString(3, password);
-
 			statement.setString(4, userId);
 
 			return statement.executeUpdate() > 0;
@@ -223,14 +227,13 @@ public class UserDAO {
 		} catch (Exception e) {
 
 			e.printStackTrace();
-
 		}
 
 		return false;
-
 	}
 
 	// Activate account
+
 	public boolean activateAccount(String id) {
 
 		String sql = "UPDATE users SET status = 1 WHERE id = ?";
@@ -245,6 +248,7 @@ public class UserDAO {
 		} catch (SQLException e) {
 
 			e.printStackTrace();
+
 			return false;
 		}
 	}

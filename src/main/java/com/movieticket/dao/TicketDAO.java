@@ -73,125 +73,137 @@ public class TicketDAO {
 				WHERE b.id = ?
 				""";
 
-		try {
-
-			Connection conn = DBConnection.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
+		try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
 			ps.setString(1, bookingId);
 
-			ResultSet rs = ps.executeQuery();
+			try (ResultSet rs = ps.executeQuery()) {
 
-			TicketBean ticket = null;
+				TicketBean ticket = null;
 
-			Map<String, StringBuilder> seatsByType = new LinkedHashMap<>();
-			Map<String, java.math.BigDecimal> priceByType = new LinkedHashMap<>();
+				Map<String, StringBuilder> seatsByType = new LinkedHashMap<>();
+				Map<String, java.math.BigDecimal> priceByType = new LinkedHashMap<>();
 
-			while (rs.next()) {
+				while (rs.next()) {
 
-				if (ticket == null) {
+					if (ticket == null) {
 
-					ticket = new TicketBean();
+						ticket = new TicketBean();
 
-					// Existing booking details
-					ticket.setBookingId(rs.getString("booking_id"));
-					ticket.setBookingReference(rs.getString("booking_reference"));
-					ticket.setTotalAmount(rs.getBigDecimal("total_amount"));
+						// Booking details
+						ticket.setBookingId(rs.getString("booking_id"));
 
-					// Existing movie details
-					ticket.setMovieTitle(rs.getString("movie_title"));
+						ticket.setBookingReference(rs.getString("booking_reference"));
 
-					// Existing mall details
-					ticket.setMallName(rs.getString("mall_name"));
+						ticket.setTotalAmount(rs.getBigDecimal("total_amount"));
 
-					// Existing show details
-					ticket.setShowDate(rs.getDate("show_date"));
-					ticket.setStartTime(rs.getTime("start_time"));
+						ticket.setBookingStatus(rs.getString("booking_status"));
 
-					// Existing payment details
-					ticket.setPaymentMethod(rs.getString("payment_method"));
-					ticket.setTransactionId(rs.getString("transaction_id"));
-					ticket.setPaymentStatus(rs.getString("payment_status"));
+						ticket.setBookingDate(rs.getTimestamp("booking_date"));
 
-					// Additional movie details
-					ticket.setLanguage(rs.getString("language"));
-					ticket.setDurationMinutes(rs.getInt("duration_minutes"));
-					ticket.setCertificate(rs.getString("certificate"));
-					ticket.setGenre(rs.getString("genre"));
-					ticket.setPosterUrl(rs.getString("poster_url"));
+						// Customer details
+						ticket.setCustomerName(rs.getString("customer_name"));
 
-					// Additional cinema details
-					ticket.setMallAddress(rs.getString("mall_address"));
-					ticket.setCity(rs.getString("city"));
-					ticket.setState(rs.getString("state"));
-					ticket.setPincode(rs.getInt("pincode"));
+						ticket.setCustomerEmail(rs.getString("customer_email"));
 
-					// Additional show details
-					ticket.setEndTime(rs.getTime("end_time"));
+						ticket.setCustomerPhone(rs.getString("customer_phone"));
 
-					// Customer details
-					ticket.setCustomerName(rs.getString("customer_name"));
-					ticket.setCustomerEmail(rs.getString("customer_email"));
-					ticket.setCustomerPhone(rs.getString("customer_phone"));
+						// Movie details
+						ticket.setMovieTitle(rs.getString("movie_title"));
 
-					// Booking details
-					ticket.setBookingStatus(rs.getString("booking_status"));
-					ticket.setBookingDate(rs.getTimestamp("booking_date"));
+						ticket.setLanguage(rs.getString("language"));
 
-					// Payment details
-					ticket.setPaidAt(rs.getTimestamp("paid_at"));
-				}
+						ticket.setDurationMinutes(rs.getInt("duration_minutes"));
 
-				String seatType = rs.getString("seat_type");
+						ticket.setCertificate(rs.getString("certificate"));
 
-				String seat = rs.getString("row_name") + rs.getInt("seat_number");
+						ticket.setGenre(rs.getString("genre"));
 
-				java.math.BigDecimal seatPrice = rs.getBigDecimal("seat_price");
+						ticket.setPosterUrl(rs.getString("poster_url"));
 
-				// Add seat to its type
-				if (!seatsByType.containsKey(seatType)) {
-					seatsByType.put(seatType, new StringBuilder());
-					priceByType.put(seatType, java.math.BigDecimal.ZERO);
-				}
+						// Cinema details
+						ticket.setMallName(rs.getString("mall_name"));
 
-				StringBuilder typeSeats = seatsByType.get(seatType);
+						ticket.setMallAddress(rs.getString("mall_address"));
 
-				if (typeSeats.length() > 0) {
-					typeSeats.append(", ");
-				}
+						ticket.setCity(rs.getString("city"));
 
-				typeSeats.append(seat);
+						ticket.setState(rs.getString("state"));
 
-				// Add price to the type total
-				priceByType.put(seatType, priceByType.get(seatType).add(seatPrice));
-			}
+						ticket.setPincode(rs.getInt("pincode"));
 
-			if (ticket != null) {
+						// Show details
+						ticket.setShowDate(rs.getDate("show_date"));
 
-				StringBuilder seats = new StringBuilder();
-				StringBuilder seatTypes = new StringBuilder();
-				StringBuilder seatPrices = new StringBuilder();
+						ticket.setStartTime(rs.getTime("start_time"));
 
-				for (String seatType : seatsByType.keySet()) {
+						ticket.setEndTime(rs.getTime("end_time"));
 
-					if (seats.length() > 0) {
-						seats.append("|");
-						seatTypes.append("|");
-						seatPrices.append("|");
+						// Payment details
+						ticket.setPaymentMethod(rs.getString("payment_method"));
+
+						ticket.setTransactionId(rs.getString("transaction_id"));
+
+						ticket.setPaymentStatus(rs.getString("payment_status"));
+
+						ticket.setPaidAt(rs.getTimestamp("paid_at"));
 					}
 
-					seats.append(seatsByType.get(seatType));
+					String seatType = rs.getString("seat_type");
 
-					seatTypes.append(seatType);
+					String seat = rs.getString("row_name") + rs.getInt("seat_number");
 
-					seatPrices.append(priceByType.get(seatType));
+					java.math.BigDecimal seatPrice = rs.getBigDecimal("seat_price");
+
+					// Create entry for seat type
+					if (!seatsByType.containsKey(seatType)) {
+
+						seatsByType.put(seatType, new StringBuilder());
+
+						priceByType.put(seatType, java.math.BigDecimal.ZERO);
+					}
+
+					StringBuilder typeSeats = seatsByType.get(seatType);
+
+					if (typeSeats.length() > 0) {
+						typeSeats.append(", ");
+					}
+
+					typeSeats.append(seat);
+
+					// Add price to seat type total
+					priceByType.put(seatType, priceByType.get(seatType).add(seatPrice));
 				}
 
-				ticket.setSeats(seats.toString());
-				ticket.setSeatTypes(seatTypes.toString());
-				ticket.setSeatPrices(seatPrices.toString());
+				if (ticket != null) {
 
-				return ticket;
+					StringBuilder seats = new StringBuilder();
+					StringBuilder seatTypes = new StringBuilder();
+					StringBuilder seatPrices = new StringBuilder();
+
+					for (String seatType : seatsByType.keySet()) {
+
+						if (seats.length() > 0) {
+							seats.append("|");
+							seatTypes.append("|");
+							seatPrices.append("|");
+						}
+
+						seats.append(seatsByType.get(seatType));
+
+						seatTypes.append(seatType);
+
+						seatPrices.append(priceByType.get(seatType));
+					}
+
+					ticket.setSeats(seats.toString());
+
+					ticket.setSeatTypes(seatTypes.toString());
+
+					ticket.setSeatPrices(seatPrices.toString());
+
+					return ticket;
+				}
 			}
 
 		} catch (Exception e) {

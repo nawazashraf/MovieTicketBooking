@@ -5,16 +5,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.LinkedHashMap;
 import java.util.UUID;
 
 import com.movieticket.model.MovieBean;
 import com.movieticket.util.DBConnection;
 
 public class MovieDAO {
+
 	public boolean addMovie(MovieBean movie) {
+
 		String sql = """
 				INSERT INTO movies (
 				    id, title, description, duration_minutes, language,
@@ -23,14 +25,17 @@ public class MovieDAO {
 				""";
 
 		try (Connection conn = DBConnection.getConnection()) {
+
 			conn.setAutoCommit(false);
 
 			try {
+
 				if (movie.getId() == null || movie.getId().isBlank()) {
 					movie.setId(UUID.randomUUID().toString());
 				}
 
 				try (PreparedStatement ps = conn.prepareStatement(sql)) {
+
 					setInsertValues(ps, movie);
 					ps.executeUpdate();
 				}
@@ -38,21 +43,27 @@ public class MovieDAO {
 				insertMovieGenres(conn, movie.getId(), movie.getGenreIds());
 
 				conn.commit();
+
 				return true;
 
 			} catch (Exception e) {
+
 				conn.rollback();
 				e.printStackTrace();
+
 				return false;
 			}
 
 		} catch (Exception e) {
+
 			e.printStackTrace();
+
 			return false;
 		}
 	}
 
 	public MovieBean getMovieById(String movieId) {
+
 		String sql = "SELECT * FROM movies WHERE id = ?";
 
 		try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -60,14 +71,19 @@ public class MovieDAO {
 			ps.setString(1, movieId);
 
 			try (ResultSet rs = ps.executeQuery()) {
+
 				if (rs.next()) {
+
 					MovieBean movie = mapMovie(rs);
+
 					movie.setGenreIds(getGenreIds(conn, movieId));
+
 					return movie;
 				}
 			}
 
 		} catch (Exception e) {
+
 			e.printStackTrace();
 		}
 
@@ -75,7 +91,13 @@ public class MovieDAO {
 	}
 
 	public List<MovieBean> getAllMovies() {
-		String sql = "SELECT * FROM movies ORDER BY created_at DESC";
+
+		String sql = """
+				SELECT *
+				FROM movies
+				ORDER BY created_at DESC
+				""";
+
 		List<MovieBean> movies = new ArrayList<>();
 
 		try (Connection conn = DBConnection.getConnection();
@@ -83,12 +105,16 @@ public class MovieDAO {
 				ResultSet rs = ps.executeQuery()) {
 
 			while (rs.next()) {
+
 				MovieBean movie = mapMovie(rs);
+
 				movie.setGenreIds(getGenreIds(conn, movie.getId()));
+
 				movies.add(movie);
 			}
 
 		} catch (Exception e) {
+
 			e.printStackTrace();
 		}
 
@@ -96,32 +122,42 @@ public class MovieDAO {
 	}
 
 	public List<MovieBean> getMoviesByStatus(String status) {
+
 		String sql = """
 				SELECT *
 				FROM movies
 				WHERE status = ?
 				ORDER BY created_at DESC
 				""";
+
 		List<MovieBean> movies = new ArrayList<>();
 
-		try {
-			 Connection conn = DBConnection.getConnection();
-				PreparedStatement ps = conn.prepareStatement(sql);
-				
+		try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
 			ps.setString(1, status);
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				MovieBean movie = mapMovie(rs);
-				movie.setGenreIds(getGenreIds(conn, movie.getId()));
-				movies.add(movie);
+
+			try (ResultSet rs = ps.executeQuery()) {
+
+				while (rs.next()) {
+
+					MovieBean movie = mapMovie(rs);
+
+					movie.setGenreIds(getGenreIds(conn, movie.getId()));
+
+					movies.add(movie);
+				}
 			}
+
 		} catch (Exception e) {
+
 			e.printStackTrace();
 		}
+
 		return movies;
 	}
 
 	public boolean updateMovie(MovieBean movie) {
+
 		String sql = """
 				UPDATE movies
 				SET title = ?,
@@ -137,19 +173,25 @@ public class MovieDAO {
 				""";
 
 		try (Connection conn = DBConnection.getConnection()) {
+
 			conn.setAutoCommit(false);
 
 			try {
+
 				try (PreparedStatement ps = conn.prepareStatement(sql)) {
+
 					setUpdateValues(ps, movie);
 
 					if (ps.executeUpdate() == 0) {
+
 						conn.rollback();
+
 						return false;
 					}
 				}
 
 				try (PreparedStatement ps = conn.prepareStatement("DELETE FROM movie_genres WHERE movie_id = ?")) {
+
 					ps.setString(1, movie.getId());
 					ps.executeUpdate();
 				}
@@ -157,35 +199,45 @@ public class MovieDAO {
 				insertMovieGenres(conn, movie.getId(), movie.getGenreIds());
 
 				conn.commit();
+
 				return true;
 
 			} catch (Exception e) {
+
 				conn.rollback();
 				e.printStackTrace();
+
 				return false;
 			}
 
 		} catch (Exception e) {
+
 			e.printStackTrace();
+
 			return false;
 		}
 	}
 
 	public boolean deleteMovie(String movieId) {
+
 		String sql = "DELETE FROM movies WHERE id = ?";
 
 		try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
 			ps.setString(1, movieId);
+
 			return ps.executeUpdate() > 0;
 
 		} catch (Exception e) {
+
 			e.printStackTrace();
+
 			return false;
 		}
 	}
 
 	private void insertMovieGenres(Connection conn, String movieId, List<String> genreIds) throws SQLException {
+
 		if (genreIds == null || genreIds.isEmpty()) {
 			return;
 		}
@@ -196,10 +248,14 @@ public class MovieDAO {
 				""";
 
 		try (PreparedStatement ps = conn.prepareStatement(sql)) {
+
 			for (String genreId : genreIds) {
+
 				if (genreId != null && !genreId.isBlank()) {
+
 					ps.setString(1, movieId);
 					ps.setString(2, genreId);
+
 					ps.addBatch();
 				}
 			}
@@ -209,6 +265,7 @@ public class MovieDAO {
 	}
 
 	private List<String> getGenreIds(Connection conn, String movieId) throws SQLException {
+
 		List<String> genreIds = new ArrayList<>();
 
 		String sql = """
@@ -218,10 +275,13 @@ public class MovieDAO {
 				""";
 
 		try (PreparedStatement ps = conn.prepareStatement(sql)) {
+
 			ps.setString(1, movieId);
 
 			try (ResultSet rs = ps.executeQuery()) {
+
 				while (rs.next()) {
+
 					genreIds.add(rs.getString("genre_id"));
 				}
 			}
@@ -231,6 +291,7 @@ public class MovieDAO {
 	}
 
 	private MovieBean mapMovie(ResultSet rs) throws SQLException {
+
 		MovieBean movie = new MovieBean();
 
 		movie.setId(rs.getString("id"));
@@ -249,6 +310,7 @@ public class MovieDAO {
 	}
 
 	private void setInsertValues(PreparedStatement ps, MovieBean movie) throws SQLException {
+
 		ps.setString(1, movie.getId());
 		ps.setString(2, movie.getTitle());
 		ps.setString(3, movie.getDescription());
@@ -262,6 +324,7 @@ public class MovieDAO {
 	}
 
 	private void setUpdateValues(PreparedStatement ps, MovieBean movie) throws SQLException {
+
 		ps.setString(1, movie.getTitle());
 		ps.setString(2, movie.getDescription());
 		ps.setInt(3, movie.getDurationMinutes());
@@ -273,29 +336,66 @@ public class MovieDAO {
 		ps.setString(9, movie.getStatus());
 		ps.setString(10, movie.getId());
 	}
+
 	public List<MovieBean> searchMoviesByTitle(String query) {
-		String sql = "SELECT * FROM movies WHERE LOWER(title) LIKE LOWER(?) ORDER BY title";
+
+		String sql = """
+				SELECT *
+				FROM movies
+				WHERE LOWER(title) LIKE LOWER(?)
+				ORDER BY title
+				""";
+
 		List<MovieBean> movies = new ArrayList<>();
+
 		try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
 			ps.setString(1, "%" + query + "%");
+
 			try (ResultSet rs = ps.executeQuery()) {
+
 				while (rs.next()) {
+
 					MovieBean movie = mapMovie(rs);
+
 					movie.setGenreIds(getGenreIds(conn, movie.getId()));
+
 					movies.add(movie);
 				}
 			}
-		} catch (Exception e) { e.printStackTrace(); }
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+
 		return movies;
 	}
 
 	public Map<String, String> getAllGenres() {
+
 		Map<String, String> genres = new LinkedHashMap<>();
-		String sql = "SELECT id, name FROM genres ORDER BY name";
-		try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
-			while (rs.next()) genres.put(rs.getString("id"), rs.getString("name"));
-		} catch (Exception e) { e.printStackTrace(); }
+
+		String sql = """
+				SELECT id, name
+				FROM genres
+				ORDER BY name
+				""";
+
+		try (Connection conn = DBConnection.getConnection();
+				PreparedStatement ps = conn.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery()) {
+
+			while (rs.next()) {
+
+				genres.put(rs.getString("id"), rs.getString("name"));
+			}
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+
 		return genres;
 	}
-
 }

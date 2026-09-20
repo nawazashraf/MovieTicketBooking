@@ -22,9 +22,7 @@ public class SeatSelectionDAO {
 		String sql = "SELECT sh.id, m.title, ma.name, " + "sh.show_date, sh.start_time " + "FROM shows sh "
 				+ "JOIN movies m ON sh.movie_id = m.id " + "JOIN malls ma ON sh.mall_id = ma.id " + "WHERE sh.id = ?";
 
-		try {
-			Connection con = DBConnection.getConnection();
-			PreparedStatement ps = con.prepareStatement(sql);
+		try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setString(1, showId);
 
@@ -43,12 +41,12 @@ public class SeatSelectionDAO {
 			}
 
 		} catch (Exception ex) {
-			System.out.print(ex.getMessage());
+
+			ex.printStackTrace();
 		}
 
 		return show;
 	}
-
 	// =========================================================
 	// GET SEATS FOR SELECTED SHOW
 	// =========================================================

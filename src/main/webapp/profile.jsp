@@ -536,9 +536,7 @@
 					<div>
 
 						<strong> <%=user.getName()%>
-
 						</strong> <span> <%=user.getEmail()%>
-
 						</span>
 
 					</div>
@@ -564,6 +562,7 @@
 
 						<label for="editName"> Full Name </label>
 
+
 						<div class="drawer-input-wrapper">
 
 							<span class="field-prefix"> A </span> <input type="text"
@@ -571,6 +570,11 @@
 								autocomplete="name" required>
 
 						</div>
+
+
+						<!-- NAME ERROR -->
+
+						<small id="editNameError" class="field-error"></small>
 
 					</div>
 
@@ -581,6 +585,7 @@
 
 						<label for="editPhone"> Phone Number </label>
 
+
 						<div class="phone-input-group">
 
 							<span class="phone-prefix"> +91 </span> <input type="tel"
@@ -590,7 +595,13 @@
 
 						</div>
 
+
 						<small class="field-hint"> 10-digit mobile number </small>
+
+
+						<!-- PHONE ERROR -->
+
+						<small id="editPhoneError" class="field-error"></small>
 
 					</div>
 
@@ -601,14 +612,15 @@
 
 						<label> Email Address </label>
 
+
 						<div class="drawer-readonly">
 
 							<span class="readonly-icon"> @ </span> <span
 								class="readonly-value"> <%=user.getEmail()%>
-
 							</span> <span class="readonly-badge"> VERIFIED </span>
 
 						</div>
+
 
 						<small> Email address cannot be changed. </small>
 
@@ -623,11 +635,13 @@
 
 						<label for="editPassword"> New Password </label>
 
+
 						<div class="password-input-wrapper">
 
 							<input type="password" id="editPassword" name="password"
 								autocomplete="new-password"
 								placeholder="Leave blank to keep current password">
+
 
 							<button type="button" class="password-toggle"
 								onclick="toggleEditPassword('editPassword', this)">
@@ -655,6 +669,11 @@
 
 						</div>
 
+
+						<!-- PASSWORD ERROR -->
+
+						<small id="editPasswordError" class="field-error"></small>
+
 					</div>
 
 
@@ -666,11 +685,13 @@
 
 						<label for="editConfirmPassword"> Confirm New Password </label>
 
+
 						<div class="password-input-wrapper">
 
 							<input type="password" id="editConfirmPassword"
 								name="confirmPassword" autocomplete="new-password"
 								placeholder="Re-enter new password">
+
 
 							<button type="button" class="password-toggle"
 								onclick="toggleEditPassword('editConfirmPassword', this)">
@@ -684,12 +705,18 @@
 
 						<div id="editPasswordMatch" class="password-match"></div>
 
+
+						<!-- CONFIRM PASSWORD ERROR -->
+
+						<small id="editConfirmPasswordError" class="field-error"></small>
+
 					</div>
 
 
 					<!-- ACTIONS -->
 
 					<div class="drawer-actions">
+
 
 						<button type="button" class="drawer-cancel"
 							onclick="closeEditProfile()">Cancel</button>
@@ -701,6 +728,7 @@
 							<span> Save Changes </span> <span class="save-arrow"> → </span>
 
 						</button>
+
 
 					</div>
 

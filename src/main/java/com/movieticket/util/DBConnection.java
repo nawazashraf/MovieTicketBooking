@@ -10,117 +10,114 @@ import com.zaxxer.hikari.HikariDataSource;
 
 public final class DBConnection {
 
-    private static HikariDataSource dataSource;
+	private static HikariDataSource dataSource;
 
-    private DBConnection() {
-    }
+	private DBConnection() {
+	}
 
-    private static synchronized HikariDataSource getDataSource() {
+	private static synchronized HikariDataSource getDataSource() {
 
-        if (dataSource != null) {
-            return dataSource;
-        }
+		if (dataSource != null) {
+			return dataSource;
+		}
 
-        String url = System.getenv("MYSQL_URL");
-        String user = System.getenv("MYSQL_USER");
-        String password = System.getenv("MYSQL_PASSWORD");
+		String url = System.getenv("MYSQL_URL");
+		String user = System.getenv("MYSQL_USER");
+		String password = System.getenv("MYSQL_PASSWORD");
 
-        /*
-         * Render:
-         * Uses MYSQL_URL, MYSQL_USER and MYSQL_PASSWORD.
-         *
-         * Local Eclipse:
-         * Falls back to db.properties.
-         */
-        if (url == null || url.isBlank()
-                || user == null || user.isBlank()
-                || password == null || password.isBlank()) {
+		/*
+		 * Render: Uses MYSQL_URL, MYSQL_USER and MYSQL_PASSWORD.
+		 *
+		 * Local Eclipse: Falls back to db.properties.
+		 */
+		if (url == null || url.isBlank() || user == null || user.isBlank() || password == null || password.isBlank()) {
 
-            Properties properties = new Properties();
+			Properties properties = new Properties();
 
-            try (InputStream input = DBConnection.class
-                    .getClassLoader()
-                    .getResourceAsStream("db.properties")) {
+			try (InputStream input = DBConnection.class.getClassLoader().getResourceAsStream("db.properties")) {
 
-                if (input == null) {
-                    throw new IllegalStateException(
-                            "db.properties was not found on the application classpath");
-                }
+				if (input == null) {
+					throw new IllegalStateException("db.properties was not found on the application classpath");
+				}
 
-                properties.load(input);
+				properties.load(input);
 
-            } catch (Exception e) {
+			} catch (Exception e) {
 
-                if (e instanceof IllegalStateException) {
-                    throw (IllegalStateException) e;
-                }
+				if (e instanceof IllegalStateException) {
+					throw (IllegalStateException) e;
+				}
 
-                throw new IllegalStateException(
-                        "Unable to load database configuration", e);
-            }
+				throw new IllegalStateException("Unable to load database configuration", e);
+			}
 
-            url = properties.getProperty("DB_URL");
-            user = properties.getProperty("DB_USER");
-            password = properties.getProperty("DB_PASSWORD");
-        }
+			url = properties.getProperty("DB_URL");
+			user = properties.getProperty("DB_USER");
+			password = properties.getProperty("DB_PASSWORD");
+		}
 
-        if (url == null || url.isBlank()
-                || user == null || user.isBlank()
-                || password == null || password.isBlank()) {
+		if (url == null || url.isBlank() || user == null || user.isBlank() || password == null || password.isBlank()) {
 
-            throw new IllegalStateException(
-                    "Database configuration is missing");
-        }
+			throw new IllegalStateException("Database configuration is missing");
+		}
 
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            throw new IllegalStateException(
-                    "MySQL JDBC driver is missing from WEB-INF/lib", e);
-        }
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
 
-        HikariConfig config = new HikariConfig();
+		} catch (ClassNotFoundException e) {
 
-        config.setJdbcUrl(url.trim());
-        config.setUsername(user.trim());
-        config.setPassword(password);
+			throw new IllegalStateException("MySQL JDBC driver is missing from WEB-INF/lib", e);
+		}
 
-        /*
-         * Connection pool settings
-         */
-        config.setMaximumPoolSize(5);
-        config.setMinimumIdle(2);
+		HikariConfig config = new HikariConfig();
 
-        /*
-         * Wait at most 10 seconds for a connection
-         * from the pool.
-         */
-        config.setConnectionTimeout(10000);
+		config.setJdbcUrl(url.trim());
+		config.setUsername(user.trim());
+		config.setPassword(password);
 
-        /*
-         * Recycle connections periodically.
-         */
-        config.setMaxLifetime(600000);
+		/*
+		 * Connection pool settings
+		 */
+		config.setMaximumPoolSize(5);
+		config.setMinimumIdle(2);
 
-        /*
-         * Validate connections before using them.
-         */
-        config.setConnectionTestQuery("SELECT 1");
+		/*
+		 * Wait at most 10 seconds for a connection from the pool.
+		 */
+		config.setConnectionTimeout(10000);
 
-        dataSource = new HikariDataSource(config);
+		/*
+		 * Recycle connections periodically.
+		 */
+		config.setMaxLifetime(600000);
 
-        return dataSource;
-    }
+		/*
+		 * Validate connections before using them.
+		 */
+		config.setConnectionTestQuery("SELECT 1");
 
-    public static Connection getConnection() {
+		dataSource = new HikariDataSource(config);
 
-        try {
-            return getDataSource().getConnection();
+		return dataSource;
+	}
 
-        } catch (SQLException e) {
+	public static Connection getConnection() {
 
-            throw new IllegalStateException(
-                    "Unable to obtain database connection", e);
-        }
-    }
+		try {
+
+			long start = System.currentTimeMillis();
+
+			Connection connection = getDataSource().getConnection();
+
+			long end = System.currentTimeMillis();
+
+			System.out.println("DB CONNECTION TIME: " + (end - start) + " ms");
+
+			return connection;
+
+		} catch (SQLException e) {
+
+			throw new IllegalStateException("Unable to obtain database connection", e);
+		}
+	}
 }

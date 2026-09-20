@@ -1,5 +1,5 @@
-
 <%@ page import="com.movieticket.model.TicketBean"%>
+
 <%
 TicketBean ticket = (TicketBean) request.getAttribute("ticket");
 %>
@@ -8,10 +8,21 @@ TicketBean ticket = (TicketBean) request.getAttribute("ticket");
 	pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
-
 <html>
 
 <head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Movie E-Ticket</title>
+
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/assets/css/ticket.css">
+
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/assets/css/common.css">
 
 <script>
 	var ticketBookingReference = "${ticket.bookingReference}";
@@ -23,35 +34,32 @@ TicketBean ticket = (TicketBean) request.getAttribute("ticket");
 	var ticketSeats = "${ticket.seats}";
 </script>
 
-
-
-<script src="${pageContext.request.contextPath}/assets/js/ticket.js"></script>
-
-<meta charset="UTF-8">
-
-<title>Movie E-Ticket</title>
-
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/assets/css/ticket.css">
-
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/assets/css/common.css">
+<script src="${pageContext.request.contextPath}/assets/js/ticket.js">
+	
+</script>
 
 </head>
 
 <body>
 
 	<%@ include file="/common/navbar.jsp"%>
+
+
 	<div class="ticket">
 
+
+		<!-- ================================================= -->
 		<!-- HEADER -->
+		<!-- ================================================= -->
 
 		<div class="ticket-header">
 
 			<div>
+
 				<h1>Movie E-Ticket</h1>
 
 				<p>Booking Confirmed</p>
+
 			</div>
 
 			<div class="confirmed">✓ CONFIRMED</div>
@@ -59,7 +67,9 @@ TicketBean ticket = (TicketBean) request.getAttribute("ticket");
 		</div>
 
 
+		<!-- ================================================= -->
 		<!-- MOVIE DETAILS -->
+		<!-- ================================================= -->
 
 		<div class="movie-section">
 
@@ -74,15 +84,18 @@ TicketBean ticket = (TicketBean) request.getAttribute("ticket");
 
 				<h2 class="movie-title">${ticket.movieTitle}</h2>
 
+
 				<div class="movie-meta">
 
-					<span>${ticket.language}</span> <span>•</span> <span>${ticket.certificate}</span>
-
-					<span>•</span> <span>${ticket.durationMinutes} min</span>
+					<span> ${ticket.language} </span> <span>•</span> <span>
+						${ticket.certificate} </span> <span>•</span> <span>
+						${ticket.durationMinutes} min </span>
 
 				</div>
 
+
 				<div class="genre">${ticket.genre}</div>
+
 
 				<div class="booking-ref">
 
@@ -96,11 +109,14 @@ TicketBean ticket = (TicketBean) request.getAttribute("ticket");
 		</div>
 
 
+		<!-- ================================================= -->
 		<!-- CINEMA DETAILS -->
+		<!-- ================================================= -->
 
 		<div class="section">
 
 			<h3 class="section-title">Cinema Details</h3>
+
 
 			<div class="cinema-box">
 
@@ -148,11 +164,14 @@ TicketBean ticket = (TicketBean) request.getAttribute("ticket");
 		</div>
 
 
+		<!-- ================================================= -->
 		<!-- SHOW DETAILS -->
+		<!-- ================================================= -->
 
 		<div class="section">
 
 			<h3 class="section-title">Show Details</h3>
+
 
 			<div class="show-details">
 
@@ -183,16 +202,24 @@ TicketBean ticket = (TicketBean) request.getAttribute("ticket");
 
 		</div>
 
+
+		<!-- ================================================= -->
 		<!-- SEAT DETAILS -->
+		<!-- ================================================= -->
 
 		<div class="section">
+
 			<h3 class="section-title">Seat Details</h3>
+
 
 			<div class="seats-box">
 
 				<div class="seat-header">
-					<span>Seat</span> <span>Type</span> <span>Total Price</span>
+
+					<span> Seat </span> <span> Type </span> <span> Total Price </span>
+
 				</div>
+
 
 				<%
 				String[] seats = ticket.getSeats().split("\\|");
@@ -203,8 +230,12 @@ TicketBean ticket = (TicketBean) request.getAttribute("ticket");
 				%>
 
 				<div class="seat-row">
-					<span class="seat-number"><%=seats[i]%></span> <span><%=seatTypes[i]%></span>
-					<span>₹<%=seatPrices[i]%></span>
+
+					<span class="seat-number"> <%=seats[i]%>
+					</span> <span> <%=seatTypes[i]%>
+					</span> <span> ₹<%=seatPrices[i]%>
+					</span>
+
 				</div>
 
 				<%
@@ -212,17 +243,18 @@ TicketBean ticket = (TicketBean) request.getAttribute("ticket");
 				%>
 
 			</div>
+
 		</div>
 
 
-
-
-
+		<!-- ================================================= -->
 		<!-- CUSTOMER DETAILS -->
+		<!-- ================================================= -->
 
 		<div class="section">
 
 			<h3 class="section-title">Customer Details</h3>
+
 
 			<div class="customer-details">
 
@@ -254,11 +286,14 @@ TicketBean ticket = (TicketBean) request.getAttribute("ticket");
 		</div>
 
 
+		<!-- ================================================= -->
 		<!-- PAYMENT DETAILS -->
+		<!-- ================================================= -->
 
 		<div class="section">
 
 			<h3 class="section-title">Payment Details</h3>
+
 
 			<div class="payment-details">
 
@@ -298,7 +333,9 @@ TicketBean ticket = (TicketBean) request.getAttribute("ticket");
 		</div>
 
 
+		<!-- ================================================= -->
 		<!-- TOTAL -->
+		<!-- ================================================= -->
 
 		<div class="total-section">
 
@@ -314,13 +351,16 @@ TicketBean ticket = (TicketBean) request.getAttribute("ticket");
 		</div>
 
 
+		<!-- ================================================= -->
 		<!-- BOOKING INFORMATION -->
+		<!-- ================================================= -->
 
 		<div class="booking-section">
 
 			<div class="booking-info">
 
 				<h3>Booking Information</h3>
+
 
 				<div class="detail">
 
@@ -349,18 +389,25 @@ TicketBean ticket = (TicketBean) request.getAttribute("ticket");
 
 
 			<div class="qr-box">
+
 				<img id="qrcode" alt="Ticket QR Code">
+
 			</div>
 
 		</div>
 
 
+		<!-- ================================================= -->
+		<!-- FOOTER -->
+		<!-- ================================================= -->
+
 		<div class="ticket-footer">
 
-			<strong>Please arrive 15–20 minutes before the show.</strong>
+			<strong> Please arrive 15–20 minutes before the show. </strong>
 
 			<p>Carry this e-ticket and a valid ID for entry into the theatre.
 			</p>
+
 			<p>Your e-ticket has been mailed successfully to your registered
 				email address.</p>
 
@@ -368,6 +415,7 @@ TicketBean ticket = (TicketBean) request.getAttribute("ticket");
 				policy.</p>
 
 		</div>
+
 
 	</div>
 

@@ -61,11 +61,21 @@ public class ShowDAO {
 	}
 
 	public List<ShowBean> getAllShows() {
+
 		String sql = """
-				SELECT sh.*, m.title AS movie_name, ma.name AS mall_name
+				SELECT
+				    sh.*,
+				    m.title AS movie_name,
+				    ma.name AS mall_name,
+				    COUNT(CASE WHEN ss.status = 'AVAILABLE' THEN 1 END) AS available_seats
 				FROM shows sh
-				JOIN movies m ON sh.movie_id = m.id
-				JOIN malls ma ON sh.mall_id = ma.id
+				JOIN movies m
+				    ON sh.movie_id = m.id
+				JOIN malls ma
+				    ON sh.mall_id = ma.id
+				LEFT JOIN show_seats ss
+				    ON ss.show_id = sh.id
+				GROUP BY sh.id
 				ORDER BY sh.show_date, sh.start_time
 				""";
 
@@ -76,8 +86,11 @@ public class ShowDAO {
 				ResultSet rs = ps.executeQuery()) {
 
 			while (rs.next()) {
+
 				ShowBean show = mapShow(rs);
-				show.setAvailableSeats(getAvailableSeatCount(show.getShowId()));
+
+				show.setAvailableSeats(rs.getInt("available_seats"));
+
 				shows.add(show);
 			}
 
@@ -89,37 +102,48 @@ public class ShowDAO {
 	}
 
 	public List<ShowBean> getShowsByMovieId(String movieId) {
+
 		String sql = """
 				SELECT
-					sh.*,
-					m.title AS movie_name,
-					ma.name AS mall_name
-				FROM
-					shows sh
-				JOIN movies m ON sh.movie_id = m.id
-				JOIN malls ma ON sh.mall_id = ma.id
+				    sh.*,
+				    m.title AS movie_name,
+				    ma.name AS mall_name,
+				    COUNT(CASE WHEN ss.status = 'AVAILABLE' THEN 1 END) AS available_seats
+				FROM shows sh
+				JOIN movies m
+				    ON sh.movie_id = m.id
+				JOIN malls ma
+				    ON sh.mall_id = ma.id
+				LEFT JOIN show_seats ss
+				    ON ss.show_id = sh.id
 				WHERE sh.movie_id = ?
+				GROUP BY sh.id
 				ORDER BY sh.show_date, ma.name, sh.start_time
 				""";
 
 		List<ShowBean> shows = new ArrayList<>();
 
 		try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
 			ps.setString(1, movieId);
+
 			try (ResultSet rs = ps.executeQuery()) {
+
 				while (rs.next()) {
+
 					ShowBean show = mapShow(rs);
 
-					show.setAvailableSeats(getAvailableSeatCount(show.getShowId()));
+					show.setAvailableSeats(rs.getInt("available_seats"));
 
 					shows.add(show);
 				}
 			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return shows;
 
+		return shows;
 	}
 
 	public int getAvailableSeatCount(String showId) {
@@ -219,18 +243,32 @@ public class ShowDAO {
 		ps.setString(6, show.getEndTime());
 		ps.setString(7, show.getStatus());
 	}
+
 	public boolean syncShowSeats(String showId, String mallId, double price) {
 		String insertSql = "INSERT IGNORE INTO show_seats (id, show_id, seat_id, price, status) "
 				+ "SELECT UUID(), ?, id, ?, 'AVAILABLE' FROM seats WHERE mall_id = ? AND status = TRUE";
 		String updateSql = "UPDATE show_seats SET price=? WHERE show_id=? AND status <> 'BOOKED'";
 		try (Connection conn = DBConnection.getConnection()) {
 			conn.setAutoCommit(false);
-			try (PreparedStatement p = conn.prepareStatement(insertSql); PreparedStatement u = conn.prepareStatement(updateSql)) {
-				p.setString(1, showId); p.setDouble(2, price); p.setString(3, mallId); p.executeUpdate();
-				u.setDouble(1, price); u.setString(2, showId); u.executeUpdate();
-				conn.commit(); return true;
-			} catch (Exception e) { conn.rollback(); throw e; }
-		} catch (Exception e) { e.printStackTrace(); return false; }
+			try (PreparedStatement p = conn.prepareStatement(insertSql);
+					PreparedStatement u = conn.prepareStatement(updateSql)) {
+				p.setString(1, showId);
+				p.setDouble(2, price);
+				p.setString(3, mallId);
+				p.executeUpdate();
+				u.setDouble(1, price);
+				u.setString(2, showId);
+				u.executeUpdate();
+				conn.commit();
+				return true;
+			} catch (Exception e) {
+				conn.rollback();
+				throw e;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 }

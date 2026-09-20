@@ -28,9 +28,7 @@ public class ForgotPasswordServlet extends HttpServlet {
 
 	@Override
 	public void init() {
-
 		userDAO = new UserDAO();
-
 	}
 
 	@Override
@@ -38,7 +36,6 @@ public class ForgotPasswordServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		request.getRequestDispatcher("/forgotpassword.jsp").forward(request, response);
-
 	}
 
 	@Override
@@ -107,7 +104,6 @@ public class ForgotPasswordServlet extends HttpServlet {
 
 			request.getRequestDispatcher("/forgotpassword.jsp").forward(request, response);
 		}
-
 	}
 
 	/* SEND OTP */
@@ -115,7 +111,6 @@ public class ForgotPasswordServlet extends HttpServlet {
 	private void sendOtp(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		response.setContentType("application/json");
-
 		response.setCharacterEncoding("UTF-8");
 
 		String email = request.getParameter("email");
@@ -170,7 +165,6 @@ public class ForgotPasswordServlet extends HttpServlet {
 
 			writeJson(response, false, "Unable to send verification code.");
 		}
-
 	}
 
 	/* VERIFY OTP */
@@ -178,7 +172,6 @@ public class ForgotPasswordServlet extends HttpServlet {
 	private void verifyOtp(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		response.setContentType("application/json");
-
 		response.setCharacterEncoding("UTF-8");
 
 		String enteredOtp = request.getParameter("otp");
@@ -224,7 +217,6 @@ public class ForgotPasswordServlet extends HttpServlet {
 		session.setAttribute("forgotPasswordVerified", true);
 
 		writeJson(response, true, "Email verified successfully.");
-
 	}
 
 	/* RESEND OTP */
@@ -232,7 +224,6 @@ public class ForgotPasswordServlet extends HttpServlet {
 	private void resendOtp(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		response.setContentType("application/json");
-
 		response.setCharacterEncoding("UTF-8");
 
 		HttpSession session = request.getSession(false);
@@ -287,7 +278,6 @@ public class ForgotPasswordServlet extends HttpServlet {
 
 			writeJson(response, false, "Unable to send verification code.");
 		}
-
 	}
 
 	/* GENERATE 4 DIGIT OTP */
@@ -297,7 +287,6 @@ public class ForgotPasswordServlet extends HttpServlet {
 		int number = 1000 + random.nextInt(9000);
 
 		return String.valueOf(number);
-
 	}
 
 	/* JSON RESPONSE */
@@ -307,7 +296,5 @@ public class ForgotPasswordServlet extends HttpServlet {
 		String safeMessage = message.replace("\\", "\\\\").replace("\"", "\\\"");
 
 		response.getWriter().write("{\"success\":" + success + ",\"message\":\"" + safeMessage + "\"}");
-
 	}
-
 }

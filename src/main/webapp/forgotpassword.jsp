@@ -2,10 +2,13 @@
 	pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
+
 <html>
+
 <head>
 
 <meta charset="UTF-8">
+
 <title>Forgot Password - MovieBook</title>
 
 <link rel="stylesheet" href="assets/css/forgotpassword.css">
@@ -58,7 +61,6 @@
 
 					<div class="email-row">
 
-
 						<div class="email-input-wrapper">
 
 							<span class="input-icon"> ✉ </span> <input type="email"
@@ -71,7 +73,6 @@
 						<button type="button" id="verifyEmailButton"
 							class="verify-email-button" disabled>Verify Email</button>
 
-
 					</div>
 
 
@@ -81,14 +82,12 @@
 				</div>
 
 
-
 				<!-- OTP TRAY -->
 
 				<div class="otp-tray" id="otpTray">
 
 
 					<div class="otp-header">
-
 
 						<div>
 
@@ -100,9 +99,7 @@
 
 						<div class="otp-verified-icon" id="otpVerifiedIcon">✓</div>
 
-
 					</div>
-
 
 
 					<div class="otp-input-row">
@@ -119,9 +116,7 @@
 					</div>
 
 
-
 					<div class="otp-message" id="otpMessage"></div>
-
 
 
 					<div class="resend-area">
@@ -141,7 +136,6 @@
 				</div>
 
 
-
 				<!-- CONTINUE -->
 
 				<button type="submit" id="continueButton" class="continue-button"
@@ -149,7 +143,6 @@
 
 
 			</form>
-
 
 
 			<div class="back-login">
@@ -171,5 +164,7 @@
 
 	<script src="assets/js/forgotpassword.js"></script>
 
+
 </body>
+
 </html>

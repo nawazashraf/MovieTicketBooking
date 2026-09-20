@@ -1,6 +1,12 @@
+
 function togglePassword(inputId, button) {
 
-	const input = document.getElementById(inputId);
+	const input =
+		document.getElementById(inputId);
+
+	if (!input) {
+		return;
+	}
 
 	if (input.type === "password") {
 
@@ -19,256 +25,317 @@ function togglePassword(inputId, button) {
 }
 
 
-const newPassword =
+/* =========================================================
+PASSWORD ELEMENTS
+========================================================= */
 
+const newPassword =
 	document.getElementById("newPassword");
 
 const confirmPassword =
-
 	document.getElementById("confirmPassword");
 
 const strengthBar =
-
 	document.getElementById("strengthBar");
 
 const strengthText =
-
 	document.getElementById("strengthText");
 
 const matchMessage =
-
 	document.getElementById("matchMessage");
 
+const newPasswordError =
+	document.getElementById("newPasswordError");
 
-/* ========================================
-   PASSWORD VALIDATION
-======================================== */
+
+/* =========================================================
+SHOW ERROR
+========================================================= */
+
+function showError(element, message) {
+
+	if (!element) {
+		return;
+	}
+
+	element.textContent = message;
+
+	element.style.display = "block";
+
+	element.style.color = "#d92d20";
+
+}
+
+
+/* =========================================================
+CLEAR ERROR
+========================================================= */
+
+function clearError(element) {
+
+	if (!element) {
+		return;
+	}
+
+	element.textContent = "";
+
+	element.style.display = "none";
+
+}
+
+
+/* =========================================================
+PASSWORD VALIDATION
+========================================================= */
 
 function validatePassword() {
 
 	const value =
-
 		newPassword.value;
+
+	clearError(newPasswordError);
 
 
 	if (value === "") {
 
-		strengthText.textContent =
-			"Password is required.";
+		showError(
+			newPasswordError,
+			"Password is required."
+		);
 
 		return false;
+
 	}
 
+
+	if (value !== value.trim()) {
+
+		showError(
+			newPasswordError,
+			"Password must not contain leading or trailing spaces."
+		);
+
+		return false;
+
+	}
+
+
+	/*
+	 * Do not show an error message here.
+	 * The strength section already displays:
+	 * "Minimum 8 characters"
+	 */
 
 	if (value.length < 8) {
 
-		strengthText.textContent =
-			"Password must contain at least 8 characters.";
-
 		return false;
+
 	}
 
 
-	strengthText.textContent =
-		"";
+	if (value.length > 128) {
+
+		showError(
+			newPasswordError,
+			"Password cannot exceed 128 characters."
+		);
+
+		return false;
+
+	}
 
 
 	return true;
+
 }
 
 
-/* ========================================
-   PASSWORD STRENGTH
-======================================== */
+/* =========================================================
+PASSWORD STRENGTH
+========================================================= */
 
 function updatePasswordStrength() {
 
 	const value =
-
 		newPassword.value;
-
-
-	let strength = 0;
-
-
-	if (value.length >= 8) {
-
-		strength++;
-
-	}
-
-
-	if (/[A-Z]/.test(value)) {
-
-		strength++;
-
-	}
-
-
-	if (/[a-z]/.test(value)) {
-
-		strength++;
-
-	}
-
-
-	if (/[0-9]/.test(value)) {
-
-		strength++;
-
-	}
-
-
-	if (/[^A-Za-z0-9]/.test(value)) {
-
-		strength++;
-
-	}
 
 
 	if (value.length === 0) {
 
-		strengthBar.style.width =
-			"0%";
+		strengthBar.style.width = "0%";
 
-		strengthBar.style.background =
-			"";
+		strengthBar.style.background = "";
 
 		strengthText.textContent =
-			"Use 8 or more characters";
+			"Minimum 8 characters";
 
 		return;
 
 	}
 
 
-	if (strength <= 2) {
+	if (value.length < 8) {
 
-		strengthBar.style.width =
-			"35%";
+		strengthBar.style.width = "35%";
 
 		strengthBar.style.background =
 			"#d92d20";
 
 		strengthText.textContent =
-			"Weak password";
+			"Minimum 8 characters";
 
-	} else if (strength <= 4) {
+	} else if (value.length < 12) {
 
-		strengthBar.style.width =
-			"65%";
+		strengthBar.style.width = "65%";
 
 		strengthBar.style.background =
 			"#f79009";
 
 		strengthText.textContent =
-			"Good password";
+			"Password length is valid";
 
 	} else {
 
-		strengthBar.style.width =
-			"100%";
+		strengthBar.style.width = "100%";
 
 		strengthBar.style.background =
 			"#12b76a";
 
 		strengthText.textContent =
-			"Strong password";
+			"Password length is valid";
 
 	}
 
 }
 
 
-/* ========================================
-   PASSWORD INPUT
-======================================== */
+/* =========================================================
+CONFIRM PASSWORD VALIDATION
+========================================================= */
 
-newPassword.addEventListener(
+function validateConfirmPassword() {
 
-	"input",
+	const passwordValue =
+		newPassword.value;
 
-	function() {
-
-		updatePasswordStrength();
-
-	}
-
-);
+	const confirmValue =
+		confirmPassword.value;
 
 
-newPassword.addEventListener(
+	matchMessage.textContent = "";
 
-	"blur",
+	matchMessage.style.color = "";
 
-	function() {
 
-		validatePassword();
+	if (confirmValue === "") {
+
+		return false;
 
 	}
 
-);
+
+	if (passwordValue !== confirmValue) {
+
+		matchMessage.textContent =
+			"Passwords do not match.";
+
+		matchMessage.style.color =
+			"#d92d20";
+
+		return false;
+
+	}
 
 
-/* ========================================
-   CONFIRM PASSWORD
-======================================== */
+	matchMessage.textContent =
+		"Passwords match.";
 
-confirmPassword.addEventListener(
+	matchMessage.style.color =
+		"#16803c";
 
-	"input",
+	return true;
 
-	function() {
+}
 
-		if (confirmPassword.value === "") {
 
-			matchMessage.textContent = "";
+/* =========================================================
+PASSWORD INPUT
+========================================================= */
 
-		} else if (
+if (newPassword) {
 
-			newPassword.value ===
-			confirmPassword.value
+	newPassword.addEventListener(
+		"input",
+		function() {
 
-		) {
+			updatePasswordStrength();
 
-			matchMessage.textContent =
-				"Passwords match";
+			validatePassword();
 
-			matchMessage.style.color =
-				"#16803c";
+			if (confirmPassword.value !== "") {
 
-		} else {
+				validateConfirmPassword();
 
-			matchMessage.textContent =
-				"Passwords do not match";
-
-			matchMessage.style.color =
-				"#e50914";
+			}
 
 		}
-
-	}
-
-);
+	);
 
 
-/* ========================================
-   FORM SUBMIT
-======================================== */
+	newPassword.addEventListener(
+		"blur",
+		function() {
 
-document
+			validatePassword();
 
-	.getElementById("passwordForm")
+		}
+	);
 
-	.addEventListener(
+}
 
+
+/* =========================================================
+CONFIRM PASSWORD INPUT
+========================================================= */
+
+if (confirmPassword) {
+
+	confirmPassword.addEventListener(
+		"input",
+		function() {
+
+			validateConfirmPassword();
+
+		}
+	);
+
+
+	confirmPassword.addEventListener(
+		"blur",
+		function() {
+
+			validateConfirmPassword();
+
+		}
+	);
+
+}
+
+
+/* =========================================================
+FORM SUBMIT
+========================================================= */
+
+const passwordForm =
+	document.getElementById("passwordForm");
+
+if (passwordForm) {
+
+	passwordForm.addEventListener(
 		"submit",
-
 		function(event) {
 
-
 			const passwordValid =
-
 				validatePassword();
 
 
@@ -283,20 +350,13 @@ document
 			}
 
 
-			if (
+			const confirmValid =
+				validateConfirmPassword();
 
-				newPassword.value !==
-				confirmPassword.value
 
-			) {
+			if (!confirmValid) {
 
 				event.preventDefault();
-
-				matchMessage.textContent =
-					"Passwords do not match";
-
-				matchMessage.style.color =
-					"#e50914";
 
 				confirmPassword.focus();
 
@@ -305,5 +365,9 @@ document
 			}
 
 		}
-
 	);
+
+}
+
+
+

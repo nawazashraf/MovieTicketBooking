@@ -2,18 +2,13 @@
 let activationResendTimer = null;
 
 
-/* =========================================================
-   INACTIVE POPUP
-========================================================= */
+/* INACTIVE POPUP */
 
 function closeInactivePopup() {
 
-	const overlay =
-		document.getElementById("inactiveOverlay");
+	const overlay = document.getElementById("inactiveOverlay");
 
-	if (!overlay) {
-		return;
-	}
+	if (!overlay) return;
 
 	overlay.style.display = "none";
 
@@ -22,18 +17,13 @@ function closeInactivePopup() {
 }
 
 
-/* =========================================================
-   EDIT PROFILE DRAWER
-========================================================= */
+/* EDIT PROFILE DRAWER */
 
 function openEditProfile() {
 
-	const overlay =
-		document.getElementById("editProfileOverlay");
+	const overlay = document.getElementById("editProfileOverlay");
 
-	if (!overlay) {
-		return;
-	}
+	if (!overlay) return;
 
 	overlay.classList.add("open");
 
@@ -41,12 +31,14 @@ function openEditProfile() {
 
 	setTimeout(function() {
 
-		const name =
-			document.getElementById("editName");
+		const name = document.getElementById("editName");
 
 		if (name) {
+
 			name.focus();
+
 			name.select();
+
 		}
 
 	}, 300);
@@ -64,12 +56,9 @@ function closeEditProfile(event) {
 
 	}
 
-	const overlay =
-		document.getElementById("editProfileOverlay");
+	const overlay = document.getElementById("editProfileOverlay");
 
-	if (!overlay) {
-		return;
-	}
+	if (!overlay) return;
 
 	overlay.classList.remove("open");
 
@@ -78,15 +67,11 @@ function closeEditProfile(event) {
 }
 
 
-/* =========================================================
-   ESCAPE KEY
-========================================================= */
+/* ESCAPE KEY */
 
 document.addEventListener("keydown", function(event) {
 
-	if (event.key !== "Escape") {
-		return;
-	}
+	if (event.key !== "Escape") return;
 
 	const overlay =
 		document.getElementById("editProfileOverlay");
@@ -111,9 +96,7 @@ document.addEventListener("keydown", function(event) {
 });
 
 
-/* =========================================================
-   NAME + PHONE INPUT
-========================================================= */
+/* NAME + PHONE INPUT */
 
 document.addEventListener("DOMContentLoaded", function() {
 
@@ -124,24 +107,52 @@ document.addEventListener("DOMContentLoaded", function() {
 		document.getElementById("editPhone");
 
 
-	/* ========================================
-	   NAME INPUT
-	======================================== */
+	/* NAME INPUT */
 
 	if (name) {
 
 		name.addEventListener("input", function() {
 
-			this.value =
-				this.value.replace(/[^A-Za-z ]/g, "");
+			name.value =
+				name.value.replace(
+					/[^A-Za-z ]/g,
+					""
+				);
 
-			this.value =
-				this.value.replace(/\s{2,}/g, " ");
+			name.value =
+				name.value.replace(
+					/\s+/g,
+					" "
+				);
 
-			if (this.value.length > 50) {
+			if (name.value.length > 50) {
 
-				this.value =
-					this.value.substring(0, 50);
+				name.value =
+					name.value.substring(0, 50);
+
+			}
+
+			if (name.value.trim() !== "") {
+
+				const words =
+					name.value
+						.toLowerCase()
+						.split(" ");
+
+				for (let i = 0; i < words.length; i++) {
+
+					if (words[i].length > 0) {
+
+						words[i] =
+							words[i].charAt(0).toUpperCase() +
+							words[i].substring(1);
+
+					}
+
+				}
+
+				name.value =
+					words.join(" ");
 
 			}
 
@@ -151,17 +162,17 @@ document.addEventListener("DOMContentLoaded", function() {
 		name.addEventListener("blur", function() {
 
 			let value =
-				this.value.trim();
+				name.value.trim();
 
 			if (value === "") {
 
-				this.value = "";
+				name.value = "";
 
 				return;
 
 			}
 
-			this.value =
+			name.value =
 				value
 					.toLowerCase()
 					.split(" ")
@@ -178,21 +189,106 @@ document.addEventListener("DOMContentLoaded", function() {
 	}
 
 
-	/* ========================================
-	   PHONE INPUT
-	======================================== */
+	/* PHONE INPUT */
 
 	if (phone) {
 
 		phone.addEventListener("input", function() {
 
-			this.value =
-				this.value.replace(/\D/g, "");
+			phone.value =
+				phone.value.replace(
+					/\D/g,
+					""
+				);
 
-			if (this.value.length > 10) {
+			if (phone.value.length > 10) {
 
-				this.value =
-					this.value.substring(0, 10);
+				phone.value =
+					phone.value.substring(0, 10);
+
+			}
+
+			const phoneError =
+				document.getElementById("editPhoneError");
+
+			const value =
+				phone.value.trim();
+
+
+			/* EMPTY */
+
+			if (value === "") {
+
+				if (phoneError) {
+
+					phoneError.textContent = "";
+
+					phoneError.style.display =
+						"none";
+
+				}
+
+				return;
+
+			}
+
+
+			/* STARTS WITH 0 */
+
+			if (value.startsWith("0")) {
+
+				if (phoneError) {
+
+					phoneError.textContent =
+						"Phone number must not start with 0.";
+
+					phoneError.style.display =
+						"block";
+
+					phoneError.style.color =
+						"#d92d20";
+
+				}
+
+				return;
+
+			}
+
+
+			/* LESS THAN 10 DIGITS */
+
+			if (value.length < 10) {
+
+				if (phoneError) {
+
+					phoneError.textContent =
+						"Phone number must be exactly 10 digits.";
+
+					phoneError.style.display =
+						"block";
+
+					phoneError.style.color =
+						"#d92d20";
+
+				}
+
+				return;
+
+			}
+
+
+			/* EXACTLY 10 DIGITS */
+
+			if (value.length === 10) {
+
+				if (phoneError) {
+
+					phoneError.textContent = "";
+
+					phoneError.style.display =
+						"none";
+
+				}
 
 			}
 
@@ -203,18 +299,14 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
-/* =========================================================
-   PASSWORD TOGGLE
-========================================================= */
+/* PASSWORD TOGGLE */
 
 function togglePassword(inputId, button) {
 
 	const input =
 		document.getElementById(inputId);
 
-	if (!input) {
-		return;
-	}
+	if (!input) return;
 
 	if (input.type === "password") {
 
@@ -222,20 +314,26 @@ function togglePassword(inputId, button) {
 
 		button.textContent = "Hide";
 
+		button.setAttribute(
+			"aria-label",
+			"Hide password"
+		);
+
 	} else {
 
 		input.type = "password";
 
 		button.textContent = "Show";
 
+		button.setAttribute(
+			"aria-label",
+			"Show password"
+		);
+
 	}
 
 }
 
-
-/* =========================================================
-   KEEP OLD JSP FUNCTION
-========================================================= */
 
 function toggleEditPassword(inputId, button) {
 
@@ -244,9 +342,7 @@ function toggleEditPassword(inputId, button) {
 }
 
 
-/* =========================================================
-   PASSWORD + PROFILE VALIDATION
-========================================================= */
+/* PASSWORD + PROFILE VALIDATION */
 
 document.addEventListener("DOMContentLoaded", function() {
 
@@ -300,18 +396,20 @@ document.addEventListener("DOMContentLoaded", function() {
 	}
 
 
-	/* ========================================
-	   ERROR ELEMENTS
-	======================================== */
-
 	const nameError =
-		document.getElementById("editNameError");
+		document.getElementById(
+			"editNameError"
+		);
 
 	const phoneError =
-		document.getElementById("editPhoneError");
+		document.getElementById(
+			"editPhoneError"
+		);
 
 	const passwordError =
-		document.getElementById("editPasswordError");
+		document.getElementById(
+			"editPasswordError"
+		);
 
 	const confirmPasswordError =
 		document.getElementById(
@@ -319,64 +417,96 @@ document.addEventListener("DOMContentLoaded", function() {
 		);
 
 
-	/* ========================================
-	   SHOW ERROR
-	======================================== */
+	/* SHOW ERROR */
 
 	function showError(element, message) {
 
-		if (!element) {
-			return;
-		}
+		if (!element) return;
 
-		element.textContent = message;
+		element.textContent =
+			message;
 
-		element.style.display = "block";
+		element.style.display =
+			"block";
 
-		element.style.color = "#d92d20";
+		element.style.color =
+			"#d92d20";
 
 	}
 
 
-	/* ========================================
-	   CLEAR ERROR
-	======================================== */
+	/* CLEAR ERROR */
 
 	function clearError(element) {
 
-		if (!element) {
-			return;
-		}
+		if (!element) return;
 
 		element.textContent = "";
 
-		element.style.display = "none";
+		element.style.display =
+			"none";
 
 	}
 
 
-	/* ========================================
-	   NAME VALIDATION
-	======================================== */
+	/* NAME VALIDATION */
+
+	function formatName(value) {
+
+		value =
+			value
+				.trim()
+				.replace(/\s+/g, " ");
+
+		if (value === "") {
+
+			return "";
+
+		}
+
+		const words =
+			value
+				.toLowerCase()
+				.split(" ");
+
+		const formattedWords = [];
+
+
+		for (let word of words) {
+
+			if (word.length > 0) {
+
+				word =
+					word.charAt(0).toUpperCase() +
+					word.substring(1);
+
+				formattedWords.push(word);
+
+			}
+
+		}
+
+
+		return formattedWords.join(" ");
+
+	}
+
 
 	function validateName() {
 
-		if (!name) {
-			return true;
-		}
+		if (!name) return true;
 
-		const value =
+		let value =
 			name.value.trim();
 
 		clearError(nameError);
 
 
-		if (value.length < 2 ||
-			value.length > 50) {
+		if (value === "") {
 
 			showError(
 				nameError,
-				"Name must contain between 2 and 50 characters."
+				"Full name is required."
 			);
 
 			return false;
@@ -384,11 +514,42 @@ document.addEventListener("DOMContentLoaded", function() {
 		}
 
 
-		if (!/^[A-Za-z]+(?: [A-Za-z]+)*$/.test(value)) {
+		if (!/^[A-Za-z ]+$/.test(value)) {
 
 			showError(
 				nameError,
-				"Only English letters and single spaces are allowed."
+				"Name can contain only letters and spaces."
+			);
+
+			return false;
+
+		}
+
+
+		value =
+			value.replace(
+				/\s+/g,
+				" "
+			);
+
+
+		if (value.length < 2) {
+
+			showError(
+				nameError,
+				"Name must contain at least 2 characters."
+			);
+
+			return false;
+
+		}
+
+
+		if (value.length > 50) {
+
+			showError(
+				nameError,
+				"Name cannot exceed 50 characters."
 			);
 
 			return false;
@@ -397,32 +558,18 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 		name.value =
-			value
-				.toLowerCase()
-				.split(" ")
-				.map(function(word) {
-
-					return word.charAt(0).toUpperCase() +
-						word.substring(1);
-
-				})
-				.join(" ");
-
+			formatName(value);
 
 		return true;
 
 	}
 
 
-	/* ========================================
-	   PHONE VALIDATION
-	======================================== */
+	/* PHONE VALIDATION */
 
 	function validatePhone() {
 
-		if (!phone) {
-			return true;
-		}
+		if (!phone) return true;
 
 		const value =
 			phone.value.trim();
@@ -430,11 +577,11 @@ document.addEventListener("DOMContentLoaded", function() {
 		clearError(phoneError);
 
 
-		if (!/^\d{10}$/.test(value)) {
+		if (value === "") {
 
 			showError(
 				phoneError,
-				"Phone number must contain exactly 10 digits."
+				"Phone number is required."
 			);
 
 			return false;
@@ -454,14 +601,24 @@ document.addEventListener("DOMContentLoaded", function() {
 		}
 
 
+		if (!/^\d{10}$/.test(value)) {
+
+			showError(
+				phoneError,
+				"Phone number must be exactly 10 digits."
+			);
+
+			return false;
+
+		}
+
+
 		return true;
 
 	}
 
 
-	/* ========================================
-	   PASSWORD VALIDATION
-	======================================== */
+	/* PASSWORD VALIDATION */
 
 	function validatePassword() {
 
@@ -471,21 +628,12 @@ document.addEventListener("DOMContentLoaded", function() {
 		clearError(passwordError);
 
 
-		/*
-		 * Empty password means
-		 * keep existing password.
-		 */
-
 		if (value === "") {
 
 			return true;
 
 		}
 
-
-		/*
-		 * Leading/trailing spaces.
-		 */
 
 		if (value !== value.trim()) {
 
@@ -499,24 +647,17 @@ document.addEventListener("DOMContentLoaded", function() {
 		}
 
 
-		/*
-		 * Less than 8 characters.
-		 *
-		 * Do NOT show another error line.
-		 * The strength section already shows:
-		 * "Minimum 8 characters"
-		 */
-
 		if (value.length < 8) {
+
+			showError(
+				passwordError,
+				"Password must contain at least 8 characters."
+			);
 
 			return false;
 
 		}
 
-
-		/*
-		 * Maximum 128 characters.
-		 */
 
 		if (value.length > 128) {
 
@@ -535,24 +676,62 @@ document.addEventListener("DOMContentLoaded", function() {
 	}
 
 
-	/* ========================================
-	   PASSWORD STRENGTH
-	======================================== */
+	/* PASSWORD STRENGTH */
 
 	function updatePasswordStrength() {
 
 		const value =
 			newPassword.value;
 
+		let strength = 0;
+
+
+		/*
+		 * EXACT SAME LOGIC AS register.js
+		 */
+
+		if (value.length >= 8) {
+
+			strength++;
+
+		}
+
+
+		if (/[A-Z]/.test(value)) {
+
+			strength++;
+
+		}
+
+
+		if (/[a-z]/.test(value)) {
+
+			strength++;
+
+		}
+
+
+		if (/\d/.test(value)) {
+
+			strength++;
+
+		}
+
+
+		if (/[^A-Za-z0-9]/.test(value)) {
+
+			strength++;
+
+		}
+
 
 		if (value.length === 0) {
 
-			strengthBar.style.width = "0%";
-
-			strengthBar.style.background = "";
+			strengthBar.style.width =
+				"0%";
 
 			strengthText.textContent =
-				"Minimum 8 characters, maximum 128 characters";
+				"Use 8 or more characters";
 
 			if (strengthContainer) {
 
@@ -561,57 +740,66 @@ document.addEventListener("DOMContentLoaded", function() {
 
 			}
 
-			return;
+		} else if (strength <= 2) {
 
-		}
+			if (strengthContainer) {
 
+				strengthContainer.style.display =
+					"block";
 
-		if (strengthContainer) {
+			}
 
-			strengthContainer.style.display =
-				"block";
+			strengthBar.style.width =
+				"35%";
 
-		}
-
-
-		if (value.length < 8) {
-
-			strengthBar.style.width = "35%";
-
-			strengthBar.style.background =
+			strengthBar.style.backgroundColor =
 				"#d92d20";
 
 			strengthText.textContent =
-				"Minimum 8 characters";
+				"Weak password";
 
-		} else if (value.length < 12) {
+		} else if (strength <= 4) {
 
-			strengthBar.style.width = "65%";
+			if (strengthContainer) {
 
-			strengthBar.style.background =
+				strengthContainer.style.display =
+					"block";
+
+			}
+
+			strengthBar.style.width =
+				"65%";
+
+			strengthBar.style.backgroundColor =
 				"#f79009";
 
 			strengthText.textContent =
-				"Password length is valid";
+				"Good password";
 
 		} else {
 
-			strengthBar.style.width = "100%";
+			if (strengthContainer) {
 
-			strengthBar.style.background =
+				strengthContainer.style.display =
+					"block";
+
+			}
+
+			strengthBar.style.width =
+				"100%";
+
+			strengthBar.style.backgroundColor =
 				"#12b76a";
 
 			strengthText.textContent =
-				"Password length is valid";
+				"Strong password";
 
 		}
 
 	}
 
 
-	/* ========================================
-	   PASSWORD INPUT
-	======================================== */
+	/* PASSWORD EVENTS */
 
 	newPassword.addEventListener(
 		"input",
@@ -641,9 +829,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	);
 
 
-	/* ========================================
-	   CONFIRM PASSWORD VALIDATION
-	======================================== */
+	/* CONFIRM PASSWORD */
 
 	function validateConfirmPassword() {
 
@@ -654,24 +840,15 @@ document.addEventListener("DOMContentLoaded", function() {
 			confirmPassword.value;
 
 
-		/*
-		 * Clear BOTH possible error areas.
-		 *
-		 * The match message is now the
-		 * ONLY place showing password mismatch.
-		 */
+		clearError(
+			confirmPasswordError
+		);
 
-		clearError(confirmPasswordError);
 
 		matchMessage.textContent = "";
 
 		matchMessage.style.color = "";
 
-
-		/*
-		 * Both empty means
-		 * no password change.
-		 */
 
 		if (passwordValue === "" &&
 			confirmValue === "") {
@@ -681,24 +858,12 @@ document.addEventListener("DOMContentLoaded", function() {
 		}
 
 
-		/*
-		 * Confirm field empty.
-		 *
-		 * Do not show a second error line.
-		 */
-
 		if (confirmValue === "") {
 
 			return false;
 
 		}
 
-
-		/*
-		 * Passwords do not match.
-		 *
-		 * ONLY matchMessage is used.
-		 */
 
 		if (passwordValue !== confirmValue) {
 
@@ -713,25 +878,16 @@ document.addEventListener("DOMContentLoaded", function() {
 		}
 
 
-		/*
-		 * Passwords match.
-		 */
-
 		matchMessage.textContent =
 			"Passwords match";
 
 		matchMessage.style.color =
 			"#16803c";
 
-
 		return true;
 
 	}
 
-
-	/* ========================================
-	   CONFIRM PASSWORD INPUT
-	======================================== */
 
 	confirmPassword.addEventListener(
 		"input",
@@ -743,9 +899,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	);
 
 
-	/* ========================================
-	   NAME INPUT VALIDATION
-	======================================== */
+	/* NAME EVENTS */
 
 	if (name) {
 
@@ -761,9 +915,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	}
 
 
-	/* ========================================
-	   PHONE INPUT VALIDATION
-	======================================== */
+	/* PHONE EVENTS */
 
 	if (phone) {
 
@@ -779,18 +931,11 @@ document.addEventListener("DOMContentLoaded", function() {
 	}
 
 
-	/* ========================================
-	   FORM SUBMIT
-	======================================== */
+	/* FORM SUBMIT */
 
 	form.addEventListener(
 		"submit",
 		function(event) {
-
-
-			/* ========================================
-			   NAME
-			======================================== */
 
 			const validName =
 				validateName();
@@ -807,10 +952,6 @@ document.addEventListener("DOMContentLoaded", function() {
 			}
 
 
-			/* ========================================
-			   PHONE
-			======================================== */
-
 			const validPhone =
 				validatePhone();
 
@@ -825,10 +966,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 			}
 
-
-			/* ========================================
-			   PASSWORD
-			======================================== */
 
 			const validPassword =
 				validatePassword();
@@ -845,10 +982,6 @@ document.addEventListener("DOMContentLoaded", function() {
 			}
 
 
-			/* ========================================
-			   CONFIRM PASSWORD
-			======================================== */
-
 			const validConfirmPassword =
 				validateConfirmPassword();
 
@@ -864,10 +997,6 @@ document.addEventListener("DOMContentLoaded", function() {
 			}
 
 
-			/*
-			 * Everything is valid.
-			 */
-
 			name.value =
 				name.value.trim();
 
@@ -875,14 +1004,13 @@ document.addEventListener("DOMContentLoaded", function() {
 				phone.value.trim();
 
 		}
+
 	);
 
 });
 
 
-/* =========================================================
-   ACTIVATION POPUP
-========================================================= */
+/* ACTIVATION POPUP */
 
 function openActivationPopup() {
 
@@ -893,7 +1021,8 @@ function openActivationPopup() {
 
 	if (overlay) {
 
-		overlay.style.display = "flex";
+		overlay.style.display =
+			"flex";
 
 		document.body.style.overflow =
 			"hidden";
@@ -912,7 +1041,8 @@ function closeActivationPopup() {
 
 	if (overlay) {
 
-		overlay.style.display = "none";
+		overlay.style.display =
+			"none";
 
 		document.body.style.overflow =
 			"";
@@ -922,19 +1052,19 @@ function closeActivationPopup() {
 }
 
 
-/* =========================================================
-   SEND ACTIVATION OTP
-========================================================= */
+/* SEND ACTIVATION OTP */
 
 function sendActivationOtp() {
 
 	const contextPath =
 		document.body.dataset.contextPath || "";
 
+
 	const message =
 		document.getElementById(
 			"activationMessage"
 		);
+
 
 	const sendButton =
 		document.querySelector(
@@ -952,7 +1082,8 @@ function sendActivationOtp() {
 
 	if (sendButton) {
 
-		sendButton.disabled = true;
+		sendButton.disabled =
+			true;
 
 	}
 
@@ -961,12 +1092,10 @@ function sendActivationOtp() {
 		contextPath + "/emailVerification",
 		{
 			method: "POST",
-
 			headers: {
 				"Content-Type":
 					"application/x-www-form-urlencoded"
 			},
-
 			body:
 				"action=activateSend"
 		}
@@ -979,6 +1108,7 @@ function sendActivationOtp() {
 		})
 
 		.then(function(data) {
+
 
 			if (message) {
 
@@ -1033,7 +1163,6 @@ function sendActivationOtp() {
 
 				startActivationResendTimer();
 
-
 			} else {
 
 				if (sendButton) {
@@ -1051,14 +1180,12 @@ function sendActivationOtp() {
 
 			console.error(error);
 
-
 			if (message) {
 
 				message.textContent =
 					"Unable to send verification code.";
 
 			}
-
 
 			if (sendButton) {
 
@@ -1072,9 +1199,7 @@ function sendActivationOtp() {
 }
 
 
-/* =========================================================
-   VERIFY ACTIVATION OTP
-========================================================= */
+/* VERIFY ACTIVATION OTP */
 
 function verifyActivationOtp() {
 
@@ -1115,12 +1240,10 @@ function verifyActivationOtp() {
 		"/emailVerification",
 		{
 			method: "POST",
-
 			headers: {
 				"Content-Type":
 					"application/x-www-form-urlencoded"
 			},
-
 			body:
 				"action=activateVerify&otp=" +
 				encodeURIComponent(otp)
@@ -1196,9 +1319,7 @@ function verifyActivationOtp() {
 }
 
 
-/* =========================================================
-   RESEND ACTIVATION OTP
-========================================================= */
+/* RESEND ACTIVATION OTP */
 
 function resendActivationOtp() {
 
@@ -1231,7 +1352,8 @@ function resendActivationOtp() {
 
 	if (resendButton) {
 
-		resendButton.disabled = true;
+		resendButton.disabled =
+			true;
 
 	}
 
@@ -1241,12 +1363,10 @@ function resendActivationOtp() {
 		"/emailVerification",
 		{
 			method: "POST",
-
 			headers: {
 				"Content-Type":
 					"application/x-www-form-urlencoded"
 			},
-
 			body:
 				"action=activateResend"
 		}
@@ -1259,6 +1379,7 @@ function resendActivationOtp() {
 		})
 
 		.then(function(data) {
+
 
 			if (message) {
 
@@ -1354,13 +1475,12 @@ function resendActivationOtp() {
 }
 
 
-/* =========================================================
-   RESEND TIMER
-========================================================= */
+/* RESEND TIMER */
 
 function startActivationResendTimer() {
 
 	let seconds = 60;
+
 
 	const resendButton =
 		document.getElementById(
@@ -1381,7 +1501,8 @@ function startActivationResendTimer() {
 	}
 
 
-	resendButton.disabled = true;
+	resendButton.disabled =
+		true;
 
 
 	resendText.textContent =
@@ -1407,10 +1528,8 @@ function startActivationResendTimer() {
 					activationResendTimer
 				);
 
-
 				resendButton.disabled =
 					false;
-
 
 				resendText.textContent =
 					"You can request a new code.";
@@ -1430,9 +1549,7 @@ function startActivationResendTimer() {
 }
 
 
-/* =========================================================
-   PROFILE UPDATE SUCCESS POPUP
-========================================================= */
+/* PROFILE UPDATE SUCCESS POPUP */
 
 function closeProfileUpdatePopup() {
 
@@ -1442,9 +1559,7 @@ function closeProfileUpdatePopup() {
 		);
 
 
-	if (!popup) {
-		return;
-	}
+	if (!popup) return;
 
 
 	popup.classList.add("hide");
@@ -1463,9 +1578,7 @@ function closeProfileUpdatePopup() {
 }
 
 
-/* =========================================================
-   PROFILE UPDATE ERROR POPUP
-========================================================= */
+/* PROFILE UPDATE ERROR POPUP */
 
 function closeProfileUpdateErrorPopup() {
 
@@ -1475,9 +1588,7 @@ function closeProfileUpdateErrorPopup() {
 		);
 
 
-	if (!popup) {
-		return;
-	}
+	if (!popup) return;
 
 
 	popup.classList.add("hide");
@@ -1496,9 +1607,7 @@ function closeProfileUpdateErrorPopup() {
 }
 
 
-/* =========================================================
-   PROFILE UPDATE POPUPS
-========================================================= */
+/* PROFILE UPDATE POPUPS */
 
 document.addEventListener("DOMContentLoaded", function() {
 
@@ -1536,7 +1645,6 @@ document.addEventListener("DOMContentLoaded", function() {
 	}
 
 });
- 
 
- 
+
 

@@ -2,6 +2,7 @@
 package com.movieticket.controller.auth;
 
 import com.movieticket.dao.UserDAO;
+import com.movieticket.model.EmailVerificationBean;
 import com.movieticket.model.UserBean;
 import com.movieticket.util.EmailService;
 
@@ -10,6 +11,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
@@ -88,6 +90,27 @@ public class RegisterServlet extends HttpServlet {
 			return;
 		}
 
+		/*
+		 * SERVER-SIDE EMAIL OTP VERIFICATION
+		 */
+		HttpSession session = request.getSession(false);
+
+		if (session == null) {
+			request.setAttribute("error", "Please verify your email before creating an account.");
+			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			return;
+		}
+
+		EmailVerificationBean verification = (EmailVerificationBean) session.getAttribute("emailVerification");
+
+		if (verification == null || !verification.isVerified() || !email.equalsIgnoreCase(verification.getEmail())) {
+
+			request.setAttribute("error", "Please verify your email before creating an account.");
+
+			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			return;
+		}
+
 		if (password == null || password.isEmpty()) {
 			request.setAttribute("error", "Password is required.");
 			request.getRequestDispatcher("/register.jsp").forward(request, response);
@@ -145,6 +168,8 @@ public class RegisterServlet extends HttpServlet {
 
 		if (registered) {
 
+			session.removeAttribute("emailVerification");
+
 			try {
 				EmailService.sendWelcomeEmail(email, name, request.getContextPath());
 			} catch (Exception e) {
@@ -162,11 +187,9 @@ public class RegisterServlet extends HttpServlet {
 	}
 
 	@Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
-        response.sendRedirect(
-                request.getContextPath() + "/register.jsp"
-        );
-    }
+		response.sendRedirect(request.getContextPath() + "/register.jsp");
+	}
 }

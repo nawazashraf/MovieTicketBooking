@@ -2,68 +2,125 @@ package com.movieticket.util;
 
 import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+
 public final class DBConnection {
 
-	private DBConnection() {
-	}
+    private static HikariDataSource dataSource;
 
-	public static Connection getConnection() {
+    private DBConnection() {
+    }
 
-		String url = System.getenv("MYSQL_URL");
-		String user = System.getenv("MYSQL_USER");
-		String password = System.getenv("MYSQL_PASSWORD");
+    private static synchronized HikariDataSource getDataSource() {
 
-		/*
-		 * If environment variables are not available, use db.properties for local
-		 * development.
-		 */
-		if (url == null || url.isBlank() || user == null || user.isBlank() || password == null || password.isBlank()) {
+        if (dataSource != null) {
+            return dataSource;
+        }
 
-			Properties properties = new Properties();
+        String url = System.getenv("MYSQL_URL");
+        String user = System.getenv("MYSQL_USER");
+        String password = System.getenv("MYSQL_PASSWORD");
 
-			try (InputStream input = DBConnection.class.getClassLoader().getResourceAsStream("db.properties")) {
+        /*
+         * Render:
+         * Uses MYSQL_URL, MYSQL_USER and MYSQL_PASSWORD.
+         *
+         * Local Eclipse:
+         * Falls back to db.properties.
+         */
+        if (url == null || url.isBlank()
+                || user == null || user.isBlank()
+                || password == null || password.isBlank()) {
 
-				if (input == null) {
-					throw new IllegalStateException("db.properties was not found on the application classpath");
-				}
+            Properties properties = new Properties();
 
-				properties.load(input);
+            try (InputStream input = DBConnection.class
+                    .getClassLoader()
+                    .getResourceAsStream("db.properties")) {
 
-			} catch (Exception e) {
+                if (input == null) {
+                    throw new IllegalStateException(
+                            "db.properties was not found on the application classpath");
+                }
 
-				if (e instanceof IllegalStateException) {
-					throw (IllegalStateException) e;
-				}
+                properties.load(input);
 
-				throw new IllegalStateException("Unable to load database configuration", e);
-			}
+            } catch (Exception e) {
 
-			url = properties.getProperty("DB_URL");
-			user = properties.getProperty("DB_USER");
-			password = properties.getProperty("DB_PASSWORD");
-		}
+                if (e instanceof IllegalStateException) {
+                    throw (IllegalStateException) e;
+                }
 
-		if (url == null || url.isBlank() || user == null || user.isBlank() || password == null || password.isBlank()) {
+                throw new IllegalStateException(
+                        "Unable to load database configuration", e);
+            }
 
-			throw new IllegalStateException("Database configuration is missing");
-		}
+            url = properties.getProperty("DB_URL");
+            user = properties.getProperty("DB_USER");
+            password = properties.getProperty("DB_PASSWORD");
+        }
 
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			throw new IllegalStateException("MySQL JDBC driver is missing from WEB-INF/lib", e);
-		}
+        if (url == null || url.isBlank()
+                || user == null || user.isBlank()
+                || password == null || password.isBlank()) {
 
-		try {
-			return DriverManager.getConnection(url.trim(), user.trim(), password.trim());
+            throw new IllegalStateException(
+                    "Database configuration is missing");
+        }
 
-		} catch (SQLException e) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException(
+                    "MySQL JDBC driver is missing from WEB-INF/lib", e);
+        }
 
-			throw new IllegalStateException("Unable to connect to MySQL database.", e);
-		}
-	}
+        HikariConfig config = new HikariConfig();
+
+        config.setJdbcUrl(url.trim());
+        config.setUsername(user.trim());
+        config.setPassword(password);
+
+        /*
+         * Connection pool settings
+         */
+        config.setMaximumPoolSize(5);
+        config.setMinimumIdle(2);
+
+        /*
+         * Wait at most 10 seconds for a connection
+         * from the pool.
+         */
+        config.setConnectionTimeout(10000);
+
+        /*
+         * Recycle connections periodically.
+         */
+        config.setMaxLifetime(600000);
+
+        /*
+         * Validate connections before using them.
+         */
+        config.setConnectionTestQuery("SELECT 1");
+
+        dataSource = new HikariDataSource(config);
+
+        return dataSource;
+    }
+
+    public static Connection getConnection() {
+
+        try {
+            return getDataSource().getConnection();
+
+        } catch (SQLException e) {
+
+            throw new IllegalStateException(
+                    "Unable to obtain database connection", e);
+        }
+    }
 }

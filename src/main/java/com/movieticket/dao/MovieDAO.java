@@ -142,7 +142,14 @@ public class MovieDAO {
 
 					MovieBean movie = mapMovie(rs);
 
+					long genreStart = System.currentTimeMillis();
+
 					movie.setGenreIds(getGenreIds(conn, movie.getId()));
+
+					long genreEnd = System.currentTimeMillis();
+
+					System.out.println(
+							"GENRE QUERY TIME | " + movie.getTitle() + " = " + (genreEnd - genreStart) + " ms");
 
 					movies.add(movie);
 				}

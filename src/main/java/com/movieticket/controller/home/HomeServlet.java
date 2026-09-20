@@ -17,8 +17,6 @@ public class HomeServlet extends HttpServlet {
 	private final MovieDAO movieDAO = new MovieDAO();
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
 		System.out.println("========== HOME PERFORMANCE ==========");

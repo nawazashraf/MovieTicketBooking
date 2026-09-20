@@ -21,6 +21,61 @@ import com.movieticket.model.UserBean;
 
 public class EmailService {
 
+	private static Properties getEmailProperties() throws Exception {
+
+		Properties properties = new Properties();
+
+		String senderEmail = System.getenv("SENDER_EMAIL");
+		String senderPassword = System.getenv("SENDER_PASSWORD");
+
+		// --------------------------------------------------------
+		// FALLBACK TO db.properties IF ENVIRONMENT VARIABLES
+		// ARE NOT AVAILABLE
+		// --------------------------------------------------------
+
+		if (senderEmail == null || senderEmail.isBlank() || senderPassword == null || senderPassword.isBlank()) {
+
+			try (InputStream input = EmailService.class.getClassLoader().getResourceAsStream("db.properties")) {
+
+				if (input != null) {
+					Properties fileProperties = new Properties();
+					fileProperties.load(input);
+
+					if (senderEmail == null || senderEmail.isBlank()) {
+						senderEmail = fileProperties.getProperty("SENDER_EMAIL");
+					}
+
+					if (senderPassword == null || senderPassword.isBlank()) {
+						senderPassword = fileProperties.getProperty("SENDER_PASSWORD");
+					}
+				}
+			}
+		}
+
+		// --------------------------------------------------------
+		// FINAL VALIDATION
+		// --------------------------------------------------------
+
+		if (senderEmail == null || senderEmail.isBlank()) {
+			throw new IllegalStateException("SENDER_EMAIL is not configured in environment variables or db.properties");
+		}
+
+		if (senderPassword == null || senderPassword.isBlank()) {
+			throw new IllegalStateException(
+					"SENDER_PASSWORD is not configured in environment variables or db.properties");
+		}
+
+		properties.put("mail.smtp.host", "smtp.gmail.com");
+		properties.put("mail.smtp.port", "587");
+		properties.put("mail.smtp.auth", "true");
+		properties.put("mail.smtp.starttls.enable", "true");
+
+		properties.put("SENDER_EMAIL", senderEmail);
+		properties.put("SENDER_PASSWORD", senderPassword);
+
+		return properties;
+	}
+
 	// ============================================================
 	// TICKET BOOKING EMAIL
 	// ============================================================
@@ -30,26 +85,17 @@ public class EmailService {
 		UserBean user = (UserBean) session.getAttribute("user");
 		String receiverEmail = user.getEmail();
 
-		Properties properties = new Properties();
-
 		try {
 
-			InputStream input = DBConnection.class.getClassLoader().getResourceAsStream("db.properties");
-
-			properties.load(input);
+			Properties properties = getEmailProperties();
 
 			String SENDER_EMAIL = properties.getProperty("SENDER_EMAIL");
 			String SENDER_PASSWORD = properties.getProperty("SENDER_PASSWORD");
 
-			properties.put("mail.smtp.host", "smtp.gmail.com");
-			properties.put("mail.smtp.port", "587");
-			properties.put("mail.smtp.auth", "true");
-			properties.put("mail.smtp.starttls.enable", "true");
-
 			Session mailSession = Session.getInstance(properties, new Authenticator() {
 
+				@Override
 				protected PasswordAuthentication getPasswordAuthentication() {
-
 					return new PasswordAuthentication(SENDER_EMAIL, SENDER_PASSWORD);
 				}
 			});
@@ -81,9 +127,6 @@ public class EmailService {
 							"<body style='margin:0;padding:0;background:#f3f4f6;"
 							+ "font-family:Arial,Helvetica,sans-serif;color:#1f2937;'>"
 
-							// =================================================
-							// OUTER WRAPPER
-							// =================================================
 							+
 
 							"<table width='100%' cellpadding='0' cellspacing='0' "
@@ -99,9 +142,6 @@ public class EmailService {
 							+ "border='0' style='max-width:620px;width:100%;" + "background:#ffffff;border-radius:14px;"
 							+ "overflow:hidden;border:1px solid #e5e7eb;'>"
 
-							// =================================================
-							// HEADER
-							// =================================================
 							+
 
 							"<tr>" + "<td style='background:#111827;padding:22px 30px;'>"
@@ -142,9 +182,6 @@ public class EmailService {
 
 							"</td>" + "</tr>"
 
-							// =================================================
-							// SUCCESS SECTION
-							// =================================================
 							+
 
 							"<tr>" + "<td style='padding:35px 35px 20px;'>"
@@ -191,9 +228,6 @@ public class EmailService {
 
 							"</td>" + "</tr>"
 
-							// =================================================
-							// MOVIE CARD
-							// =================================================
 							+
 
 							"<tr>" + "<td style='padding:10px 35px 0;'>"
@@ -254,9 +288,6 @@ public class EmailService {
 
 							"</td>" + "</tr>"
 
-							// =================================================
-							// BOOKING REFERENCE
-							// =================================================
 							+
 
 							"<tr>" + "<td style='padding:22px 35px 5px;'>"
@@ -297,7 +328,9 @@ public class EmailService {
 
 							+
 
-							"</td>" +
+							"</td>"
+
+							+
 
 							"<td align='right' style='padding:16px 18px;'>"
 
@@ -316,7 +349,9 @@ public class EmailService {
 
 							+
 
-							"</td>" +
+							"</td>"
+
+							+
 
 							"</tr>" +
 
@@ -326,9 +361,6 @@ public class EmailService {
 
 							"</td>" + "</tr>"
 
-							// =================================================
-							// SHOW DETAILS
-							// =================================================
 							+
 
 							"<tr>" + "<td style='padding:20px 35px;'>"
@@ -345,13 +377,13 @@ public class EmailService {
 
 							"<td width='50%' style='padding:12px 0;'>" + "<div style='font-size:11px;color:#9ca3af;"
 							+ "font-weight:bold;'>SHOW DATE</div>" + "<div style='font-size:14px;font-weight:bold;"
-							+ "color:#111827;margin-top:5px;'>" + ticket.getShowDate() + "</div>" + "</td>"
+							+ "color:#111827;margin-top:5px;'>" + ticket.getShowDate() + "</div></td>"
 
 							+
 
 							"<td width='50%' style='padding:12px 0;'>" + "<div style='font-size:11px;color:#9ca3af;"
 							+ "font-weight:bold;'>START TIME</div>" + "<div style='font-size:14px;font-weight:bold;"
-							+ "color:#111827;margin-top:5px;'>" + ticket.getStartTime() + "</div>" + "</td>"
+							+ "color:#111827;margin-top:5px;'>" + ticket.getStartTime() + "</div></td>"
 
 							+
 
@@ -365,13 +397,13 @@ public class EmailService {
 
 							"<td width='50%' style='padding:12px 0;'>" + "<div style='font-size:11px;color:#9ca3af;"
 							+ "font-weight:bold;'>SEATS</div>" + "<div style='font-size:14px;font-weight:bold;"
-							+ "color:#111827;margin-top:5px;'>" + ticket.getSeats() + "</div>" + "</td>"
+							+ "color:#111827;margin-top:5px;'>" + ticket.getSeats() + "</div></td>"
 
 							+
 
 							"<td width='50%' style='padding:12px 0;'>" + "<div style='font-size:11px;color:#9ca3af;"
 							+ "font-weight:bold;'>TOTAL PAID</div>" + "<div style='font-size:16px;font-weight:bold;"
-							+ "color:#111827;margin-top:5px;'>₹" + ticket.getTotalAmount() + "</div>" + "</td>"
+							+ "color:#111827;margin-top:5px;'>₹" + ticket.getTotalAmount() + "</div></td>"
 
 							+
 
@@ -385,9 +417,6 @@ public class EmailService {
 
 							"</td>" + "</tr>"
 
-							// =================================================
-							// IMPORTANT INFORMATION
-							// =================================================
 							+
 
 							"<tr>" + "<td style='padding:0 35px 25px;'>"
@@ -437,9 +466,6 @@ public class EmailService {
 
 							"</td>" + "</tr>"
 
-							// =================================================
-							// ATTACHMENT INFORMATION
-							// =================================================
 							+
 
 							"<tr>" + "<td style='padding:0 35px 30px;'>"
@@ -481,9 +507,6 @@ public class EmailService {
 
 							"</td>" + "</tr>"
 
-							// =================================================
-							// FOOTER
-							// =================================================
 							+
 
 							"<tr>" + "<td style='background:#f9fafb;" + "border-top:1px solid #e5e7eb;"
@@ -531,17 +554,15 @@ public class EmailService {
 
 							+
 
-							"</table>" +
+							"</table>"
+
+							+
 
 							"</td>" + "</tr>" + "</table>" +
 
 							"</body>" + "</html>";
 
 			textPart.setContent(emailContent, "text/html; charset=UTF-8");
-
-			// ========================================================
-			// PDF ATTACHMENT
-			// ========================================================
 
 			MimeBodyPart attachmentPart = new MimeBodyPart();
 
@@ -574,20 +595,10 @@ public class EmailService {
 
 	public static void sendOtpEmail(String receiverEmail, String otp) throws Exception {
 
-		Properties properties = new Properties();
-
-		InputStream input = DBConnection.class.getClassLoader().getResourceAsStream("db.properties");
-
-		properties.load(input);
+		Properties properties = getEmailProperties();
 
 		String SENDER_EMAIL = properties.getProperty("SENDER_EMAIL");
-
 		String SENDER_PASSWORD = properties.getProperty("SENDER_PASSWORD");
-
-		properties.put("mail.smtp.host", "smtp.gmail.com");
-		properties.put("mail.smtp.port", "587");
-		properties.put("mail.smtp.auth", "true");
-		properties.put("mail.smtp.starttls.enable", "true");
 
 		Session session = Session.getInstance(properties, new Authenticator() {
 
@@ -609,7 +620,9 @@ public class EmailService {
 		String html =
 
 				"<!DOCTYPE html>" + "<html>" + "<head>" + "<meta charset='UTF-8'>" + "<meta name='viewport' "
-						+ "content='width=device-width,initial-scale=1.0'>" + "</head>" +
+						+ "content='width=device-width,initial-scale=1.0'>" + "</head>"
+
+						+
 
 						"<body style='margin:0;padding:0;" + "background:#f3f4f6;"
 						+ "font-family:Arial,Helvetica,sans-serif;'>"
@@ -621,76 +634,45 @@ public class EmailService {
 
 						+
 
-						"<tr>" + "<td align='center'>"
+						"<tr><td align='center'>"
 
 						+
 
 						"<table width='520' cellpadding='0' cellspacing='0' " + "style='max-width:520px;width:100%;"
 						+ "background:#ffffff;border:1px solid #e5e7eb;" + "border-radius:14px;overflow:hidden;'>"
 
-						// HEADER
 						+
 
-						"<tr>" + "<td style='background:#111827;padding:23px 30px;'>"
+						"<tr><td style='background:#111827;padding:23px 30px;'>"
 
 						+
 
 						"<div style='font-size:23px;font-weight:bold;color:white;'>"
+						+ "<span style='color:#e50914;'>M</span> MovieBook" + "</div>"
 
 						+
 
-						"<span style='color:#e50914;'>M</span> MovieBook"
+						"</td></tr>"
 
 						+
 
-						"</div>"
-
-						+
-
-						"</td>" + "</tr>"
-
-						// CONTENT
-						+
-
-						"<tr>" + "<td style='padding:35px 32px;'>"
+						"<tr><td style='padding:35px 32px;'>"
 
 						+
 
 						"<div style='font-size:12px;font-weight:bold;" + "letter-spacing:1px;color:#6b7280;'>"
-
-						+
-
-						"EMAIL VERIFICATION"
-
-						+
-
-						"</div>"
+						+ "EMAIL VERIFICATION" + "</div>"
 
 						+
 
 						"<h2 style='margin:10px 0 10px;" + "font-size:24px;color:#111827;'>"
-
-						+
-
-						"Verify your email address"
-
-						+
-
-						"</h2>"
+						+ "Verify your email address" + "</h2>"
 
 						+
 
 						"<p style='font-size:14px;line-height:1.7;" + "color:#6b7280;margin-bottom:25px;'>"
+						+ "Use the verification code below to continue " + "with your MovieBook account." + "</p>"
 
-						+
-
-						"Use the verification code below to continue " + "with your MovieBook account."
-
-						+
-
-						"</p>"
-
-						// OTP
 						+
 
 						"<div style='background:#f9fafb;" + "border:1px solid #e5e7eb;"
@@ -699,26 +681,12 @@ public class EmailService {
 						+
 
 						"<div style='font-size:11px;color:#9ca3af;" + "letter-spacing:1px;margin-bottom:10px;'>"
+						+ "VERIFICATION CODE" + "</div>"
 
 						+
 
-						"VERIFICATION CODE"
-
-						+
-
-						"</div>"
-
-						+
-
-						"<div style='font-size:34px;font-weight:bold;" + "letter-spacing:9px;color:#111827;'>"
-
-						+
-
-						otp
-
-						+
-
-						"</div>"
+						"<div style='font-size:34px;font-weight:bold;" + "letter-spacing:9px;color:#111827;'>" + otp
+						+ "</div>"
 
 						+
 
@@ -727,15 +695,8 @@ public class EmailService {
 						+
 
 						"<p style='font-size:12px;color:#6b7280;" + "line-height:1.7;margin-top:22px;'>"
-
-						+
-
-						"For your security, never share this verification "
-						+ "code with anyone, including someone claiming to be " + "from MovieBook."
-
-						+
-
-						"</p>"
+						+ "For your security, never share this verification "
+						+ "code with anyone, including someone claiming to be " + "from MovieBook." + "</p>"
 
 						+
 
@@ -744,14 +705,7 @@ public class EmailService {
 						+
 
 						"<p style='margin:0;font-size:12px;" + "color:#9ca3af;line-height:1.6;'>"
-
-						+
-
-						"If you did not request this code, you can safely " + "ignore this email."
-
-						+
-
-						"</p>"
+						+ "If you did not request this code, you can safely " + "ignore this email." + "</p>"
 
 						+
 
@@ -759,29 +713,20 @@ public class EmailService {
 
 						+
 
-						"</td>" + "</tr>"
+						"</td></tr>"
 
-						// FOOTER
 						+
 
-						"<tr>" + "<td style='background:#f9fafb;" + "border-top:1px solid #e5e7eb;"
+						"<tr><td style='background:#f9fafb;" + "border-top:1px solid #e5e7eb;"
 						+ "padding:20px;text-align:center;'>"
 
 						+
 
-						"<div style='font-size:11px;color:#9ca3af;'>"
+						"<div style='font-size:11px;color:#9ca3af;'>" + "© MovieBook. All rights reserved." + "</div>"
 
 						+
 
-						"© MovieBook. All rights reserved."
-
-						+
-
-						"</div>"
-
-						+
-
-						"</td>" + "</tr>"
+						"</td></tr>"
 
 						+
 
@@ -789,11 +734,11 @@ public class EmailService {
 
 						+
 
-						"</td>" + "</tr>" + "</table>"
+						"</td></tr></table>"
 
 						+
 
-						"</body>" + "</html>";
+						"</body></html>";
 
 		message.setContent(html, "text/html; charset=UTF-8");
 
@@ -807,20 +752,10 @@ public class EmailService {
 	public static void sendWelcomeEmail(String receiverEmail, String customerName, String contextPath)
 			throws Exception {
 
-		Properties properties = new Properties();
-
-		InputStream input = DBConnection.class.getClassLoader().getResourceAsStream("db.properties");
-
-		properties.load(input);
+		Properties properties = getEmailProperties();
 
 		String SENDER_EMAIL = properties.getProperty("SENDER_EMAIL");
-
 		String SENDER_PASSWORD = properties.getProperty("SENDER_PASSWORD");
-
-		properties.put("mail.smtp.host", "smtp.gmail.com");
-		properties.put("mail.smtp.port", "587");
-		properties.put("mail.smtp.auth", "true");
-		properties.put("mail.smtp.starttls.enable", "true");
 
 		Session session = Session.getInstance(properties, new Authenticator() {
 
@@ -841,8 +776,10 @@ public class EmailService {
 
 		String html =
 
-				"<!DOCTYPE html>" + "<html>" + "<head>" + "<meta charset='UTF-8'>" + "<meta name='viewport' "
-						+ "content='width=device-width,initial-scale=1.0'>" + "</head>" +
+				"<!DOCTYPE html>" + "<html><head>" + "<meta charset='UTF-8'>" + "<meta name='viewport' "
+						+ "content='width=device-width,initial-scale=1.0'>" + "</head>"
+
+						+
 
 						"<body style='margin:0;padding:0;" + "background:#f3f4f6;"
 						+ "font-family:Arial,Helvetica,sans-serif;" + "color:#111827;'>"
@@ -854,90 +791,51 @@ public class EmailService {
 
 						+
 
-						"<tr>" + "<td align='center'>"
+						"<tr><td align='center'>"
 
 						+
 
 						"<table width='600' cellpadding='0' cellspacing='0' " + "style='max-width:600px;width:100%;"
 						+ "background:white;border-radius:14px;" + "overflow:hidden;border:1px solid #e5e7eb;'>"
 
-						// HEADER
 						+
 
-						"<tr>" + "<td style='background:#111827;padding:24px 30px;'>"
-
-						+
-
-						"<div style='font-size:24px;" + "font-weight:bold;color:#ffffff;'>"
+						"<tr><td style='background:#111827;padding:24px 30px;'>"
 
 						+
 
-						"<span style='color:#e50914;'>M</span> MovieBook"
+						"<div style='font-size:24px;font-weight:bold;color:#ffffff;'>"
+						+ "<span style='color:#e50914;'>M</span> MovieBook" + "</div>"
 
 						+
 
-						"</div>"
+						"</td></tr>"
 
 						+
 
-						"</td>" + "</tr>"
-
-						// CONTENT
-						+
-
-						"<tr>" + "<td style='padding:38px 32px;'>"
+						"<tr><td style='padding:38px 32px;'>"
 
 						+
 
 						"<div style='width:54px;height:54px;" + "background:#dcfce7;border-radius:50%;"
 						+ "line-height:54px;text-align:center;" + "font-size:26px;color:#15803d;font-weight:bold;'>"
+						+ "✓" + "</div>"
 
 						+
 
-						"✓"
+						"<h1 style='font-size:26px;margin:20px 0 10px;'>" + "Welcome to MovieBook!" + "</h1>"
 
 						+
 
-						"</div>"
+						"<p style='font-size:14px;line-height:1.8;color:#6b7280;'>" + "Hi " + customerName + ","
+						+ "</p>"
 
 						+
 
-						"<h1 style='font-size:26px;margin:20px 0 10px;'>"
+						"<p style='font-size:14px;line-height:1.8;color:#6b7280;'>"
+						+ "Your MovieBook account has been successfully created. "
+						+ "You can now browse movies, choose your seats and " + "book your favourite shows." + "</p>"
 
-						+
-
-						"Welcome to MovieBook!"
-
-						+
-
-						"</h1>"
-
-						+
-
-						"<p style='font-size:14px;line-height:1.8;" + "color:#6b7280;'>"
-
-						+
-
-						"Hi " + customerName + ","
-
-						+
-
-						"</p>"
-
-						+
-
-						"<p style='font-size:14px;line-height:1.8;" + "color:#6b7280;'>"
-
-						+
-
-						"Your MovieBook account has been successfully created. "
-						+ "You can now browse movies, choose your seats and " + "book your favourite shows."
-
-						+
-
-						"</p>"
-
-						// ACCOUNT CARD
 						+
 
 						"<table width='100%' cellpadding='0' cellspacing='0' "
@@ -945,37 +843,21 @@ public class EmailService {
 
 						+
 
-						"<tr>" + "<td style='padding:18px;'>"
+						"<tr><td style='padding:18px;'>"
 
 						+
 
 						"<div style='font-size:11px;color:#9ca3af;" + "font-weight:bold;letter-spacing:1px;'>"
-
-						+
-
-						"ACCOUNT EMAIL"
-
-						+
-
-						"</div>"
+						+ "ACCOUNT EMAIL" + "</div>"
 
 						+
 
 						"<div style='font-size:14px;font-weight:bold;" + "color:#111827;margin-top:7px;'>"
+						+ receiverEmail + "</div>"
 
 						+
 
-						receiverEmail
-
-						+
-
-						"</div>"
-
-						+
-
-						"</td>" + "</tr>" +
-
-						"</table>"
+						"</td></tr></table>"
 
 						+
 
@@ -983,69 +865,40 @@ public class EmailService {
 
 						+
 
-						"<div style='font-size:13px;font-weight:bold;" + "color:#374151;'>"
-
-						+
-
-						"Security reminder"
-
-						+
-
-						"</div>"
+						"<div style='font-size:13px;font-weight:bold;" + "color:#374151;'>" + "Security reminder"
+						+ "</div>"
 
 						+
 
 						"<p style='font-size:12px;color:#6b7280;" + "line-height:1.7;margin-bottom:0;'>"
+						+ "MovieBook will never ask you to share your " + "password or verification codes by email."
+						+ "</p>"
 
 						+
 
-						"MovieBook will never ask you to share your " + "password or verification codes by email."
+						"</div></td></tr>"
 
 						+
 
-						"</p>"
-
-						+
-
-						"</div>"
-
-						+
-
-						"</td>" + "</tr>"
-
-						// FOOTER
-						+
-
-						"<tr>" + "<td style='background:#f9fafb;" + "border-top:1px solid #e5e7eb;"
+						"<tr><td style='background:#f9fafb;" + "border-top:1px solid #e5e7eb;"
 						+ "padding:22px;text-align:center;'>"
 
 						+
 
 						"<div style='font-size:11px;color:#9ca3af;" + "line-height:1.6;'>"
+						+ "© MovieBook. All rights reserved." + "</div>"
 
 						+
 
-						"© MovieBook. All rights reserved."
+						"</td></tr>"
 
 						+
 
-						"</div>"
+						"</table></td></tr></table>"
 
 						+
 
-						"</td>" + "</tr>"
-
-						+
-
-						"</table>"
-
-						+
-
-						"</td>" + "</tr>" + "</table>"
-
-						+
-
-						"</body>" + "</html>";
+						"</body></html>";
 
 		message.setContent(html, "text/html; charset=UTF-8");
 
@@ -1061,20 +914,10 @@ public class EmailService {
 	public static void sendPasswordChangedEmail(String receiverEmail, String customerName, String changedAt)
 			throws Exception {
 
-		Properties properties = new Properties();
-
-		InputStream input = DBConnection.class.getClassLoader().getResourceAsStream("db.properties");
-
-		properties.load(input);
+		Properties properties = getEmailProperties();
 
 		String SENDER_EMAIL = properties.getProperty("SENDER_EMAIL");
-
 		String SENDER_PASSWORD = properties.getProperty("SENDER_PASSWORD");
-
-		properties.put("mail.smtp.host", "smtp.gmail.com");
-		properties.put("mail.smtp.port", "587");
-		properties.put("mail.smtp.auth", "true");
-		properties.put("mail.smtp.starttls.enable", "true");
 
 		Session session = Session.getInstance(properties, new Authenticator() {
 
@@ -1095,8 +938,10 @@ public class EmailService {
 
 		String html =
 
-				"<!DOCTYPE html>" + "<html>" + "<head>" + "<meta charset='UTF-8'>" + "<meta name='viewport' "
-						+ "content='width=device-width,initial-scale=1.0'>" + "</head>" +
+				"<!DOCTYPE html>" + "<html><head>" + "<meta charset='UTF-8'>" + "<meta name='viewport' "
+						+ "content='width=device-width,initial-scale=1.0'>" + "</head>"
+
+						+
 
 						"<body style='margin:0;padding:0;" + "background:#f3f4f6;"
 						+ "font-family:Arial,Helvetica,sans-serif;" + "color:#111827;'>"
@@ -1108,89 +953,50 @@ public class EmailService {
 
 						+
 
-						"<tr>" + "<td align='center'>"
+						"<tr><td align='center'>"
 
 						+
 
 						"<table width='600' cellpadding='0' cellspacing='0' " + "style='max-width:600px;width:100%;"
 						+ "background:#ffffff;border-radius:14px;" + "overflow:hidden;border:1px solid #e5e7eb;'>"
 
-						// HEADER
 						+
 
-						"<tr>" + "<td style='background:#111827;padding:24px 30px;'>"
-
-						+
-
-						"<div style='font-size:24px;" + "font-weight:bold;color:#ffffff;'>"
+						"<tr><td style='background:#111827;padding:24px 30px;'>"
 
 						+
 
-						"<span style='color:#e50914;'>M</span> MovieBook"
+						"<div style='font-size:24px;font-weight:bold;color:#ffffff;'>"
+						+ "<span style='color:#e50914;'>M</span> MovieBook" + "</div>"
 
 						+
 
-						"</div>"
+						"</td></tr>"
 
 						+
 
-						"</td>" + "</tr>"
-
-						// CONTENT
-						+
-
-						"<tr>" + "<td style='padding:38px 32px;'>"
+						"<tr><td style='padding:38px 32px;'>"
 
 						+
 
 						"<div style='width:54px;height:54px;" + "background:#dcfce7;border-radius:50%;"
 						+ "line-height:54px;text-align:center;" + "font-size:26px;color:#15803d;font-weight:bold;'>"
+						+ "✓" + "</div>"
 
 						+
 
-						"✓"
+						"<h1 style='font-size:25px;margin:20px 0 10px;'>" + "Your password was changed" + "</h1>"
 
 						+
 
-						"</div>"
+						"<p style='font-size:14px;line-height:1.8;color:#6b7280;'>" + "Dear " + customerName + ","
+						+ "</p>"
 
 						+
 
-						"<h1 style='font-size:25px;margin:20px 0 10px;'>"
+						"<p style='font-size:14px;line-height:1.8;color:#6b7280;'>"
+						+ "The password for your MovieBook account " + "was successfully changed." + "</p>"
 
-						+
-
-						"Your password was changed"
-
-						+
-
-						"</h1>"
-
-						+
-
-						"<p style='font-size:14px;line-height:1.8;" + "color:#6b7280;'>"
-
-						+
-
-						"Dear " + customerName + ","
-
-						+
-
-						"</p>"
-
-						+
-
-						"<p style='font-size:14px;line-height:1.8;" + "color:#6b7280;'>"
-
-						+
-
-						"The password for your MovieBook account " + "was successfully changed."
-
-						+
-
-						"</p>"
-
-						// SECURITY DETAILS
 						+
 
 						"<table width='100%' cellpadding='0' cellspacing='0' "
@@ -1198,31 +1004,17 @@ public class EmailService {
 
 						+
 
-						"<tr>" + "<td style='padding:18px;'>"
+						"<tr><td style='padding:18px;'>"
 
 						+
 
 						"<div style='font-size:11px;color:#9ca3af;" + "font-weight:bold;letter-spacing:1px;'>"
-
-						+
-
-						"ACCOUNT"
-
-						+
-
-						"</div>"
+						+ "ACCOUNT" + "</div>"
 
 						+
 
 						"<div style='font-size:14px;font-weight:bold;" + "margin-top:6px;color:#111827;'>"
-
-						+
-
-						receiverEmail
-
-						+
-
-						"</div>"
+						+ receiverEmail + "</div>"
 
 						+
 
@@ -1231,34 +1023,17 @@ public class EmailService {
 						+
 
 						"<div style='font-size:11px;color:#9ca3af;" + "font-weight:bold;letter-spacing:1px;'>"
+						+ "CHANGED AT" + "</div>"
 
 						+
 
-						"CHANGED AT"
+						"<div style='font-size:14px;font-weight:bold;" + "margin-top:6px;color:#111827;'>" + changedAt
+						+ "</div>"
 
 						+
 
-						"</div>"
+						"</td></tr></table>"
 
-						+
-
-						"<div style='font-size:14px;font-weight:bold;" + "margin-top:6px;color:#111827;'>"
-
-						+
-
-						changedAt
-
-						+
-
-						"</div>"
-
-						+
-
-						"</td>" + "</tr>" +
-
-						"</table>"
-
-						// WARNING
 						+
 
 						"<table width='100%' cellpadding='0' cellspacing='0' " + "style='background:#fff7ed;"
@@ -1266,101 +1041,59 @@ public class EmailService {
 
 						+
 
-						"<tr>" + "<td style='padding:18px;'>"
+						"<tr><td style='padding:18px;'>"
 
 						+
 
 						"<div style='font-size:13px;font-weight:bold;" + "color:#9a3412;margin-bottom:7px;'>"
-
-						+
-
-						"Didn't change your password?"
-
-						+
-
-						"</div>"
+						+ "Didn't change your password?" + "</div>"
 
 						+
 
 						"<div style='font-size:12px;line-height:1.7;" + "color:#7c2d12;'>"
-
-						+
-
-						"If you did not make this change, someone may have "
+						+ "If you did not make this change, someone may have "
 						+ "access to your account. Please reset your password "
-						+ "immediately and contact MovieBook support."
+						+ "immediately and contact MovieBook support." + "</div>"
 
 						+
 
-						"</div>"
-
-						+
-
-						"</td>" + "</tr>" +
-
-						"</table>"
+						"</td></tr></table>"
 
 						+
 
 						"<p style='font-size:12px;color:#6b7280;" + "line-height:1.7;margin-top:22px;'>"
+						+ "For your security, MovieBook will never include " + "your password in an email." + "</p>"
 
 						+
 
-						"For your security, MovieBook will never include " + "your password in an email."
+						"</td></tr>"
 
 						+
 
-						"</p>"
-
-						+
-
-						"</td>" + "</tr>"
-
-						// FOOTER
-						+
-
-						"<tr>" + "<td style='background:#f9fafb;" + "border-top:1px solid #e5e7eb;"
+						"<tr><td style='background:#f9fafb;" + "border-top:1px solid #e5e7eb;"
 						+ "padding:22px;text-align:center;'>"
 
 						+
 
-						"<div style='font-size:11px;color:#9ca3af;'>"
-
-						+
-
-						"This is an automated security notification."
-
-						+
-
-						"</div>"
+						"<div style='font-size:11px;color:#9ca3af;'>" + "This is an automated security notification."
+						+ "</div>"
 
 						+
 
 						"<div style='font-size:11px;color:#9ca3af;" + "margin-top:5px;'>"
+						+ "© MovieBook. All rights reserved." + "</div>"
 
 						+
 
-						"© MovieBook. All rights reserved."
+						"</td></tr>"
 
 						+
 
-						"</div>"
+						"</table></td></tr></table>"
 
 						+
 
-						"</td>" + "</tr>"
-
-						+
-
-						"</table>"
-
-						+
-
-						"</td>" + "</tr>" + "</table>"
-
-						+
-
-						"</body>" + "</html>";
+						"</body></html>";
 
 		message.setContent(html, "text/html; charset=UTF-8");
 
@@ -1375,20 +1108,10 @@ public class EmailService {
 
 	public static void sendAccountActivatedEmail(String receiverEmail, String customerName) throws Exception {
 
-		Properties properties = new Properties();
-
-		InputStream input = DBConnection.class.getClassLoader().getResourceAsStream("db.properties");
-
-		properties.load(input);
+		Properties properties = getEmailProperties();
 
 		String SENDER_EMAIL = properties.getProperty("SENDER_EMAIL");
-
 		String SENDER_PASSWORD = properties.getProperty("SENDER_PASSWORD");
-
-		properties.put("mail.smtp.host", "smtp.gmail.com");
-		properties.put("mail.smtp.port", "587");
-		properties.put("mail.smtp.auth", "true");
-		properties.put("mail.smtp.starttls.enable", "true");
 
 		Session session = Session.getInstance(properties, new Authenticator() {
 
@@ -1409,172 +1132,162 @@ public class EmailService {
 
 		String html =
 
-				"<!DOCTYPE html>" + "<html>" + "<head>" + "<meta charset='UTF-8'>" + "<meta name='viewport' "
+				"<!DOCTYPE html>" + "<html><head>" + "<meta charset='UTF-8'>" + "<meta name='viewport' "
 						+ "content='width=device-width,initial-scale=1.0'>" + "</head>"
 
-						+ "<body style='margin:0;padding:0;" + "background:#f3f4f6;"
+						+
+
+						"<body style='margin:0;padding:0;" + "background:#f3f4f6;"
 						+ "font-family:Arial,Helvetica,sans-serif;" + "color:#111827;'>"
 
-						+ "<table width='100%' cellpadding='0' cellspacing='0' "
+						+
+
+						"<table width='100%' cellpadding='0' cellspacing='0' "
 						+ "style='padding:40px 15px;background:#f3f4f6;'>"
 
-						+ "<tr>" + "<td align='center'>"
+						+
 
-						+ "<table width='600' cellpadding='0' cellspacing='0' " + "style='max-width:600px;width:100%;"
-						+ "background:#ffffff;" + "border-radius:14px;" + "overflow:hidden;"
-						+ "border:1px solid #e5e7eb;'>"
+						"<tr><td align='center'>"
 
-						// =================================================
-						// HEADER
-						// =================================================
+						+
 
-						+ "<tr>" + "<td style='background:#111827;padding:24px 30px;'>"
+						"<table width='600' cellpadding='0' cellspacing='0' " + "style='max-width:600px;width:100%;"
+						+ "background:#ffffff;border-radius:14px;" + "overflow:hidden;border:1px solid #e5e7eb;'>"
 
-						+ "<div style='font-size:24px;" + "font-weight:bold;color:#ffffff;'>"
+						+
 
-						+ "<span style='color:#e50914;'>M</span> MovieBook"
+						"<tr><td style='background:#111827;padding:24px 30px;'>"
 
-						+ "</div>"
+						+
 
-						+ "</td>" + "</tr>"
+						"<div style='font-size:24px;font-weight:bold;color:#ffffff;'>"
+						+ "<span style='color:#e50914;'>M</span> MovieBook" + "</div>"
 
-						// =================================================
-						// CONTENT
-						// =================================================
+						+
 
-						+ "<tr>" + "<td style='padding:38px 32px;'>"
+						"</td></tr>"
 
-						// SUCCESS ICON
+						+
 
-						+ "<div style='width:54px;height:54px;" + "background:#dcfce7;" + "border-radius:50%;"
-						+ "line-height:54px;" + "text-align:center;" + "font-size:26px;" + "color:#15803d;"
-						+ "font-weight:bold;'>"
+						"<tr><td style='padding:38px 32px;'>"
 
-						+ "✓"
+						+
 
-						+ "</div>"
+						"<div style='width:54px;height:54px;" + "background:#dcfce7;border-radius:50%;"
+						+ "line-height:54px;text-align:center;" + "font-size:26px;color:#15803d;font-weight:bold;'>"
+						+ "✓" + "</div>"
 
-						// HEADING
+						+
 
-						+ "<h1 style='font-size:26px;" + "margin:20px 0 10px;" + "color:#111827;'>"
-
-						+ "Account Activated"
-
+						"<h1 style='font-size:26px;margin:20px 0 10px;" + "color:#111827;'>" + "Account Activated"
 						+ "</h1>"
 
-						// GREETING
+						+
 
-						+ "<p style='font-size:14px;" + "line-height:1.8;" + "color:#6b7280;'>"
-
-						+ "Hi " + customerName + ","
-
+						"<p style='font-size:14px;line-height:1.8;color:#6b7280;'>" + "Hi " + customerName + ","
 						+ "</p>"
 
-						// MESSAGE
+						+
 
-						+ "<p style='font-size:14px;" + "line-height:1.8;" + "color:#6b7280;'>"
+						"<p style='font-size:14px;line-height:1.8;color:#6b7280;'>"
+						+ "Your MovieBook account has been successfully " + "verified and activated." + "</p>"
 
-						+ "Your MovieBook account has been successfully " + "verified and activated."
+						+
 
-						+ "</p>"
+						"<table width='100%' cellpadding='0' cellspacing='0' "
+						+ "style='margin:25px 0;background:#f9fafb;" + "border:1px solid #e5e7eb;border-radius:10px;'>"
 
-						// ACCOUNT CARD
+						+
 
-						+ "<table width='100%' cellpadding='0' cellspacing='0' " + "style='margin:25px 0;"
-						+ "background:#f9fafb;" + "border:1px solid #e5e7eb;" + "border-radius:10px;'>"
+						"<tr><td style='padding:18px;'>"
 
-						+ "<tr>" + "<td style='padding:18px;'>"
+						+
 
-						+ "<div style='font-size:11px;" + "color:#9ca3af;" + "font-weight:bold;"
-						+ "letter-spacing:1px;'>"
+						"<div style='font-size:11px;color:#9ca3af;" + "font-weight:bold;letter-spacing:1px;'>"
+						+ "ACCOUNT EMAIL" + "</div>"
 
-						+ "ACCOUNT EMAIL"
+						+
 
+						"<div style='font-size:14px;font-weight:bold;" + "color:#111827;margin-top:7px;'>"
+						+ receiverEmail + "</div>"
+
+						+
+
+						"</td></tr></table>"
+
+						+
+
+						"<table width='100%' cellpadding='0' cellspacing='0' " + "style='background:#f0fdf4;"
+						+ "border:1px solid #bbf7d0;border-radius:10px;'>"
+
+						+
+
+						"<tr><td style='padding:18px;'>"
+
+						+
+
+						"<div style='font-size:13px;font-weight:bold;" + "color:#166534;margin-bottom:7px;'>"
+						+ "Account Status" + "</div>"
+
+						+
+
+						"<div style='font-size:12px;line-height:1.7;" + "color:#166534;'>"
+						+ "Your account is now active. You can browse movies, "
+						+ "select seats and book your favourite shows." + "</div>"
+
+						+
+
+						"</td></tr></table>"
+
+						+
+
+						"<div style='border-top:1px solid #e5e7eb;" + "padding-top:22px;margin-top:25px;'>"
+
+						+
+
+						"<div style='font-size:13px;font-weight:bold;" + "color:#374151;'>" + "Security reminder"
 						+ "</div>"
 
-						+ "<div style='font-size:14px;" + "font-weight:bold;" + "color:#111827;" + "margin-top:7px;'>"
+						+
 
-						+ receiverEmail
-
-						+ "</div>"
-
-						+ "</td>" + "</tr>"
-
-						+ "</table>"
-
-						// STATUS CARD
-
-						+ "<table width='100%' cellpadding='0' cellspacing='0' " + "style='background:#f0fdf4;"
-						+ "border:1px solid #bbf7d0;" + "border-radius:10px;'>"
-
-						+ "<tr>" + "<td style='padding:18px;'>"
-
-						+ "<div style='font-size:13px;" + "font-weight:bold;" + "color:#166534;"
-						+ "margin-bottom:7px;'>"
-
-						+ "Account Status"
-
-						+ "</div>"
-
-						+ "<div style='font-size:12px;" + "line-height:1.7;" + "color:#166534;'>"
-
-						+ "Your account is now active. " + "You can browse movies, select seats and "
-						+ "book your favourite shows."
-
-						+ "</div>"
-
-						+ "</td>" + "</tr>"
-
-						+ "</table>"
-
-						// SECURITY REMINDER
-
-						+ "<div style='border-top:1px solid #e5e7eb;" + "padding-top:22px;" + "margin-top:25px;'>"
-
-						+ "<div style='font-size:13px;" + "font-weight:bold;" + "color:#374151;'>"
-
-						+ "Security reminder"
-
-						+ "</div>"
-
-						+ "<p style='font-size:12px;" + "color:#6b7280;" + "line-height:1.7;" + "margin-bottom:0;'>"
-
+						"<p style='font-size:12px;color:#6b7280;" + "line-height:1.7;margin-bottom:0;'>"
 						+ "MovieBook will never ask you to share your " + "password or verification codes by email."
-
 						+ "</p>"
 
-						+ "</div>"
+						+
 
-						+ "</td>" + "</tr>"
+						"</div>"
 
-						// =================================================
-						// FOOTER
-						// =================================================
+						+
 
-						+ "<tr>" + "<td style='background:#f9fafb;" + "border-top:1px solid #e5e7eb;" + "padding:22px;"
-						+ "text-align:center;'>"
+						"</td></tr>"
 
-						+ "<div style='font-size:11px;" + "color:#9ca3af;" + "line-height:1.6;'>"
+						+
 
-						+ "This is an automated email."
+						"<tr><td style='background:#f9fafb;" + "border-top:1px solid #e5e7eb;"
+						+ "padding:22px;text-align:center;'>"
 
-						+ "</div>"
+						+
 
-						+ "<div style='font-size:11px;" + "color:#9ca3af;" + "margin-top:5px;'>"
+						"<div style='font-size:11px;color:#9ca3af;" + "line-height:1.6;'>"
+						+ "This is an automated email." + "</div>"
 
-						+ "© MovieBook. All rights reserved."
+						+
 
-						+ "</div>"
+						"<div style='font-size:11px;color:#9ca3af;" + "margin-top:5px;'>"
+						+ "© MovieBook. All rights reserved." + "</div>"
 
-						+ "</td>" + "</tr>"
+						+
 
-						+ "</table>"
+						"</td></tr>"
 
-						+ "</td>" + "</tr>"
+						+
 
-						+ "</table>"
+						"</table></td></tr></table>"
 
-						+ "</body>" + "</html>";
+						+
+
+						"</body></html>";
 
 		message.setContent(html, "text/html; charset=UTF-8");
 
@@ -1582,5 +1295,4 @@ public class EmailService {
 
 		System.out.println("Account activation email sent to: " + receiverEmail);
 	}
-
 }

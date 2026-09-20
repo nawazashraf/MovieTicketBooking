@@ -1,3 +1,4 @@
+
 let activationResendTimer = null;
 
 
@@ -15,7 +16,9 @@ function closeInactivePopup() {
 	}
 
 	overlay.style.display = "none";
+
 	document.body.style.overflow = "";
+
 }
 
 
@@ -33,6 +36,7 @@ function openEditProfile() {
 	}
 
 	overlay.classList.add("open");
+
 	document.body.style.overflow = "hidden";
 
 	setTimeout(function() {
@@ -46,6 +50,7 @@ function openEditProfile() {
 		}
 
 	}, 300);
+
 }
 
 
@@ -56,6 +61,7 @@ function closeEditProfile(event) {
 		event.target.id !== "editProfileOverlay") {
 
 		return;
+
 	}
 
 	const overlay =
@@ -66,7 +72,9 @@ function closeEditProfile(event) {
 	}
 
 	overlay.classList.remove("open");
+
 	document.body.style.overflow = "";
+
 }
 
 
@@ -87,6 +95,7 @@ document.addEventListener("keydown", function(event) {
 		overlay.classList.contains("open")) {
 
 		closeEditProfile();
+
 	}
 
 	const activation =
@@ -96,6 +105,7 @@ document.addEventListener("keydown", function(event) {
 		activation.style.display === "flex") {
 
 		closeActivationPopup();
+
 	}
 
 });
@@ -122,23 +132,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
 		name.addEventListener("input", function() {
 
-			/*
-			 * Only English letters and spaces.
-			 */
-
 			this.value =
 				this.value.replace(/[^A-Za-z ]/g, "");
 
-			/*
-			 * Prevent multiple spaces.
-			 */
-
 			this.value =
 				this.value.replace(/\s{2,}/g, " ");
-
-			/*
-			 * Maximum 50 characters.
-			 */
 
 			if (this.value.length > 50) {
 
@@ -160,11 +158,8 @@ document.addEventListener("DOMContentLoaded", function() {
 				this.value = "";
 
 				return;
-			}
 
-			/*
-			 * First letter of every word capital.
-			 */
+			}
 
 			this.value =
 				value
@@ -191,16 +186,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
 		phone.addEventListener("input", function() {
 
-			/*
-			 * Only digits.
-			 */
-
 			this.value =
 				this.value.replace(/\D/g, "");
-
-			/*
-			 * Maximum 10 digits.
-			 */
 
 			if (this.value.length > 10) {
 
@@ -232,11 +219,13 @@ function togglePassword(inputId, button) {
 	if (input.type === "password") {
 
 		input.type = "text";
+
 		button.textContent = "Hide";
 
 	} else {
 
 		input.type = "password";
+
 		button.textContent = "Show";
 
 	}
@@ -307,6 +296,7 @@ document.addEventListener("DOMContentLoaded", function() {
 		!form) {
 
 		return;
+
 	}
 
 
@@ -324,7 +314,9 @@ document.addEventListener("DOMContentLoaded", function() {
 		document.getElementById("editPasswordError");
 
 	const confirmPasswordError =
-		document.getElementById("editConfirmPasswordError");
+		document.getElementById(
+			"editConfirmPasswordError"
+		);
 
 
 	/* ========================================
@@ -338,8 +330,11 @@ document.addEventListener("DOMContentLoaded", function() {
 		}
 
 		element.textContent = message;
+
 		element.style.display = "block";
+
 		element.style.color = "#d92d20";
+
 	}
 
 
@@ -354,7 +349,9 @@ document.addEventListener("DOMContentLoaded", function() {
 		}
 
 		element.textContent = "";
+
 		element.style.display = "none";
+
 	}
 
 
@@ -374,10 +371,6 @@ document.addEventListener("DOMContentLoaded", function() {
 		clearError(nameError);
 
 
-		/*
-		 * 2 to 50 characters.
-		 */
-
 		if (value.length < 2 ||
 			value.length > 50) {
 
@@ -387,13 +380,9 @@ document.addEventListener("DOMContentLoaded", function() {
 			);
 
 			return false;
+
 		}
 
-
-		/*
-		 * Only English letters
-		 * and single spaces.
-		 */
 
 		if (!/^[A-Za-z]+(?: [A-Za-z]+)*$/.test(value)) {
 
@@ -403,13 +392,9 @@ document.addEventListener("DOMContentLoaded", function() {
 			);
 
 			return false;
+
 		}
 
-
-		/*
-		 * First letter of every word
-		 * automatically capitalized.
-		 */
 
 		name.value =
 			value
@@ -425,6 +410,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 		return true;
+
 	}
 
 
@@ -444,10 +430,6 @@ document.addEventListener("DOMContentLoaded", function() {
 		clearError(phoneError);
 
 
-		/*
-		 * Exactly 10 digits.
-		 */
-
 		if (!/^\d{10}$/.test(value)) {
 
 			showError(
@@ -456,12 +438,9 @@ document.addEventListener("DOMContentLoaded", function() {
 			);
 
 			return false;
+
 		}
 
-
-		/*
-		 * Must not start with 0.
-		 */
 
 		if (value.startsWith("0")) {
 
@@ -471,10 +450,12 @@ document.addEventListener("DOMContentLoaded", function() {
 			);
 
 			return false;
+
 		}
 
 
 		return true;
+
 	}
 
 
@@ -498,12 +479,12 @@ document.addEventListener("DOMContentLoaded", function() {
 		if (value === "") {
 
 			return true;
+
 		}
 
 
 		/*
-		 * Leading/trailing spaces
-		 * are not allowed.
+		 * Leading/trailing spaces.
 		 */
 
 		if (value !== value.trim()) {
@@ -513,25 +494,23 @@ document.addEventListener("DOMContentLoaded", function() {
 				"Password must not contain leading or trailing spaces."
 			);
 
-			strengthText.textContent =
-				"Password must not contain leading or trailing spaces.";
-
 			return false;
+
 		}
 
 
 		/*
-		 * Minimum 8 characters.
+		 * Less than 8 characters.
+		 *
+		 * Do NOT show another error line.
+		 * The strength section already shows:
+		 * "Minimum 8 characters"
 		 */
 
 		if (value.length < 8) {
 
-			showError(
-				passwordError,
-				"Password must contain at least 8 characters."
-			);
-
 			return false;
+
 		}
 
 
@@ -547,10 +526,12 @@ document.addEventListener("DOMContentLoaded", function() {
 			);
 
 			return false;
+
 		}
 
 
 		return true;
+
 	}
 
 
@@ -567,6 +548,7 @@ document.addEventListener("DOMContentLoaded", function() {
 		if (value.length === 0) {
 
 			strengthBar.style.width = "0%";
+
 			strengthBar.style.background = "";
 
 			strengthText.textContent =
@@ -580,6 +562,7 @@ document.addEventListener("DOMContentLoaded", function() {
 			}
 
 			return;
+
 		}
 
 
@@ -638,7 +621,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
 			validatePassword();
 
-			validateConfirmPassword();
+			if (confirmPassword.value !== "") {
+
+				validateConfirmPassword();
+
+			}
 
 		}
 	);
@@ -666,7 +653,19 @@ document.addEventListener("DOMContentLoaded", function() {
 		const confirmValue =
 			confirmPassword.value;
 
+
+		/*
+		 * Clear BOTH possible error areas.
+		 *
+		 * The match message is now the
+		 * ONLY place showing password mismatch.
+		 */
+
 		clearError(confirmPasswordError);
+
+		matchMessage.textContent = "";
+
+		matchMessage.style.color = "";
 
 
 		/*
@@ -677,30 +676,40 @@ document.addEventListener("DOMContentLoaded", function() {
 		if (passwordValue === "" &&
 			confirmValue === "") {
 
-			matchMessage.textContent = "";
-
 			return true;
+
 		}
 
 
 		/*
-		 * Passwords must match.
+		 * Confirm field empty.
+		 *
+		 * Do not show a second error line.
+		 */
+
+		if (confirmValue === "") {
+
+			return false;
+
+		}
+
+
+		/*
+		 * Passwords do not match.
+		 *
+		 * ONLY matchMessage is used.
 		 */
 
 		if (passwordValue !== confirmValue) {
-
-			showError(
-				confirmPasswordError,
-				"Passwords do not match."
-			);
 
 			matchMessage.textContent =
 				"Passwords do not match";
 
 			matchMessage.style.color =
-				"#e50914";
+				"#d92d20";
 
 			return false;
+
 		}
 
 
@@ -708,18 +717,15 @@ document.addEventListener("DOMContentLoaded", function() {
 		 * Passwords match.
 		 */
 
-		if (confirmValue !== "") {
+		matchMessage.textContent =
+			"Passwords match";
 
-			matchMessage.textContent =
-				"Passwords match";
-
-			matchMessage.style.color =
-				"#16803c";
-
-		}
+		matchMessage.style.color =
+			"#16803c";
 
 
 		return true;
+
 	}
 
 
@@ -797,6 +803,7 @@ document.addEventListener("DOMContentLoaded", function() {
 				name.focus();
 
 				return;
+
 			}
 
 
@@ -815,6 +822,7 @@ document.addEventListener("DOMContentLoaded", function() {
 				phone.focus();
 
 				return;
+
 			}
 
 
@@ -833,6 +841,7 @@ document.addEventListener("DOMContentLoaded", function() {
 				newPassword.focus();
 
 				return;
+
 			}
 
 
@@ -851,12 +860,12 @@ document.addEventListener("DOMContentLoaded", function() {
 				confirmPassword.focus();
 
 				return;
+
 			}
 
 
 			/*
 			 * Everything is valid.
-			 * Form can go to servlet.
 			 */
 
 			name.value =
@@ -1016,6 +1025,7 @@ function sendActivationOtp() {
 				if (otp) {
 
 					otp.value = "";
+
 					otp.focus();
 
 				}
@@ -1269,6 +1279,7 @@ function resendActivationOtp() {
 				if (otp) {
 
 					otp.value = "";
+
 					otp.focus();
 
 				}
@@ -1432,9 +1443,7 @@ function closeProfileUpdatePopup() {
 
 
 	if (!popup) {
-
 		return;
-
 	}
 
 
@@ -1467,9 +1476,7 @@ function closeProfileUpdateErrorPopup() {
 
 
 	if (!popup) {
-
 		return;
-
 	}
 
 
@@ -1529,3 +1536,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	}
 
 });
+ 
+
+ 
+

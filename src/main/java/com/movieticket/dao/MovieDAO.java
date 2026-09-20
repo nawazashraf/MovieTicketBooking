@@ -121,16 +121,62 @@ public class MovieDAO {
 		return movies;
 	}
 
+//	public List<MovieBean> getMoviesByStatus(String status) {
+//
+//		String sql = """
+//				SELECT *
+//				FROM movies
+//				WHERE status = ?
+//				ORDER BY created_at DESC
+//				""";
+//
+//		List<MovieBean> movies = new ArrayList<>();
+//
+//		try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+//
+//			ps.setString(1, status);
+//
+//			try (ResultSet rs = ps.executeQuery()) {
+//
+//				while (rs.next()) {
+//
+//					MovieBean movie = mapMovie(rs);
+//
+//					long genreStart = System.currentTimeMillis();
+//
+//					movie.setGenreIds(getGenreIds(conn, movie.getId()));
+//
+//					long genreEnd = System.currentTimeMillis();
+//
+//					System.out.println(
+//							"GENRE QUERY TIME | " + movie.getTitle() + " = " + (genreEnd - genreStart) + " ms");
+//
+//					movies.add(movie);
+//				}
+//			}
+//
+//		} catch (Exception e) {
+//
+//			e.printStackTrace();
+//		}
+//
+//		return movies;
+//	}
+
 	public List<MovieBean> getMoviesByStatus(String status) {
 
 		String sql = """
-				SELECT *
-				FROM movies
-				WHERE status = ?
-				ORDER BY created_at DESC
+				SELECT
+				    m.*,
+				    mg.genre_id
+				FROM movies m
+				LEFT JOIN movie_genres mg
+				    ON mg.movie_id = m.id
+				WHERE m.status = ?
+				ORDER BY m.created_at DESC
 				""";
 
-		List<MovieBean> movies = new ArrayList<>();
+		Map<String, MovieBean> movieMap = new LinkedHashMap<>();
 
 		try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -140,27 +186,29 @@ public class MovieDAO {
 
 				while (rs.next()) {
 
-					MovieBean movie = mapMovie(rs);
+					String movieId = rs.getString("id");
 
-					long genreStart = System.currentTimeMillis();
+					MovieBean movie = movieMap.get(movieId);
 
-					movie.setGenreIds(getGenreIds(conn, movie.getId()));
+					if (movie == null) {
+						movie = mapMovie(rs);
+						movie.setGenreIds(new ArrayList<>());
+						movieMap.put(movieId, movie);
+					}
 
-					long genreEnd = System.currentTimeMillis();
+					String genreId = rs.getString("genre_id");
 
-					System.out.println(
-							"GENRE QUERY TIME | " + movie.getTitle() + " = " + (genreEnd - genreStart) + " ms");
-
-					movies.add(movie);
+					if (genreId != null) {
+						movie.getGenreIds().add(genreId);
+					}
 				}
 			}
 
 		} catch (Exception e) {
-
 			e.printStackTrace();
 		}
 
-		return movies;
+		return new ArrayList<>(movieMap.values());
 	}
 
 	public boolean updateMovie(MovieBean movie) {

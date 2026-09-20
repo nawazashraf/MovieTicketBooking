@@ -1,3 +1,4 @@
+
 package com.movieticket.controller.auth;
 
 import com.movieticket.dao.UserDAO;
@@ -16,7 +17,6 @@ import java.io.IOException;
 public class RegisterServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-
 	private UserDAO userDAO;
 
 	@Override
@@ -33,7 +33,6 @@ public class RegisterServlet extends HttpServlet {
 		String password = request.getParameter("password");
 		String phone = request.getParameter("phone");
 
-		// NAME VALIDATION AND FORMATTING
 		if (name == null || name.trim().isEmpty()) {
 			request.setAttribute("error", "Name is required.");
 			request.getRequestDispatcher("/register.jsp").forward(request, response);
@@ -42,24 +41,20 @@ public class RegisterServlet extends HttpServlet {
 
 		name = name.trim();
 
-		// Only English letters and spaces
 		if (!name.matches("[A-Za-z ]+")) {
 			request.setAttribute("error", "Name can contain only letters and spaces.");
 			request.getRequestDispatcher("/register.jsp").forward(request, response);
 			return;
 		}
 
-		// Remove extra spaces between words
 		name = name.replaceAll("\\s+", " ");
 
-		// Minimum 2 characters
-		if (name.length() < 2) {
-			request.setAttribute("error", "Name must contain at least 2 characters.");
+		if (name.length() < 2 || name.length() > 50) {
+			request.setAttribute("error", "Name must be between 2 and 50 characters.");
 			request.getRequestDispatcher("/register.jsp").forward(request, response);
 			return;
 		}
 
-		// First letter of each word capital
 		String[] words = name.toLowerCase().split(" ");
 		StringBuilder formattedName = new StringBuilder();
 
@@ -77,17 +72,14 @@ public class RegisterServlet extends HttpServlet {
 
 		name = formattedName.toString().trim();
 
-		// EMAIL
 		if (email == null || email.trim().isEmpty()) {
 			request.setAttribute("error", "Email is required.");
 			request.getRequestDispatcher("/register.jsp").forward(request, response);
 			return;
 		}
 
-		// Trim and always convert email to lowercase
 		email = email.trim().toLowerCase();
 
-		// EMAIL FORMAT
 		String emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
 
 		if (!email.matches(emailRegex)) {
@@ -96,35 +88,50 @@ public class RegisterServlet extends HttpServlet {
 			return;
 		}
 
-		// PASSWORD
 		if (password == null || password.isEmpty()) {
 			request.setAttribute("error", "Password is required.");
 			request.getRequestDispatcher("/register.jsp").forward(request, response);
 			return;
 		}
 
-		// Password must be greater than 7 characters
-		if (password.length() < 8) {
-			request.setAttribute("error", "Password must be at least 8 characters.");
+		if (!password.equals(password.trim())) {
+			request.setAttribute("error", "Password must not contain leading or trailing spaces.");
 			request.getRequestDispatcher("/register.jsp").forward(request, response);
 			return;
 		}
 
-		// PHONE
-		if (phone == null || phone.isEmpty()) {
+		if (password.length() < 8) {
+			request.setAttribute("error", "Password must contain at least 8 characters.");
+			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			return;
+		}
+
+		if (password.length() > 128) {
+			request.setAttribute("error", "Password cannot exceed 128 characters.");
+			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			return;
+		}
+
+		if (phone == null || phone.trim().isEmpty()) {
 			request.setAttribute("error", "Phone number is required.");
 			request.getRequestDispatcher("/register.jsp").forward(request, response);
 			return;
 		}
 
-		// Exactly 10 digits
+		phone = phone.trim();
+
 		if (!phone.matches("\\d{10}")) {
 			request.setAttribute("error", "Phone number must contain exactly 10 digits.");
 			request.getRequestDispatcher("/register.jsp").forward(request, response);
 			return;
 		}
 
-		// CREATE USER
+		if (phone.startsWith("0")) {
+			request.setAttribute("error", "Please enter a valid 10-digit mobile number.");
+			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			return;
+		}
+
 		UserBean user = new UserBean();
 
 		user.setName(name);
@@ -155,9 +162,11 @@ public class RegisterServlet extends HttpServlet {
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-		response.sendRedirect(request.getContextPath() + "/register.jsp");
-	}
+        response.sendRedirect(
+                request.getContextPath() + "/register.jsp"
+        );
+    }
 }

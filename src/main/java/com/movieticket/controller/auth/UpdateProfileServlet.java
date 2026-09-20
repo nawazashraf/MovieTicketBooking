@@ -1,3 +1,4 @@
+
 package com.movieticket.controller.auth;
 
 import com.movieticket.dao.UserDAO;
@@ -48,8 +49,11 @@ public class UpdateProfileServlet extends HttpServlet {
 		}
 
 		String name = request.getParameter("name");
+
 		String phone = request.getParameter("phone");
+
 		String password = request.getParameter("password");
+
 		String confirmPassword = request.getParameter("confirmPassword");
 
 		/*
@@ -75,10 +79,12 @@ public class UpdateProfileServlet extends HttpServlet {
 		 * ======================================== NAME VALIDATION
 		 * ========================================
 		 *
-		 * Only English letters and single spaces.
+		 * Extra spaces are normalized.
 		 *
-		 * No: - dots - numbers - hyphens - underscores - special characters - emojis
+		 * Example: John Smith becomes John Smith
 		 */
+
+		name = name.replaceAll("\\s+", " ");
 
 		if (name.length() < 2 || name.length() > 50) {
 
@@ -91,9 +97,9 @@ public class UpdateProfileServlet extends HttpServlet {
 			return;
 		}
 
-		if (!name.matches("[A-Za-z]+(?: [A-Za-z]+)*")) {
+		if (!name.matches("[A-Za-z ]+")) {
 
-			request.setAttribute("updateError", "Name can contain only letters and single spaces.");
+			request.setAttribute("updateError", "Name can contain only letters and spaces.");
 
 			request.setAttribute("user", user);
 
@@ -120,6 +126,7 @@ public class UpdateProfileServlet extends HttpServlet {
 				formattedName.append(Character.toUpperCase(word.charAt(0)));
 
 				if (word.length() > 1) {
+
 					formattedName.append(word.substring(1));
 				}
 
@@ -148,7 +155,8 @@ public class UpdateProfileServlet extends HttpServlet {
 		}
 
 		/*
-		 * Phone number should not start with 0.
+		 * ======================================== PHONE NUMBER SHOULD NOT START WITH 0
+		 * ========================================
 		 */
 
 		if (phone.startsWith("0")) {
@@ -258,7 +266,9 @@ public class UpdateProfileServlet extends HttpServlet {
 			UserBean updatedUser = userDAO.getUserById(userId);
 
 			session.setAttribute("user", updatedUser);
+
 			session.setAttribute("userName", updatedUser.getName());
+
 			session.setAttribute("userRole", updatedUser.getRole());
 
 			/*
@@ -275,6 +285,7 @@ public class UpdateProfileServlet extends HttpServlet {
 					EmailService.sendPasswordChangedEmail(updatedUser.getEmail(), updatedUser.getName(), changedAt);
 
 				} catch (Exception e) {
+
 					e.printStackTrace();
 				}
 			}

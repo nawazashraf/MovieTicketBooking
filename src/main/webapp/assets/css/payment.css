@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 /* =========================================================
-BASE
+   BASE
 ========================================================= */
 .payment-page {
 	padding: 30px 48px 50px;
@@ -19,11 +19,12 @@ BASE
 .payment-container h1 {
 	margin: 0 0 20px;
 	font-size: 26px;
+	line-height: 1.3;
 	color: #222;
 }
 
 /* =========================================================
-MAIN LAYOUT
+   MAIN LAYOUT
 ========================================================= */
 .checkout-container {
 	display: flex;
@@ -33,7 +34,7 @@ MAIN LAYOUT
 }
 
 /* =========================================================
-LEFT SIDE
+   LEFT SIDE
 ========================================================= */
 .payment-left {
 	flex: 1;
@@ -41,7 +42,7 @@ LEFT SIDE
 }
 
 /* =========================================================
-MOVIE BANNER
+   MOVIE BANNER
 ========================================================= */
 .movie-banner {
 	position: relative;
@@ -94,6 +95,7 @@ MOVIE BANNER
 .movie-details h3 {
 	margin: 0 0 8px;
 	font-size: 19px;
+	line-height: 1.3;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -103,10 +105,11 @@ MOVIE BANNER
 	margin: 5px 0;
 	color: #eee;
 	font-size: 13px;
+	line-height: 1.4;
 }
 
 /* =========================================================
-BOOKING DETAILS CARD
+   BOOKING DETAILS CARD
 ========================================================= */
 .booking-details-card {
 	background: white;
@@ -129,6 +132,7 @@ BOOKING DETAILS CARD
 	justify-content: space-between;
 	padding: 14px 16px;
 	font-size: 14px;
+	gap: 15px;
 }
 
 .booking-details-content span {
@@ -139,10 +143,11 @@ BOOKING DETAILS CARD
 .booking-details-content>strong {
 	font-size: 16px;
 	color: #222;
+	white-space: nowrap;
 }
 
 /* =========================================================
-INFO CARD
+   INFO CARD
 ========================================================= */
 .info-card {
 	display: flex;
@@ -154,20 +159,23 @@ INFO CARD
 	border: 1px solid #e2e2e2;
 	border-radius: 8px;
 	font-size: 13px;
+	line-height: 1.4;
 	color: #555;
 }
 
 .info-card i {
 	color: #666;
+	flex-shrink: 0;
 }
 
 /* =========================================================
-OFFERS
+   OFFERS
 ========================================================= */
 .offers-card {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	gap: 15px;
 	padding: 13px 15px;
 	margin-bottom: 18px;
 	background: #fff;
@@ -193,6 +201,7 @@ OFFERS
 	font-size: 13px;
 	font-weight: 600;
 	cursor: pointer;
+	white-space: nowrap;
 }
 
 .offers-card button:hover {
@@ -200,23 +209,21 @@ OFFERS
 }
 
 /* =========================================================
-PAYMENT OPTIONS
+   PAYMENT OPTIONS
 ========================================================= */
 .payment-options-title {
 	margin: 0 0 10px;
 	font-size: 18px;
+	line-height: 1.3;
 	color: #222;
 }
 
-/* =========================================================
-PAYMENT OPTION BLOCK
-========================================================= */
 .payment-option-block {
 	margin-bottom: 10px;
 }
 
 /* =========================================================
-PAYMENT METHOD
+   PAYMENT METHOD
 ========================================================= */
 .payment-method {
 	margin: 0;
@@ -224,6 +231,7 @@ PAYMENT METHOD
 	align-items: center;
 	gap: 13px;
 	padding: 14px 16px;
+	min-height: 66px;
 	border: 1px solid #ddd;
 	border-radius: 8px;
 	cursor: pointer;
@@ -238,13 +246,13 @@ PAYMENT METHOD
 }
 
 /* =========================================================
-RADIO
+   RADIO
 ========================================================= */
 .payment-method input[type="radio"] {
 	appearance: none;
 	-webkit-appearance: none;
-	width: 17px;
-	height: 17px;
+	width: 18px;
+	height: 18px;
 	margin: 0;
 	border: 2px solid #aaa;
 	border-radius: 50%;
@@ -269,28 +277,30 @@ RADIO
 	background-color: #222;
 }
 
-/* Selected payment card */
+/* =========================================================
+   SELECTED PAYMENT CARD
+========================================================= */
 .payment-method:has(input[type="radio"]:checked) {
 	border-color: #222;
 	background-color: #fafafa;
 }
 
 /* =========================================================
-PAYMENT ICON
+   PAYMENT ICON
 ========================================================= */
 .payment-icon {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 38px;
-	height: 38px;
+	width: 40px;
+	height: 40px;
 	flex-shrink: 0;
 	border-radius: 50%;
 	background-color: #f1f1f1;
 }
 
 .payment-icon i {
-	font-size: 16px;
+	font-size: 17px;
 	color: #444;
 }
 
@@ -303,7 +313,7 @@ PAYMENT ICON
 }
 
 /* =========================================================
-PAYMENT METHOD TEXT
+   PAYMENT METHOD TEXT
 ========================================================= */
 .payment-method-text {
 	min-width: 0;
@@ -312,6 +322,7 @@ PAYMENT METHOD TEXT
 .payment-method h3 {
 	margin: 0 0 3px;
 	font-size: 15px;
+	line-height: 1.3;
 	color: #222;
 }
 
@@ -319,10 +330,11 @@ PAYMENT METHOD TEXT
 	margin: 0;
 	color: #777;
 	font-size: 12px;
+	line-height: 1.4;
 }
 
 /* =========================================================
-QR PAYMENT
+   QR PAYMENT
 ========================================================= */
 .qr-payment-card {
 	margin-top: 10px;
@@ -341,7 +353,8 @@ QR PAYMENT
 .qr-payment-card>p {
 	margin: 5px 0;
 	color: #777;
-	font-size: 12px;
+	font-size: 13px;
+	line-height: 1.4;
 }
 
 .payment-qr {
@@ -369,7 +382,7 @@ QR PAYMENT
 }
 
 /* =========================================================
-PAYMENT INPUTS
+   PAYMENT INPUTS
 ========================================================= */
 .payment-inputs {
 	display: grid;
@@ -402,7 +415,7 @@ PAYMENT INPUTS
 }
 
 .payment-inputs label {
-	font-size: 12px;
+	font-size: 13px;
 	color: #555;
 	margin-top: 8px;
 }
@@ -412,15 +425,16 @@ PAYMENT INPUTS
 }
 
 /* =========================================================
-INPUTS
+   INPUTS
 ========================================================= */
 .payment-inputs input {
 	padding: 10px 12px !important;
+	min-height: 42px;
 	border: 1px solid #ddd !important;
 	border-radius: 6px !important;
 	background-color: #fafafa !important;
 	color: #222 !important;
-	font-size: 13px;
+	font-size: 14px;
 	outline: none;
 	width: 100%;
 	box-sizing: border-box;
@@ -437,7 +451,7 @@ INPUTS
 }
 
 /* =========================================================
-CARD INPUT ROW
+   CARD INPUT ROW
 ========================================================= */
 .card-row {
 	display: flex;
@@ -457,24 +471,26 @@ CARD INPUT ROW
 }
 
 /* =========================================================
-SECURE NOTE
+   SECURE NOTE
 ========================================================= */
 .secure-note {
 	display: flex;
 	align-items: center;
 	gap: 6px;
 	margin: 10px 0 0;
-	font-size: 11px;
+	font-size: 12px;
+	line-height: 1.4;
 	color: #888;
 }
 
 .secure-note i {
 	color: #777;
-	font-size: 10px;
+	font-size: 11px;
+	flex-shrink: 0;
 }
 
 /* =========================================================
-RIGHT SIDE - PAYMENT SUMMARY
+   RIGHT SIDE - PAYMENT SUMMARY
 ========================================================= */
 .booking-summary {
 	width: 350px;
@@ -489,12 +505,13 @@ RIGHT SIDE - PAYMENT SUMMARY
 	margin: 0;
 	padding: 18px 20px;
 	font-size: 18px;
+	line-height: 1.3;
 	color: #222;
 	border-bottom: 1px solid #eee;
 }
 
 /* =========================================================
-SUMMARY
+   SUMMARY
 ========================================================= */
 .summary-container {
 	padding: 18px 20px;
@@ -503,21 +520,25 @@ SUMMARY
 .summary-row {
 	display: flex;
 	justify-content: space-between;
+	gap: 15px;
 	padding: 11px 0;
 	border-bottom: 1px solid #eee;
 	font-size: 13px;
+	line-height: 1.4;
 	color: #777;
 }
 
 .summary-row strong {
 	color: #222;
 	font-weight: 600;
+	white-space: nowrap;
 }
 
 .summary-total {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	gap: 15px;
 	padding: 18px 0;
 	font-size: 17px;
 	font-weight: 600;
@@ -525,15 +546,17 @@ SUMMARY
 
 .summary-total strong {
 	color: #222;
+	white-space: nowrap;
 }
 
 /* =========================================================
-BOOKING DETAILS
+   BOOKING DETAILS
 ========================================================= */
 .details-title {
 	margin: 0;
 	padding: 16px 20px 10px;
 	font-size: 17px;
+	line-height: 1.3;
 	color: #222;
 	border-top: 1px solid #eee;
 }
@@ -573,11 +596,12 @@ BOOKING DETAILS
 .user-details-card p {
 	margin: 3px 0 0;
 	font-size: 12px;
+	line-height: 1.35;
 	color: #777;
 }
 
 /* =========================================================
-TERMS
+   TERMS
 ========================================================= */
 .terms-card {
 	display: flex;
@@ -585,19 +609,22 @@ TERMS
 	gap: 8px;
 	margin: 0 20px 18px;
 	font-size: 12px;
+	line-height: 1.4;
 	color: #777;
 }
 
 .terms-card i {
 	color: #777;
+	flex-shrink: 0;
 }
 
 /* =========================================================
-PAY BUTTON
+   PAY BUTTON
 ========================================================= */
 .pay-button {
 	width: calc(100% - 40px);
 	margin: 0 20px 20px;
+	min-height: 48px;
 	padding: 14px;
 	border: none;
 	border-radius: 6px;
@@ -618,7 +645,7 @@ PAY BUTTON
 }
 
 /* =========================================================
-PHONE QR PAGE
+   PHONE QR PAGE
 ========================================================= */
 .qr-phone-page {
 	min-height: 100vh;
@@ -662,6 +689,7 @@ PHONE QR PAGE
 .qr-phone-booking {
 	display: flex;
 	justify-content: space-between;
+	gap: 15px;
 	padding: 15px;
 	margin-bottom: 15px;
 	background: #f5f5f5;
@@ -703,11 +731,40 @@ PHONE QR PAGE
 }
 
 /* =========================================================
-RESPONSIVE
+   TABLET
+========================================================= */
+@media ( max-width : 1000px) {
+	.payment-page {
+		padding: 28px 24px 45px;
+	}
+	.checkout-container {
+		gap: 22px;
+	}
+	.booking-summary {
+		width: 320px;
+	}
+	.movie-banner {
+		height: 145px;
+	}
+	.movie-poster {
+		width: 82px;
+		height: 115px;
+	}
+	.movie-details h3 {
+		font-size: 18px;
+	}
+	.movie-details p {
+		font-size: 13px;
+	}
+}
+
+/* =========================================================
+   TABLET / SMALL LAPTOP
 ========================================================= */
 @media ( max-width : 900px) {
 	.checkout-container {
 		flex-direction: column;
+		gap: 20px;
 	}
 	.payment-left {
 		width: 100%;
@@ -715,25 +772,310 @@ RESPONSIVE
 	.booking-summary {
 		width: 100%;
 	}
+	.payment-container h1 {
+		font-size: 25px;
+	}
 }
 
+/* =========================================================
+   MOBILE
+========================================================= */
 @media ( max-width : 600px) {
 	.payment-page {
-		padding: 20px;
+		padding: 20px 14px 35px;
+		min-height: calc(100vh - 55px);
+		overflow-x: hidden;
 	}
+	.payment-container {
+		width: 100%;
+	}
+	.payment-container h1 {
+		margin-bottom: 18px;
+		font-size: 23px;
+		line-height: 1.25;
+	}
+	.checkout-container {
+		width: 100%;
+		gap: 18px;
+	}
+
+	/* -------------------------
+       MOVIE BANNER
+    ------------------------- */
 	.movie-banner {
-		height: 140px;
+		height: 135px;
+		border-radius: 9px;
+		margin-bottom: 12px;
+	}
+	.movie-content {
+		gap: 13px;
+		padding: 12px 14px;
 	}
 	.movie-poster {
-		width: 75px;
-		height: 105px;
+		width: 78px;
+		height: 110px;
+		border-radius: 6px;
+	}
+	.movie-details {
+		min-width: 0;
+	}
+	.movie-details h3 {
+		margin-bottom: 7px;
+		font-size: 17px;
+		line-height: 1.25;
+	}
+	.movie-details p {
+		margin: 5px 0;
+		font-size: 13px;
+		line-height: 1.35;
+	}
+
+	/* -------------------------
+       BOOKING DETAILS
+    ------------------------- */
+	.booking-details-card {
+		margin-bottom: 10px;
+	}
+	.booking-details-header {
+		padding: 12px 14px;
+		font-size: 13px;
+	}
+	.booking-details-content {
+		padding: 13px 14px;
+		font-size: 13px;
+	}
+	.booking-details-content>strong {
+		font-size: 15px;
+	}
+
+	/* -------------------------
+       INFO CARD
+    ------------------------- */
+	.info-card {
+		gap: 8px;
+		padding: 12px 14px;
+		margin-bottom: 10px;
+		font-size: 13px;
+		line-height: 1.4;
+	}
+
+	/* -------------------------
+       OFFERS
+    ------------------------- */
+	.offers-card {
+		padding: 13px 14px;
+		margin-bottom: 18px;
+	}
+	.offers-title {
+		font-size: 14px;
+	}
+	.offers-card button {
+		font-size: 13px;
+	}
+
+	/* -------------------------
+       PAYMENT OPTIONS
+    ------------------------- */
+	.payment-options-title {
+		margin-bottom: 10px;
+		font-size: 19px;
+	}
+	.payment-option-block {
+		margin-bottom: 10px;
+	}
+	.payment-method {
+		gap: 11px;
+		padding: 14px;
+		min-height: 66px;
+	}
+	.payment-method input[type="radio"] {
+		width: 18px;
+		height: 18px;
+	}
+	.payment-icon {
+		width: 40px;
+		height: 40px;
+	}
+	.payment-icon i {
+		font-size: 17px;
+	}
+	.payment-method h3 {
+		font-size: 15px;
+		line-height: 1.3;
+	}
+	.payment-method p {
+		margin-top: 3px;
+		font-size: 12px;
+		line-height: 1.35;
+	}
+
+	/* -------------------------
+       CARD INPUTS
+    ------------------------- */
+	.payment-inputs.active {
+		padding: 15px 14px;
+	}
+	.payment-inputs label {
+		font-size: 13px;
+		margin-top: 9px;
+	}
+	.payment-inputs input {
+		min-height: 42px;
+		padding: 10px 12px !important;
+		font-size: 14px;
 	}
 	.card-row {
 		flex-direction: column;
 		gap: 0;
+		margin-top: 0;
+	}
+	.card-field {
+		width: 100%;
+	}
+	.secure-note {
+		font-size: 12px;
+		line-height: 1.4;
+	}
+
+	/* -------------------------
+       QR PAYMENT
+    ------------------------- */
+	.qr-payment-card {
+		padding: 18px 14px;
+	}
+	.qr-payment-card h3 {
+		font-size: 17px;
+	}
+	.qr-payment-card>p {
+		font-size: 13px;
+		line-height: 1.4;
 	}
 	.payment-qr {
 		width: 220px;
 		height: 220px;
+		max-width: 80vw;
+	}
+	.qr-payment-card .qr-amount {
+		font-size: 14px;
+	}
+	.qr-payment-card .qr-amount strong {
+		font-size: 17px;
+	}
+
+	/* -------------------------
+       PAYMENT SUMMARY
+    ------------------------- */
+	.booking-summary {
+		width: 100%;
+		border-radius: 9px;
+	}
+	.booking-summary>h2 {
+		padding: 16px;
+		font-size: 18px;
+	}
+	.summary-container {
+		padding: 15px 16px;
+	}
+	.summary-row {
+		padding: 11px 0;
+		font-size: 14px;
+	}
+	.summary-total {
+		padding: 17px 0;
+		font-size: 18px;
+	}
+
+	/* -------------------------
+       BOOKING DETAILS
+    ------------------------- */
+	.details-title {
+		padding: 16px 16px 10px;
+		font-size: 18px;
+	}
+	.user-details-card {
+		margin: 0 16px 15px;
+		padding: 13px;
+	}
+	.user-details-card strong {
+		font-size: 14px;
+	}
+	.user-details-card p {
+		font-size: 13px;
+		line-height: 1.35;
+	}
+
+	/* -------------------------
+       TERMS
+    ------------------------- */
+	.terms-card {
+		margin: 0 16px 18px;
+		font-size: 13px;
+		line-height: 1.4;
+	}
+
+	/* -------------------------
+       PAY BUTTON
+    ------------------------- */
+	.pay-button {
+		width: calc(100% - 28px);
+		margin: 0 14px 16px;
+		min-height: 48px;
+		padding: 13px;
+		font-size: 15px;
+	}
+}
+
+/* =========================================================
+   VERY SMALL PHONES
+========================================================= */
+@media ( max-width : 380px) {
+	.payment-page {
+		padding: 18px 12px 30px;
+	}
+	.payment-container h1 {
+		font-size: 22px;
+	}
+	.movie-banner {
+		height: 125px;
+	}
+	.movie-content {
+		gap: 11px;
+		padding: 10px 12px;
+	}
+	.movie-poster {
+		width: 70px;
+		height: 100px;
+	}
+	.movie-details h3 {
+		font-size: 16px;
+	}
+	.movie-details p {
+		font-size: 12px;
+	}
+	.payment-method {
+		padding: 13px;
+	}
+	.payment-method p {
+		font-size: 12px;
+	}
+	.payment-icon {
+		width: 38px;
+		height: 38px;
+	}
+	.payment-inputs.active {
+		padding: 14px 12px;
+	}
+	.payment-qr {
+		width: 200px;
+		height: 200px;
+	}
+	.summary-row {
+		font-size: 13px;
+	}
+	.summary-total {
+		font-size: 17px;
+	}
+	.pay-button {
+		font-size: 14px;
 	}
 }

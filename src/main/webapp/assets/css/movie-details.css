@@ -1,8 +1,30 @@
 @charset "UTF-8";
 
+/* =========================================================
+   BASE
+========================================================= */
+* {
+	box-sizing: border-box;
+}
+
+html, body {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	overflow-x: hidden;
+}
+
+body {
+	background: #f5f5f5;
+}
+
+/* =========================================================
+   MOVIE HERO
+========================================================= */
 .movie-hero {
 	position: relative;
-	color: white;
+	width: 100%;
+	color: #ffffff;
 	overflow: hidden;
 }
 
@@ -19,165 +41,106 @@
 	content: "";
 	position: absolute;
 	inset: 0;
-	background: rgba(0, 0, 0, 0.75);
+	background: rgba(0, 0, 0, 0.78);
 }
 
 .movie-hero-content {
 	position: relative;
-	display: flex;
-	gap: 40px;
+	width: 100%;
 	max-width: 1100px;
-	margin: auto;
+	margin: 0 auto;
 	padding: 60px 30px;
+	display: flex;
+	align-items: flex-start;
+	gap: 40px;
+}
+
+/* =========================================================
+   POSTER
+========================================================= */
+.movie-poster {
+	flex: 0 0 auto;
 }
 
 .movie-poster img {
+	display: block;
 	width: 280px;
 	height: 420px;
 	object-fit: cover;
 	border-radius: 8px;
 }
 
+/* =========================================================
+   MOVIE INFO
+========================================================= */
 .movie-info {
 	flex: 1;
+	min-width: 0;
 }
 
 .movie-info h1 {
+	margin: 20px 0 0;
 	font-size: 42px;
-	margin-top: 20px;
+	line-height: 1.15;
 }
 
 .movie-meta {
-	font-size: 16px;
 	margin: 20px 0;
+	font-size: 16px;
 }
 
 .movie-description {
 	max-width: 650px;
+	margin: 0;
+	font-size: 15px;
 	line-height: 1.6;
 }
 
+/* =========================================================
+   MOVIE ACTIONS
+========================================================= */
 .movie-actions {
 	display: flex;
+	flex-wrap: wrap;
 	gap: 15px;
 	margin-top: 30px;
 }
 
 .movie-actions a {
-	text-decoration: none;
-	color: white;
-	border: 1px solid white;
-	padding: 12px 20px;
-	border-radius: 6px;
-}
-
-.shows-section {
-	max-width: 1100px;
-	margin: 0 auto;
-	padding: 40px 30px;
-}
-
-.shows-section h2 {
-	margin-bottom: 25px;
-}
-
-.show-row {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	padding: 20px 0;
-	border-bottom: 1px solid #ddd;
-}
-
-.show-mall h3 {
-	margin: 0 0 6px;
-}
-
-.show-mall span {
-	font-size: 13px;
-	color: #777;
-}
-
-.show-time a {
 	display: inline-block;
 	padding: 12px 20px;
-	border: 1px solid #ccc;
-	border-radius: 6px;
+	color: #ffffff;
 	text-decoration: none;
-	color: #333;
-	background: white;
+	border: 1px solid #ffffff;
+	border-radius: 6px;
 }
 
+/* =========================================================
+   SHOWS SECTION
+========================================================= */
 .shows-section {
+	width: 100%;
 	max-width: 1100px;
 	margin: 40px auto;
-	padding: 0 20px;
+	padding: 0 30px;
 }
 
 .shows-section h2 {
-	margin-bottom: 30px;
+	margin: 0 0 30px;
 }
 
-.show-date {
-	margin-bottom: 35px;
-}
-
-.show-date h3 {
-	margin-bottom: 20px;
-}
-
-.show-list {
-	padding: 20px 0;
-	border-bottom: 1px solid #ddd;
-}
-
-.show-mall {
-	margin-bottom: 15px;
-	font-size: 18px;
-}
-
-.show-times {
-	display: flex;
-	gap: 12px;
-	flex-wrap: wrap;
-}
-
-.show-times a {
-	display: inline-block;
-	padding: 10px 18px;
-	border: 1px solid #ccc;
-	border-radius: 6px;
-	background: white;
-	color: #333;
-	text-decoration: none;
-	transition: 0.2s;
-}
-
-.show-times a:hover {
-	border-color: #222;
-	background: #f5f5f5;
-}
-
-.no-shows {
-	padding: 20px 0;
-}
-
-.date-heading {
-	margin-top: 30px;
-	margin-bottom: 10px;
-}
-
-.date-heading h3 {
-	font-size: 20px;
-	font-weight: 600;
-}
-
+/* =========================================================
+   DATE SELECTOR
+========================================================= */
 .date-selector {
+	width: 100%;
 	display: flex;
 	gap: 10px;
 	margin-bottom: 30px;
+	padding-bottom: 5px;
 	overflow-x: auto;
 	scrollbar-width: none;
+	-ms-overflow-style: none;
 }
 
 .date-selector::-webkit-scrollbar {
@@ -185,18 +148,28 @@
 }
 
 .date-btn {
+	flex: 0 0 auto;
 	min-width: 70px;
 	padding: 8px 12px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	gap: 3px;
-	border: 1px solid #ddd;
+	border: 1px solid #dddddd;
 	border-radius: 10px;
-	background: #fff;
-	color: #333;
+	background: #ffffff;
+	color: #333333;
 	cursor: pointer;
-	transition: 0.2s;
+}
+
+.date-btn:hover {
+	border-color: #222222;
+}
+
+.date-btn.active {
+	background: #222222;
+	color: #ffffff;
+	border-color: #222222;
 }
 
 .date-day {
@@ -211,40 +184,76 @@
 
 .date-month {
 	font-size: 10px;
-	color: #777;
+	color: #777777;
 }
 
 .date-btn.active .date-month {
-	color: #fff;
+	color: #ffffff;
 }
 
-.date-btn:hover {
-	border-color: #222;
+/* =========================================================
+   SHOW DATE
+========================================================= */
+.show-date {
+	width: 100%;
+	margin-bottom: 35px;
 }
 
-.date-btn.active {
-	background: #222;
-	color: white;
-	border-color: #222;
+.date-heading {
+	margin: 30px 0 10px;
 }
 
-.date-day {
-	display: block;
-	font-weight: #222;
+.date-heading h3 {
+	margin: 0;
+	font-size: 20px;
+	font-weight: 600;
+}
+
+/* =========================================================
+   MALL
+========================================================= */
+.show-list {
+	width: 100%;
+	padding: 20px 0;
+	border-bottom: 1px solid #dddddd;
+}
+
+.show-mall {
+	margin-bottom: 15px;
+	font-size: 18px;
+}
+
+.show-mall strong {
+	font-weight: 600;
+}
+
+/* =========================================================
+   SHOW TIMES
+========================================================= */
+.show-times {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	width: 100%;
 }
 
 .show-time-btn {
+	min-width: 100px;
 	padding: 10px 18px;
-	border: 1px solid #ccc;
-	border-radius: 8px;
-	background: white;
-	cursor: pointer;
-	font-size: 14px;
-	transition: 0.2s;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	gap: 4px;
+	border: 1px solid #cccccc;
+	border-radius: 8px;
+	background: #ffffff;
+	color: #333333;
+	cursor: pointer;
+	font-size: 14px;
+}
+
+.show-time-btn:hover {
+	border-color: #222222;
 }
 
 .show-time {
@@ -254,24 +263,35 @@
 
 .available-seats {
 	font-size: 11px;
-	color: #777;
-}
-
-.show-time-btn.selected .available-seats {
-	color: #eee;
-}
-
-.show-time-btn:hover {
-	border-color: #222;
+	color: #777777;
 }
 
 .show-time-btn.selected {
-	background: #222;
-	color: white;
-	border-color: #222;
+	background: #222222;
+	color: #ffffff;
+	border-color: #222222;
 }
 
+.show-time-btn.selected .available-seats {
+	color: #eeeeee;
+}
+
+.show-time-btn.sold-out {
+	background: #f3f3f3;
+	color: #999999;
+	border-color: #dddddd;
+	cursor: not-allowed;
+}
+
+.no-shows {
+	padding: 20px 0;
+}
+
+/* =========================================================
+   BOOKING SUMMARY
+========================================================= */
 .booking-summary {
+	width: 100%;
 	margin-top: 30px;
 	padding: 20px 24px;
 	display: flex;
@@ -285,9 +305,9 @@
 
 .booking-summary span {
 	display: block;
-	font-size: 13px;
-	color: #777;
 	margin-bottom: 5px;
+	font-size: 13px;
+	color: #777777;
 }
 
 .booking-summary strong {
@@ -299,12 +319,12 @@
 	padding: 12px 22px;
 	border: none;
 	border-radius: 8px;
-	background: #222;
-	color: white;
+	background: #222222;
+	color: #ffffff;
 	font-size: 15px;
 	font-weight: bold;
 	cursor: pointer;
-	background: #222;
+	white-space: nowrap;
 }
 
 #proceedButton:hover:not(:disabled) {
@@ -312,7 +332,442 @@
 }
 
 #proceedButton:disabled {
-	background: #ccc;
-	color: #777;
+	background: #cccccc;
+	color: #777777;
 	cursor: not-allowed;
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+@media ( max-width : 1024px) {
+	.movie-hero-content {
+		padding: 45px 24px;
+		gap: 30px;
+	}
+	.movie-poster img {
+		width: 230px;
+		height: 345px;
+	}
+	.movie-info h1 {
+		font-size: 36px;
+	}
+	.shows-section {
+		padding: 0 24px;
+	}
+}
+
+/* =========================================================
+   MOBILE MOVIE DETAILS
+========================================================= */
+@media ( max-width : 768px) {
+	/* =====================================================
+       MOVIE HERO
+    ===================================================== */
+	.movie-hero-content {
+		width: 100%;
+		padding: 26px 16px 32px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 18px;
+		text-align: center;
+	}
+	.movie-poster img {
+		width: 180px;
+		height: 270px;
+		border-radius: 10px;
+		box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+	}
+	.movie-hero .movie-info {
+		width: 100%;
+		max-width: 500px;
+	}
+	.movie-hero .movie-info h1 {
+		margin: 0;
+		font-size: 29px;
+		line-height: 1.2;
+	}
+	.movie-hero .movie-meta {
+		margin: 10px 0 14px;
+		font-size: 14px;
+		line-height: 1.5;
+	}
+	.movie-hero .movie-description {
+		max-width: 100%;
+		margin: 0;
+		font-size: 14px;
+		line-height: 1.55;
+		color: rgba(255, 255, 255, 0.88);
+	}
+
+	/* =====================================================
+       HERO ACTIONS
+    ===================================================== */
+	.movie-actions {
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		gap: 10px;
+		margin-top: 20px;
+	}
+	.movie-actions a {
+		flex: 1;
+		max-width: 170px;
+		padding: 12px 14px;
+		font-size: 14px;
+		font-weight: 600;
+		border-radius: 8px;
+	}
+
+	/* =====================================================
+       SHOWS SECTION
+    ===================================================== */
+	.shows-section {
+		width: 100%;
+		margin: 0;
+		padding: 28px 16px 110px;
+		background: #f5f5f5;
+	}
+	.shows-section h2 {
+		margin: 0 0 20px;
+		font-size: 23px;
+		line-height: 1.2;
+	}
+
+	/* =====================================================
+       DATE SELECTOR
+    ===================================================== */
+	.date-selector {
+		width: calc(100% + 32px);
+		margin-left: -16px;
+		margin-bottom: 28px;
+		padding: 4px 16px 10px;
+		display: flex;
+		gap: 9px;
+		overflow-x: auto;
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+	}
+	.date-selector::-webkit-scrollbar {
+		display: none;
+	}
+	.date-btn {
+		flex: 0 0 72px;
+		width: 72px;
+		min-width: 72px;
+		height: 78px;
+		padding: 8px 6px;
+		border-radius: 10px;
+		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+	}
+	.date-day {
+		font-size: 10px;
+		font-weight: 700;
+	}
+	.date-number {
+		font-size: 20px;
+		line-height: 1.2;
+	}
+	.date-month {
+		font-size: 10px;
+		font-weight: 600;
+	}
+
+	/* =====================================================
+       DATE GROUP
+    ===================================================== */
+	.show-date {
+		width: 100%;
+		margin-bottom: 28px;
+	}
+	.date-heading {
+		margin: 0 0 12px;
+		padding-bottom: 8px;
+		border-bottom: 1px solid #dedede;
+	}
+	.date-heading h3 {
+		margin: 0;
+		font-size: 18px;
+		font-weight: 700;
+	}
+
+	/* =====================================================
+       MALL CARD
+    ===================================================== */
+	.show-list {
+		width: 100%;
+		margin-bottom: 12px;
+		padding: 15px;
+		background: #ffffff;
+		border: 1px solid #e5e5e5;
+		border-radius: 10px;
+		box-shadow: 0 2px 7px rgba(0, 0, 0, 0.06);
+	}
+	.show-mall {
+		margin: 0 0 13px;
+		font-size: 16px;
+		line-height: 1.3;
+	}
+	.show-mall strong {
+		font-weight: 700;
+	}
+
+	/* =====================================================
+       SHOW TIMES
+    ===================================================== */
+	.show-times {
+		width: 100%;
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 9px;
+	}
+	.show-time-btn {
+		width: 100%;
+		min-width: 0;
+		min-height: 60px;
+		padding: 9px 5px;
+		border-radius: 8px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 4px;
+	}
+	.show-time {
+		font-size: 14px;
+		font-weight: 700;
+	}
+	.available-seats {
+		font-size: 10px;
+		line-height: 1.2;
+	}
+
+	/* =====================================================
+       BOOKING SUMMARY
+    ===================================================== */
+	.booking-summary {
+		position: fixed;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 1000;
+		width: 100%;
+		margin: 0;
+		padding: 12px 14px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		background: #ffffff;
+		border-radius: 0;
+		border-top: 1px solid #dddddd;
+		box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.12);
+	}
+	.booking-summary>div {
+		min-width: 0;
+		flex: 1;
+	}
+	.booking-summary span {
+		margin-bottom: 3px;
+		font-size: 10px;
+		color: #777777;
+	}
+	.booking-summary strong {
+		display: block;
+		overflow: hidden;
+		font-size: 13px;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+	#proceedButton {
+		flex: 0 0 auto;
+		min-height: 44px;
+		padding: 10px 20px;
+		border-radius: 8px;
+		font-size: 14px;
+		font-weight: 700;
+	}
+}
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+@media ( max-width : 480px) {
+	/* HERO */
+	.movie-hero-content {
+		padding: 23px 14px 28px;
+		gap: 16px;
+	}
+	.movie-poster img {
+		width: 165px;
+		height: 248px;
+	}
+	.movie-hero .movie-info h1 {
+		font-size: 26px;
+	}
+	.movie-hero .movie-meta {
+		font-size: 13px;
+	}
+	.movie-hero .movie-description {
+		font-size: 13px;
+	}
+
+	/* ACTIONS */
+	.movie-actions {
+		margin-top: 17px;
+	}
+	.movie-actions a {
+		padding: 11px 12px;
+		font-size: 13px;
+	}
+
+	/* SHOWS */
+	.shows-section {
+		padding: 25px 12px 105px;
+	}
+	.shows-section h2 {
+		font-size: 22px;
+	}
+
+	/* DATE SELECTOR */
+	.date-selector {
+		width: calc(100% + 24px);
+		margin-left: -12px;
+		padding-left: 12px;
+		padding-right: 12px;
+	}
+	.date-btn {
+		flex-basis: 70px;
+		width: 70px;
+		min-width: 70px;
+		height: 76px;
+	}
+
+	/* DATE */
+	.date-heading h3 {
+		font-size: 17px;
+	}
+
+	/* MALL */
+	.show-list {
+		padding: 14px;
+		border-radius: 9px;
+	}
+	.show-mall {
+		font-size: 15px;
+	}
+
+	/* SHOW BUTTONS */
+	.show-times {
+		grid-template-columns: repeat(3, 1fr);
+		gap: 8px;
+	}
+	.show-time-btn {
+		min-height: 56px;
+		padding: 8px 4px;
+	}
+	.show-time {
+		font-size: 13px;
+	}
+	.available-seats {
+		font-size: 9px;
+	}
+
+	/* BOOKING BAR */
+	.booking-summary {
+		padding: 11px 12px;
+	}
+	.booking-summary strong {
+		font-size: 12px;
+	}
+	#proceedButton {
+		min-height: 42px;
+		padding: 9px 17px;
+		font-size: 13px;
+	}
+}
+
+/* =========================================================
+   VERY SMALL PHONES
+========================================================= */
+@media ( max-width : 360px) {
+	.movie-hero-content {
+		padding: 20px 10px 25px;
+	}
+	.movie-poster img {
+		width: 155px;
+		height: 232px;
+	}
+	.movie-hero .movie-info h1 {
+		font-size: 24px;
+	}
+	.movie-hero .movie-meta {
+		font-size: 12px;
+	}
+	.movie-hero .movie-description {
+		font-size: 12px;
+	}
+
+	/* ACTIONS */
+	.movie-actions {
+		gap: 7px;
+	}
+	.movie-actions a {
+		padding: 10px 9px;
+		font-size: 12px;
+	}
+
+	/* SHOWS */
+	.shows-section {
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+
+	/* DATE BUTTONS */
+	.date-selector {
+		width: calc(100% + 20px);
+		margin-left: -10px;
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+	.date-btn {
+		flex-basis: 67px;
+		width: 67px;
+		min-width: 67px;
+		height: 74px;
+	}
+
+	/* MALL */
+	.show-list {
+		padding: 13px;
+	}
+
+	/* SHOW TIMES */
+	.show-times {
+		grid-template-columns: repeat(2, 1fr);
+		gap: 8px;
+	}
+	.show-time-btn {
+		min-height: 57px;
+	}
+	.show-time {
+		font-size: 13px;
+	}
+	.available-seats {
+		font-size: 9px;
+	}
+
+	/* BOOKING BAR */
+	.booking-summary {
+		padding: 10px;
+	}
+	.booking-summary strong {
+		font-size: 11px;
+	}
+	#proceedButton {
+		min-height: 40px;
+		padding: 8px 13px;
+		font-size: 12px;
+	}
 }

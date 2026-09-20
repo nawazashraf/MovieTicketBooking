@@ -1,14 +1,15 @@
-
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
-
 <html>
 
 <head>
 
 <meta charset="UTF-8">
+
+<!-- IMPORTANT FOR MOBILE RESPONSIVENESS -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Payment</title>
 
@@ -43,7 +44,7 @@
 				method="post" class="checkout-container">
 
 
-				<!-- Booking ID -->
+				<!-- BOOKING ID -->
 
 				<input type="hidden" name="bookingId" value="${booking.id}">
 
@@ -75,7 +76,7 @@
 
 								<p>${booking.mallName}</p>
 
-								<p>${booking.showDate}&nbsp;•&nbsp; ${booking.startTime}</p>
+								<p>${booking.showDate} &nbsp;•&nbsp; ${booking.startTime}</p>
 
 							</div>
 
@@ -116,8 +117,8 @@
 
 					<div class="info-card">
 
-						<i class="fa-solid fa-circle-info"> </i> <span> This
-							theatre allows cancellation </span>
+						<i class="fa-solid fa-circle-info"></i> <span> This theatre
+							allows cancellation </span>
 
 					</div>
 
@@ -128,7 +129,7 @@
 
 						<div class="offers-title">
 
-							<i class="fa-solid fa-percent"> </i> <strong> Offers </strong>
+							<i class="fa-solid fa-percent"></i> <strong> Offers </strong>
 
 						</div>
 
@@ -153,7 +154,7 @@
 
 							<div class="payment-icon">
 
-								<i class="fa-solid fa-mobile-screen-button"> </i>
+								<i class="fa-solid fa-mobile-screen-button"></i>
 
 							</div>
 
@@ -203,7 +204,7 @@
 
 							<div class="payment-icon">
 
-								<i class="fa-regular fa-credit-card"> </i>
+								<i class="fa-regular fa-credit-card"></i>
 
 							</div>
 
@@ -233,7 +234,6 @@
 
 							<div class="card-row">
 
-
 								<div class="card-field">
 
 									<label for="expiryDate"> Expiry Date </label> <input
@@ -257,8 +257,8 @@
 
 							<p class="secure-note">
 
-								<i class="fa-solid fa-lock"> </i> Your card details are
-								encrypted and never stored
+								<i class="fa-solid fa-lock"></i> Your card details are encrypted
+								and never stored
 
 							</p>
 
@@ -294,7 +294,7 @@
 
 						<div class="summary-row">
 
-							<span> Taxes & fees </span> <strong> ₹0 </strong>
+							<span> Taxes &amp; fees </span> <strong> ₹0 </strong>
 
 						</div>
 
@@ -318,7 +318,7 @@
 
 						<div class="user-icon">
 
-							<i class="fa-regular fa-calendar"> </i>
+							<i class="fa-regular fa-calendar"></i>
 
 						</div>
 
@@ -339,7 +339,7 @@
 
 					<div class="terms-card">
 
-						<i class="fa-regular fa-circle-question"> </i> <span> Terms
+						<i class="fa-regular fa-circle-question"></i> <span> Terms
 							and conditions </span>
 
 					</div>
@@ -364,14 +364,17 @@
 
 
 	<!-- ================================================= -->
-	<!-- EXTERNAL JAVASCRIPT -->
+	<!-- JAVASCRIPT -->
 	<!-- ================================================= -->
+
 	<script>
 		window.contextPath = "${pageContext.request.contextPath}";
 	</script>
-	<script src="${pageContext.request.contextPath}/assets/js/payment.js"></script>
+
+	<script src="${pageContext.request.contextPath}/assets/js/payment.js">
+		
+	</script>
 
 </body>
 
 </html>
-

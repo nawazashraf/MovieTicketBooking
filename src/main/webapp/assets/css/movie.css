@@ -1,42 +1,109 @@
 @charset "UTF-8";
 
+/* =========================
+   HOME PAGE
+========================= */
 .home-page {
 	padding: 0 48px;
 	background-color: #F1F1F1;
-}
-
-.movie-container {
-	display: flex;
-	gap: 20px;
-	overflow-x: auto;
-	padding: 10px 5px 20px;
-	scrollbar-width: none; /* Firefox */
-	-ms-overflow-style: none; /* IE/Edge */
-}
-
-.movie-container::-webkit-scrollbar {
-	display: none; /* Chrome/Safari */
-}
-
-.movie-card {
-	flex: 0 0 260px;
 }
 
 .movie-section {
 	padding: 8px 0;
 }
 
+/* =========================
+   SECTION HEADER
+========================= */
 .section-header {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	margin-bottom: 10px;
+	gap: 12px;
 }
 
 .section-header h2 {
 	margin: 0;
+	font-size: 1.5rem;
 }
 
 .section-header a {
 	text-decoration: none;
+	white-space: nowrap;
+}
+
+/* =========================
+   MOVIE CONTAINER
+========================= */
+.movie-container {
+	display: flex;
+	gap: 20px;
+	overflow-x: auto;
+	padding: 10px 5px 20px;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+}
+
+.movie-container::-webkit-scrollbar {
+	display: none;
+}
+
+/* =========================
+   TABLET
+========================= */
+@media ( max-width : 1024px) {
+	.home-page {
+		padding: 0 24px;
+	}
+	.movie-container {
+		gap: 16px;
+	}
+}
+
+/* =========================
+   MOBILE
+========================= */
+@media ( max-width : 768px) {
+	.home-page {
+		padding: 0 16px;
+	}
+	.movie-section {
+		padding: 7px 0;
+	}
+	.movie-container {
+		gap: 14px;
+		padding: 8px 4px 18px;
+	}
+	.section-header {
+		margin-bottom: 9px;
+	}
+	.section-header h2 {
+		font-size: 1.25rem;
+	}
+}
+
+/* =========================
+   SMALL PHONES
+========================= */
+@media ( max-width : 480px) {
+	.home-page {
+		padding: 0 12px;
+	}
+	.movie-section {
+		padding: 6px 0;
+	}
+	.movie-container {
+		gap: 10px;
+		padding: 8px 2px 18px;
+	}
+	.section-header {
+		margin-bottom: 8px;
+	}
+	.section-header h2 {
+		font-size: 1.1rem;
+	}
+	.section-header a {
+		font-size: 0.9rem;
+	}
 }

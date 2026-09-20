@@ -93,32 +93,23 @@ public class MovieDAO {
 	public List<MovieBean> getAllMovies() {
 
 		String sql = """
-				SELECT *
-				FROM movies
-				ORDER BY created_at DESC
+				SELECT
+				    m.*,
+				    mg.genre_id
+				FROM movies m
+				LEFT JOIN movie_genres mg
+				    ON mg.movie_id = m.id
+				ORDER BY m.created_at DESC
 				""";
 
-		List<MovieBean> movies = new ArrayList<>();
+		try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
-		try (Connection conn = DBConnection.getConnection();
-				PreparedStatement ps = conn.prepareStatement(sql);
-				ResultSet rs = ps.executeQuery()) {
-
-			while (rs.next()) {
-
-				MovieBean movie = mapMovie(rs);
-
-				movie.setGenreIds(getGenreIds(conn, movie.getId()));
-
-				movies.add(movie);
-			}
+			return mapMoviesWithGenres(conn, ps);
 
 		} catch (Exception e) {
-
 			e.printStackTrace();
+			return new ArrayList<>();
 		}
-
-		return movies;
 	}
 
 //	public List<MovieBean> getMoviesByStatus(String status) {
@@ -395,36 +386,26 @@ public class MovieDAO {
 	public List<MovieBean> searchMoviesByTitle(String query) {
 
 		String sql = """
-				SELECT *
-				FROM movies
-				WHERE LOWER(title) LIKE LOWER(?)
-				ORDER BY title
+				SELECT
+				    m.*,
+				    mg.genre_id
+				FROM movies m
+				LEFT JOIN movie_genres mg
+				    ON mg.movie_id = m.id
+				WHERE LOWER(m.title) LIKE LOWER(?)
+				ORDER BY m.title
 				""";
-
-		List<MovieBean> movies = new ArrayList<>();
 
 		try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
 			ps.setString(1, "%" + query + "%");
 
-			try (ResultSet rs = ps.executeQuery()) {
-
-				while (rs.next()) {
-
-					MovieBean movie = mapMovie(rs);
-
-					movie.setGenreIds(getGenreIds(conn, movie.getId()));
-
-					movies.add(movie);
-				}
-			}
+			return mapMoviesWithGenres(conn, ps);
 
 		} catch (Exception e) {
-
 			e.printStackTrace();
+			return new ArrayList<>();
 		}
-
-		return movies;
 	}
 
 	public Map<String, String> getAllGenres() {
@@ -452,5 +433,34 @@ public class MovieDAO {
 		}
 
 		return genres;
+	}
+
+	private List<MovieBean> mapMoviesWithGenres(Connection conn, PreparedStatement ps) throws SQLException {
+
+		Map<String, MovieBean> movieMap = new LinkedHashMap<>();
+
+		try (ResultSet rs = ps.executeQuery()) {
+
+			while (rs.next()) {
+
+				String movieId = rs.getString("id");
+
+				MovieBean movie = movieMap.get(movieId);
+
+				if (movie == null) {
+					movie = mapMovie(rs);
+					movie.setGenreIds(new ArrayList<>());
+					movieMap.put(movieId, movie);
+				}
+
+				String genreId = rs.getString("genre_id");
+
+				if (genreId != null) {
+					movie.getGenreIds().add(genreId);
+				}
+			}
+		}
+
+		return new ArrayList<>(movieMap.values());
 	}
 }

@@ -1,4 +1,5 @@
 package com.movieticket.filter;
+
 import java.io.IOException;
 
 import jakarta.servlet.Filter;
@@ -27,20 +28,20 @@ public class PerformanceFilter implements Filter {
 		String uri = httpRequest.getRequestURI();
 
 		System.out.println("==================================================");
-		System.out.println("REQUEST START: " + method + " " + uri);
+		System.out.println("FILTER BEFORE: " + method + " " + uri);
 
 		try {
 
 			chain.doFilter(request, response);
+
+			System.out.println("FILTER AFTER: " + method + " " + uri);
 
 		} finally {
 
 			long end = System.currentTimeMillis();
 
 			System.out.println("REQUEST END: " + method + " " + uri);
-
 			System.out.println("STATUS: " + httpResponse.getStatus());
-
 			System.out.println("TOTAL REQUEST TIME: " + (end - start) + " ms");
 
 			System.out.println("==================================================");

@@ -42,11 +42,9 @@ public class BookingDAO {
 				WHERE b.id = ?
 				""";
 
-		try {
+		try (Connection conn = DBConnection.getConnection();
 
-			Connection conn = DBConnection.getConnection();
-
-			PreparedStatement ps = conn.prepareStatement(sql);
+				PreparedStatement ps = conn.prepareStatement(sql)) {
 
 			ps.setString(1, id);
 
@@ -112,11 +110,9 @@ public class BookingDAO {
 				VALUES (?, ?, ?, ?, ?, ?, ?)
 				""";
 
-		try {
+		try (Connection conn = DBConnection.getConnection();
 
-			Connection conn = DBConnection.getConnection();
-
-			PreparedStatement ps = conn.prepareStatement(sql);
+				PreparedStatement ps = conn.prepareStatement(sql);) {
 
 			ps.setString(1, booking.getId());
 
@@ -156,11 +152,9 @@ public class BookingDAO {
 				VALUES (?, ?, ?, ?)
 				""";
 
-		try {
+		try (Connection conn = DBConnection.getConnection();
 
-			Connection conn = DBConnection.getConnection();
-
-			PreparedStatement ps = conn.prepareStatement(sql);
+				PreparedStatement ps = conn.prepareStatement(sql)) {
 
 			ps.setString(1, seat.getId());
 
@@ -181,84 +175,73 @@ public class BookingDAO {
 	}
 
 	// CONFIRM BOOKING
-	
-	
+
 	public boolean confirmBookingAndSeats(String bookingId) {
 
-	    String bookingSql = """
-	            UPDATE bookings
-	            SET booking_status = 'CONFIRMED'
-	            WHERE id = ?
-	            """;
+		String bookingSql = """
+				UPDATE bookings
+				SET booking_status = 'CONFIRMED'
+				WHERE id = ?
+				""";
 
-	    String seatSql = """
-	            UPDATE show_seats ss
-	            JOIN booking_seats bs
-	                ON ss.id = bs.show_seat_id
-	            SET ss.status = 'BOOKED'
-	            WHERE bs.booking_id = ?
-	            """;
+		String seatSql = """
+				UPDATE show_seats ss
+				JOIN booking_seats bs
+				    ON ss.id = bs.show_seat_id
+				SET ss.status = 'BOOKED'
+				WHERE bs.booking_id = ?
+				""";
 
-	    try {
+		try (Connection conn = DBConnection.getConnection();
+				PreparedStatement ps1 = conn.prepareStatement(bookingSql);
+				PreparedStatement ps2 = conn.prepareStatement(seatSql)) {
 
-	        Connection conn = DBConnection.getConnection();
+			// Update booking
+			ps1.setString(1, bookingId);
 
-	        // Update booking
-	        PreparedStatement ps1 =
-	                conn.prepareStatement(bookingSql);
+			int bookingResult = ps1.executeUpdate();
 
-	        ps1.setString(1, bookingId);
+			if (bookingResult == 0) {
+				return false;
+			}
 
-	        int bookingResult =
-	                ps1.executeUpdate();
+			// Update seats
+			ps2.setString(1, bookingId);
+			ps2.executeUpdate();
 
-	        if (bookingResult == 0) {
-	            return false;
-	        }
+			return true;
 
-	        // Update seats
-	        PreparedStatement ps2 =
-	                conn.prepareStatement(seatSql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-	        ps2.setString(1, bookingId);
-
-	        ps2.executeUpdate();
-
-	        return true;
-
-	    } catch (Exception e) {
-
-	        e.printStackTrace();
-	    }
-
-	    return false;
+		return false;
 	}
-	
+
 	public BigDecimal getSeatPrice(String showSeatId) {
 		String sql = """
 				SELECT
 					price
-				FROM 
+				FROM
 					show_seats
 				WHERE
 					id = ?
 				""";
-		
-		try(Connection conn = DBConnection.getConnection();
-				PreparedStatement ps = conn.prepareStatement(sql)){
+
+		try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 			ps.setString(1, showSeatId);
-			
+
 			try (ResultSet rs = ps.executeQuery()) {
-				if(rs.next()) {
+				if (rs.next()) {
 					return rs.getBigDecimal("price");
 				}
 			}
-		}
-		catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
+
 	public List<BookingBean> getBookingsByUserId(String userId) {
 		String sql = "SELECT b.id, b.booking_reference, b.user_id, b.show_id, b.total_amount, b.booking_status, b.created_at, b.expires_at, "
 				+ "m.title AS movie_title, m.poster_url, ma.name AS mall_name, s.show_date, s.start_time, s.end_time, "
@@ -268,20 +251,32 @@ public class BookingDAO {
 				+ "LEFT JOIN seats ON seats.id=ss.seat_id LEFT JOIN seat_types st ON st.id=seats.seat_type_id "
 				+ "WHERE b.user_id=? GROUP BY b.id ORDER BY b.created_at DESC";
 		List<BookingBean> list = new ArrayList<>();
-		try (Connection conn=DBConnection.getConnection(); PreparedStatement ps=conn.prepareStatement(sql)) {
-			ps.setString(1,userId);
-			try(ResultSet rs=ps.executeQuery()){
-				while(rs.next()){
-					BookingBean b=new BookingBean();
-					b.setId(rs.getString("id")); b.setBookingReference(rs.getString("booking_reference")); b.setUserId(rs.getString("user_id"));
-					b.setShowId(rs.getString("show_id")); b.setTotalAmount(rs.getBigDecimal("total_amount")); b.setBookingStatus(rs.getString("booking_status"));
-					b.setMovieTitle(rs.getString("movie_title")); b.setPosterUrl(rs.getString("poster_url")); b.setMallName(rs.getString("mall_name"));
-					b.setShowDate(rs.getDate("show_date")); b.setStartTime(rs.getTime("start_time")); b.setEndTime(rs.getTime("end_time"));
-					b.setCreatedAt(rs.getTimestamp("created_at")); b.setExpiresAt(rs.getTimestamp("expires_at")); b.setSeatLabels(rs.getString("seat_labels"));
+		try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+			ps.setString(1, userId);
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					BookingBean b = new BookingBean();
+					b.setId(rs.getString("id"));
+					b.setBookingReference(rs.getString("booking_reference"));
+					b.setUserId(rs.getString("user_id"));
+					b.setShowId(rs.getString("show_id"));
+					b.setTotalAmount(rs.getBigDecimal("total_amount"));
+					b.setBookingStatus(rs.getString("booking_status"));
+					b.setMovieTitle(rs.getString("movie_title"));
+					b.setPosterUrl(rs.getString("poster_url"));
+					b.setMallName(rs.getString("mall_name"));
+					b.setShowDate(rs.getDate("show_date"));
+					b.setStartTime(rs.getTime("start_time"));
+					b.setEndTime(rs.getTime("end_time"));
+					b.setCreatedAt(rs.getTimestamp("created_at"));
+					b.setExpiresAt(rs.getTimestamp("expires_at"));
+					b.setSeatLabels(rs.getString("seat_labels"));
 					list.add(b);
 				}
 			}
-		} catch(Exception e){e.printStackTrace();}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return list;
 	}
 

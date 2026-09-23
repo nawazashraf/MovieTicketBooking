@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", function() {
 
 
@@ -240,8 +239,6 @@ document.addEventListener("DOMContentLoaded", function() {
 		}
 
 
-		/* Only English letters and spaces */
-
 		if (!/^[A-Za-z ]+$/.test(value)) {
 
 			nameError.textContent =
@@ -253,14 +250,10 @@ document.addEventListener("DOMContentLoaded", function() {
 		}
 
 
-		/* Remove extra spaces */
-
 		value =
 
 			value.replace(/\s+/g, " ");
 
-
-		/* 2 to 50 characters */
 
 		if (value.length < 2 || value.length > 50) {
 
@@ -272,8 +265,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 		}
 
-
-		/* First letter of each word capital */
 
 		name.value =
 
@@ -317,8 +308,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 		}
 
-
-		/* Always keep email lowercase */
 
 		value =
 
@@ -698,26 +687,19 @@ document.addEventListener("DOMContentLoaded", function() {
 				value.toLowerCase();
 
 
-			validateEmail();
-
-
 			if (emailVerified) {
 
 				emailVerified = false;
 
-
 				email.readOnly = false;
-
 
 				verifyEmailButton.disabled =
 
 					!isValidEmail(email.value.trim());
 
-
 				verifyEmailButton.textContent =
 
 					"Verify Email";
-
 
 				verifyEmailButton.classList.remove(
 
@@ -725,62 +707,57 @@ document.addEventListener("DOMContentLoaded", function() {
 
 				);
 
-
 				otpTray.classList.remove(
 
 					"active"
 
 				);
 
-
 				otp.value = "";
 
-
 				otp.readOnly = false;
-
 
 				verifyOtpButton.disabled =
 
 					true;
 
-
 				verifyOtpButton.textContent =
 
 					"Verify";
-
 
 				otpVerifiedIcon.style.display =
 
 					"none";
 
-
 				otpMessage.textContent = "";
-
 
 				otpMessage.className =
 
 					"otp-message";
 
-
 				registerButton.disabled =
 
 					true;
-
 
 				buttonText.textContent =
 
 					"Verify Email to Continue";
 
-
 				resendOtpButton.disabled =
 
 					true;
 
+				resendOtpButton.style.display =
+
+					"none";
+
+				resendText.style.display =
+
+					"none";
 
 				resendText.textContent =
 
 					"Resend available in 60 seconds";
-
 
 				clearInterval(
 
@@ -789,6 +766,8 @@ document.addEventListener("DOMContentLoaded", function() {
 				);
 
 			}
+
+			validateEmail();
 
 		}
 
@@ -905,6 +884,16 @@ document.addEventListener("DOMContentLoaded", function() {
 		true;
 
 
+	resendOtpButton.style.display =
+
+		"none";
+
+
+	resendText.style.display =
+
+		"none";
+
+
 	registerButton.disabled =
 
 		true;
@@ -928,6 +917,13 @@ document.addEventListener("DOMContentLoaded", function() {
 		"click",
 
 		function() {
+
+
+			if (emailVerified) {
+
+				return;
+
+			}
 
 
 			if (!validateEmail()) {
@@ -1029,6 +1025,16 @@ document.addEventListener("DOMContentLoaded", function() {
 							true;
 
 
+						resendOtpButton.style.display =
+
+							"inline-block";
+
+
+						resendText.style.display =
+
+							"block";
+
+
 						registerButton.disabled =
 
 							true;
@@ -1104,6 +1110,15 @@ document.addEventListener("DOMContentLoaded", function() {
 		function() {
 
 
+			if (emailVerified) {
+
+				otp.value = "";
+
+				return;
+
+			}
+
+
 			otp.value =
 
 				otp.value
@@ -1130,7 +1145,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 			otpMessage.textContent = "";
 
-
 			otpMessage.className =
 
 				"otp-message";
@@ -1149,6 +1163,13 @@ document.addEventListener("DOMContentLoaded", function() {
 		"click",
 
 		function() {
+
+
+			if (emailVerified) {
+
+				return;
+
+			}
 
 
 			const enteredOtp =
@@ -1297,6 +1318,16 @@ document.addEventListener("DOMContentLoaded", function() {
 							true;
 
 
+						resendOtpButton.style.display =
+
+							"none";
+
+
+						resendText.style.display =
+
+							"none";
+
+
 						resendText.textContent =
 
 							"Email verified";
@@ -1370,6 +1401,18 @@ document.addEventListener("DOMContentLoaded", function() {
 
 			if (emailVerified) {
 
+				resendOtpButton.disabled =
+
+					true;
+
+				resendOtpButton.style.display =
+
+					"none";
+
+				resendText.style.display =
+
+					"none";
+
 				return;
 
 			}
@@ -1399,7 +1442,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 			otpMessage.textContent = "";
-
 
 			otpMessage.className =
 
@@ -1532,6 +1574,27 @@ document.addEventListener("DOMContentLoaded", function() {
 	function startResendTimer() {
 
 
+		if (emailVerified) {
+
+			clearInterval(resendTimer);
+
+			resendOtpButton.disabled =
+
+				true;
+
+			resendOtpButton.style.display =
+
+				"none";
+
+			resendText.style.display =
+
+				"none";
+
+			return;
+
+		}
+
+
 		let seconds =
 
 			60;
@@ -1540,6 +1603,16 @@ document.addEventListener("DOMContentLoaded", function() {
 		resendOtpButton.disabled =
 
 			true;
+
+
+		resendOtpButton.style.display =
+
+			"inline-block";
+
+
+		resendText.style.display =
+
+			"block";
 
 
 		resendText.textContent =
@@ -1565,6 +1638,31 @@ document.addEventListener("DOMContentLoaded", function() {
 				function() {
 
 
+					if (emailVerified) {
+
+						clearInterval(
+
+							resendTimer
+
+						);
+
+						resendOtpButton.disabled =
+
+							true;
+
+						resendOtpButton.style.display =
+
+							"none";
+
+						resendText.style.display =
+
+							"none";
+
+						return;
+
+					}
+
+
 					seconds--;
 
 
@@ -1578,9 +1676,38 @@ document.addEventListener("DOMContentLoaded", function() {
 						);
 
 
+						if (emailVerified) {
+
+							resendOtpButton.disabled =
+
+								true;
+
+							resendOtpButton.style.display =
+
+								"none";
+
+							resendText.style.display =
+
+								"none";
+
+							return;
+
+						}
+
+
 						resendOtpButton.disabled =
 
 							false;
+
+
+						resendOtpButton.style.display =
+
+							"inline-block";
+
+
+						resendText.style.display =
+
+							"block";
 
 
 						resendText.textContent =
@@ -1702,4 +1829,3 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 });
-

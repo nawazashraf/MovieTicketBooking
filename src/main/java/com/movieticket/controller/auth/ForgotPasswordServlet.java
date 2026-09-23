@@ -45,42 +45,29 @@ public class ForgotPasswordServlet extends HttpServlet {
 		String action = request.getParameter("action");
 
 		/* SEND OTP */
-
 		if ("send".equals(action)) {
-
 			sendOtp(request, response);
-
 			return;
 		}
 
 		/* VERIFY OTP */
-
 		if ("verify".equals(action)) {
-
 			verifyOtp(request, response);
-
 			return;
 		}
 
 		/* RESEND OTP */
-
 		if ("resend".equals(action)) {
-
 			resendOtp(request, response);
-
 			return;
 		}
 
 		/* OLD NORMAL REQUEST */
-
 		String email = request.getParameter("email");
 
 		if (email == null || email.trim().isEmpty()) {
-
 			request.setAttribute("error", "Email address is required.");
-
 			request.getRequestDispatcher("/forgotpassword.jsp").forward(request, response);
-
 			return;
 		}
 
@@ -93,7 +80,6 @@ public class ForgotPasswordServlet extends HttpServlet {
 			HttpSession session = request.getSession();
 
 			session.setAttribute("forgotUserId", user.getId());
-
 			session.setAttribute("forgotUserEmail", user.getEmail());
 
 			response.sendRedirect(request.getContextPath() + "/changepassword");
@@ -107,7 +93,6 @@ public class ForgotPasswordServlet extends HttpServlet {
 	}
 
 	/* SEND OTP */
-
 	private void sendOtp(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		response.setContentType("application/json");
@@ -116,9 +101,7 @@ public class ForgotPasswordServlet extends HttpServlet {
 		String email = request.getParameter("email");
 
 		if (email == null || email.trim().isEmpty()) {
-
 			writeJson(response, false, "Email address is required.");
-
 			return;
 		}
 
@@ -127,9 +110,7 @@ public class ForgotPasswordServlet extends HttpServlet {
 		UserBean user = userDAO.getUserByEmail(email);
 
 		if (user == null) {
-
 			writeJson(response, false, "No account is registered with this email address.");
-
 			return;
 		}
 
@@ -168,7 +149,6 @@ public class ForgotPasswordServlet extends HttpServlet {
 	}
 
 	/* VERIFY OTP */
-
 	private void verifyOtp(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		response.setContentType("application/json");
@@ -190,6 +170,20 @@ public class ForgotPasswordServlet extends HttpServlet {
 		if (verification == null) {
 
 			writeJson(response, false, "Please request a verification code first.");
+
+			return;
+		}
+
+		/*
+		 * SERVER-SIDE LOCK
+		 *
+		 * OTP has already been successfully verified. It cannot be verified again.
+		 */
+		Boolean alreadyVerified = (Boolean) session.getAttribute("forgotPasswordVerified");
+
+		if (Boolean.TRUE.equals(alreadyVerified)) {
+
+			writeJson(response, false, "Email is already verified.");
 
 			return;
 		}
@@ -220,7 +214,6 @@ public class ForgotPasswordServlet extends HttpServlet {
 	}
 
 	/* RESEND OTP */
-
 	private void resendOtp(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		response.setContentType("application/json");
@@ -231,6 +224,22 @@ public class ForgotPasswordServlet extends HttpServlet {
 		if (session == null) {
 
 			writeJson(response, false, "Please request a verification code first.");
+
+			return;
+		}
+
+		/*
+		 * SERVER-SIDE LOCK
+		 *
+		 * Once OTP verification succeeds, resend is no longer allowed.
+		 *
+		 * This protects against bypassing JavaScript.
+		 */
+		Boolean verified = (Boolean) session.getAttribute("forgotPasswordVerified");
+
+		if (Boolean.TRUE.equals(verified)) {
+
+			writeJson(response, false, "Email is already verified. Resend is not allowed.");
 
 			return;
 		}
@@ -281,7 +290,6 @@ public class ForgotPasswordServlet extends HttpServlet {
 	}
 
 	/* GENERATE 4 DIGIT OTP */
-
 	private String generateOtp() {
 
 		int number = 1000 + random.nextInt(9000);
@@ -290,7 +298,6 @@ public class ForgotPasswordServlet extends HttpServlet {
 	}
 
 	/* JSON RESPONSE */
-
 	private void writeJson(HttpServletResponse response, boolean success, String message) throws IOException {
 
 		String safeMessage = message.replace("\\", "\\\\").replace("\"", "\\\"");

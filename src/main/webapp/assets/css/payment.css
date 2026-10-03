@@ -246,6 +246,49 @@
 }
 
 /* =========================================================
+   FIELD VALIDATION ERRORS
+========================================================= */
+.field-error {
+	margin: 4px 0 0;
+	min-height: 17px;
+	font-size: 12px;
+	line-height: 1.35;
+	color: #d92d20;
+}
+
+/* =========================================================
+   INVALID INPUT
+========================================================= */
+.payment-inputs input.input-error {
+	border-color: #d92d20 !important;
+	background-color: #fff8f8 !important;
+}
+
+.payment-inputs input.input-error:focus {
+	border-color: #d92d20 !important;
+	box-shadow: 0 0 0 3px rgba(217, 45, 32, 0.08);
+}
+
+/* =========================================================
+   PAY BUTTON DISABLED
+========================================================= */
+.pay-button:disabled {
+	background-color: #bdbdbd;
+	color: #eeeeee;
+	cursor: not-allowed;
+	opacity: 0.8;
+	transform: none;
+}
+
+.pay-button:disabled:hover {
+	background-color: #bdbdbd;
+}
+
+.pay-button:disabled:active {
+	transform: none;
+}
+
+/* =========================================================
    RADIO
 ========================================================= */
 .payment-method input[type="radio"] {

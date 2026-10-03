@@ -3,7 +3,6 @@ package com.movieticket.controller.auth;
 
 import com.movieticket.dao.UserDAO;
 import com.movieticket.model.UserBean;
-import com.movieticket.util.EmailService;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -56,63 +55,72 @@ public class UpdateProfileServlet extends HttpServlet {
 
 		String confirmPassword = request.getParameter("confirmPassword");
 
+		String securityQuestion = request.getParameter("securityQuestion");
+
+		String securityAnswer = request.getParameter("securityAnswer");
+
 		/*
-		 * ======================================== REQUIRED FIELDS
+		 * ========================================
+		 * REQUIRED FIELDS
 		 * ========================================
 		 */
 
-		if (name == null || name.trim().isEmpty() || phone == null || phone.trim().isEmpty()) {
+		if (name == null || name.trim().isEmpty()
+				|| phone == null || phone.trim().isEmpty()) {
 
-			request.setAttribute("updateError", "Name and phone number are required.");
+			request.setAttribute("updateError",
+					"Name and phone number are required.");
 
 			request.setAttribute("user", user);
 
-			request.getRequestDispatcher("/profile.jsp").forward(request, response);
+			request.getRequestDispatcher("/profile.jsp")
+					.forward(request, response);
 
 			return;
 		}
 
 		name = name.trim();
+
 		phone = phone.trim();
 
 		/*
-		 * ======================================== NAME VALIDATION
 		 * ========================================
-		 *
-		 * Extra spaces are normalized.
-		 *
-		 * Example: John Smith becomes John Smith
+		 * NAME VALIDATION
+		 * ========================================
 		 */
 
 		name = name.replaceAll("\\s+", " ");
 
 		if (name.length() < 2 || name.length() > 50) {
 
-			request.setAttribute("updateError", "Name must be between 2 and 50 characters.");
+			request.setAttribute("updateError",
+					"Name must be between 2 and 50 characters.");
 
 			request.setAttribute("user", user);
 
-			request.getRequestDispatcher("/profile.jsp").forward(request, response);
+			request.getRequestDispatcher("/profile.jsp")
+					.forward(request, response);
 
 			return;
 		}
 
 		if (!name.matches("[A-Za-z ]+")) {
 
-			request.setAttribute("updateError", "Name can contain only letters and spaces.");
+			request.setAttribute("updateError",
+					"Name can contain only letters and spaces.");
 
 			request.setAttribute("user", user);
 
-			request.getRequestDispatcher("/profile.jsp").forward(request, response);
+			request.getRequestDispatcher("/profile.jsp")
+					.forward(request, response);
 
 			return;
 		}
 
 		/*
-		 * ======================================== FORMAT NAME
 		 * ========================================
-		 *
-		 * john doe -> John Doe JOHN DOE -> John Doe jOhN dOe -> John Doe
+		 * FORMAT NAME
+		 * ========================================
 		 */
 
 		String[] words = name.toLowerCase().split(" ");
@@ -123,7 +131,8 @@ public class UpdateProfileServlet extends HttpServlet {
 
 			if (!word.isEmpty()) {
 
-				formattedName.append(Character.toUpperCase(word.charAt(0)));
+				formattedName.append(
+						Character.toUpperCase(word.charAt(0)));
 
 				if (word.length() > 1) {
 
@@ -137,111 +146,162 @@ public class UpdateProfileServlet extends HttpServlet {
 		name = formattedName.toString().trim();
 
 		/*
-		 * ======================================== PHONE VALIDATION
 		 * ========================================
-		 *
-		 * Exactly 10 digits.
+		 * PHONE VALIDATION
+		 * ========================================
 		 */
 
 		if (!phone.matches("\\d{10}")) {
 
-			request.setAttribute("updateError", "Phone number must contain exactly 10 digits.");
+			request.setAttribute("updateError",
+					"Phone number must contain exactly 10 digits.");
 
 			request.setAttribute("user", user);
 
-			request.getRequestDispatcher("/profile.jsp").forward(request, response);
+			request.getRequestDispatcher("/profile.jsp")
+					.forward(request, response);
 
 			return;
 		}
-
-		/*
-		 * ======================================== PHONE NUMBER SHOULD NOT START WITH 0
-		 * ========================================
-		 */
 
 		if (phone.startsWith("0")) {
 
-			request.setAttribute("updateError", "Please enter a valid 10-digit mobile number.");
+			request.setAttribute("updateError",
+					"Please enter a valid 10-digit mobile number.");
 
 			request.setAttribute("user", user);
 
-			request.getRequestDispatcher("/profile.jsp").forward(request, response);
+			request.getRequestDispatcher("/profile.jsp")
+					.forward(request, response);
 
 			return;
 		}
 
 		/*
-		 * ======================================== PASSWORD
+		 * ========================================
+		 * SECURITY QUESTION
 		 * ========================================
 		 */
 
-		boolean changePassword = password != null && !password.trim().isEmpty();
+		if (securityQuestion == null
+				|| securityQuestion.trim().isEmpty()) {
+
+			request.setAttribute("updateError",
+					"Please select a security question.");
+
+			request.setAttribute("user", user);
+
+			request.getRequestDispatcher("/profile.jsp")
+					.forward(request, response);
+
+			return;
+		}
+
+		securityQuestion = securityQuestion.trim();
+
+		/*
+		 * ========================================
+		 * SECURITY ANSWER
+		 * ========================================
+		 */
+
+		if (securityAnswer == null
+				|| securityAnswer.trim().isEmpty()) {
+
+			request.setAttribute("updateError",
+					"Security answer is required.");
+
+			request.setAttribute("user", user);
+
+			request.getRequestDispatcher("/profile.jsp")
+					.forward(request, response);
+
+			return;
+		}
+
+		securityAnswer = securityAnswer.trim();
+
+		if (securityAnswer.length() < 2 || securityAnswer.length() > 100) {
+
+			request.setAttribute("updateError",
+					"Security answer must be between 2 and 100 characters.");
+
+			request.setAttribute("user", user);
+
+			request.getRequestDispatcher("/profile.jsp")
+					.forward(request, response);
+
+			return;
+		}
+
+		/*
+		 * ========================================
+		 * PASSWORD
+		 * ========================================
+		 */
+
+		boolean changePassword =
+				password != null && !password.trim().isEmpty();
 
 		if (changePassword) {
 
-			/*
-			 * No leading/trailing spaces.
-			 */
-
 			if (!password.equals(password.trim())) {
 
-				request.setAttribute("updateError", "Password must not contain leading or trailing spaces.");
+				request.setAttribute("updateError",
+						"Password must not contain leading or trailing spaces.");
 
 				request.setAttribute("user", user);
 
-				request.getRequestDispatcher("/profile.jsp").forward(request, response);
+				request.getRequestDispatcher("/profile.jsp")
+						.forward(request, response);
 
 				return;
 			}
-
-			/*
-			 * Minimum 8 characters.
-			 */
 
 			if (password.length() < 8) {
 
-				request.setAttribute("updateError", "Password must contain at least 8 characters.");
+				request.setAttribute("updateError",
+						"Password must contain at least 8 characters.");
 
 				request.setAttribute("user", user);
 
-				request.getRequestDispatcher("/profile.jsp").forward(request, response);
+				request.getRequestDispatcher("/profile.jsp")
+						.forward(request, response);
 
 				return;
 			}
-
-			/*
-			 * Maximum 128 characters.
-			 */
 
 			if (password.length() > 128) {
 
-				request.setAttribute("updateError", "Password cannot exceed 128 characters.");
+				request.setAttribute("updateError",
+						"Password cannot exceed 128 characters.");
 
 				request.setAttribute("user", user);
 
-				request.getRequestDispatcher("/profile.jsp").forward(request, response);
+				request.getRequestDispatcher("/profile.jsp")
+						.forward(request, response);
 
 				return;
 			}
 
-			/*
-			 * Confirm password.
-			 */
+			if (confirmPassword == null
+					|| !password.equals(confirmPassword)) {
 
-			if (confirmPassword == null || !password.equals(confirmPassword)) {
-
-				request.setAttribute("updateError", "Passwords do not match.");
+				request.setAttribute("updateError",
+						"Passwords do not match.");
 
 				request.setAttribute("user", user);
 
-				request.getRequestDispatcher("/profile.jsp").forward(request, response);
+				request.getRequestDispatcher("/profile.jsp")
+						.forward(request, response);
 
 				return;
 			}
 		}
 
 		/*
-		 * ======================================== UPDATE PROFILE
+		 * ========================================
+		 * UPDATE PROFILE
 		 * ========================================
 		 */
 
@@ -249,30 +309,52 @@ public class UpdateProfileServlet extends HttpServlet {
 
 		if (changePassword) {
 
-			updated = userDAO.updateProfile(userId, name, phone, password);
+			updated = userDAO.updateProfile(
+					userId,
+					name,
+					phone,
+					password,
+					securityQuestion,
+					securityAnswer
+			);
 
 		} else {
 
-			updated = userDAO.updateProfile(userId, name, phone);
+			updated = userDAO.updateProfile(
+					userId,
+					name,
+					phone,
+					securityQuestion,
+					securityAnswer
+			);
 		}
 
 		/*
-		 * ======================================== RESULT
+		 * ========================================
+		 * RESULT
 		 * ========================================
 		 */
 
 		if (updated) {
 
-			UserBean updatedUser = userDAO.getUserById(userId);
+			UserBean updatedUser =
+					userDAO.getUserById(userId);
 
 			session.setAttribute("user", updatedUser);
 
-			session.setAttribute("userName", updatedUser.getName());
+			session.setAttribute(
+					"userName",
+					updatedUser.getName()
+			);
 
-			session.setAttribute("userRole", updatedUser.getRole());
+			session.setAttribute(
+					"userRole",
+					updatedUser.getRole()
+			);
 
 			/*
-			 * ======================================== PASSWORD CHANGE EMAIL
+			 * ========================================
+			 * PASSWORD CHANGE EMAIL
 			 * ========================================
 			 */
 
@@ -280,9 +362,12 @@ public class UpdateProfileServlet extends HttpServlet {
 
 				try {
 
-					String changedAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a"));
-
-					EmailService.sendPasswordChangedEmail(updatedUser.getEmail(), updatedUser.getName(), changedAt);
+					String changedAt =
+							LocalDateTime.now().format(
+									DateTimeFormatter.ofPattern(
+											"dd MMM yyyy, hh:mm a"
+									)
+							);
 
 				} catch (Exception e) {
 
@@ -290,17 +375,30 @@ public class UpdateProfileServlet extends HttpServlet {
 				}
 			}
 
-			request.setAttribute("updateSuccess", "Profile updated successfully.");
+			request.setAttribute(
+					"updateSuccess",
+					"Profile updated successfully."
+			);
 
-			request.setAttribute("user", updatedUser);
+			request.setAttribute(
+					"user",
+					updatedUser
+			);
 
 		} else {
 
-			request.setAttribute("updateError", "Profile update failed. Please try again.");
+			request.setAttribute(
+					"updateError",
+					"Profile update failed. Please try again."
+			);
 
-			request.setAttribute("user", user);
+			request.setAttribute(
+					"user",
+					user
+			);
 		}
 
-		request.getRequestDispatcher("/profile.jsp").forward(request, response);
+		request.getRequestDispatcher("/profile.jsp")
+				.forward(request, response);
 	}
 }

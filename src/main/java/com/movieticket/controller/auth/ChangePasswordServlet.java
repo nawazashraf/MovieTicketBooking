@@ -2,7 +2,6 @@ package com.movieticket.controller.auth;
 
 import com.movieticket.dao.UserDAO;
 import com.movieticket.model.UserBean;
-import com.movieticket.util.EmailService;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -12,8 +11,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @WebServlet("/changepassword")
 public class ChangePasswordServlet extends HttpServlet {
@@ -94,7 +91,7 @@ public class ChangePasswordServlet extends HttpServlet {
 			Boolean verified = (Boolean) session.getAttribute("forgotPasswordVerified");
 
 			/*
-			 * SERVER-SIDE OTP VERIFICATION CHECK
+			 * FORGOT PASSWORD MUST HAVE BEEN VERIFIED (EMAIL FOUND)
 			 */
 			if (!Boolean.TRUE.equals(verified)) {
 
@@ -116,7 +113,6 @@ public class ChangePasswordServlet extends HttpServlet {
 
 				session.removeAttribute("forgotUserId");
 				session.removeAttribute("forgotUserEmail");
-				session.removeAttribute("forgotPasswordVerification");
 				session.removeAttribute("forgotPasswordVerified");
 
 				response.sendRedirect(request.getContextPath() + "/forgotpassword");
@@ -197,19 +193,6 @@ public class ChangePasswordServlet extends HttpServlet {
 				 */
 				userDAO.activateAccount(userId);
 
-				String forgotEmail = (String) session.getAttribute("forgotUserEmail");
-
-				String changedAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a"));
-
-				try {
-
-					EmailService.sendPasswordChangedEmail(forgotEmail, "MovieBook User", changedAt);
-
-				} catch (Exception e) {
-
-					e.printStackTrace();
-				}
-
 				/*
 				 * CONSUME FORGOT PASSWORD AUTHORIZATION
 				 *
@@ -218,7 +201,6 @@ public class ChangePasswordServlet extends HttpServlet {
 				 */
 				session.removeAttribute("forgotUserId");
 				session.removeAttribute("forgotUserEmail");
-				session.removeAttribute("forgotPasswordVerification");
 				session.removeAttribute("forgotPasswordVerified");
 
 				request.setAttribute("resetSuccess", "Your password has been changed successfully.");
@@ -331,17 +313,6 @@ public class ChangePasswordServlet extends HttpServlet {
 		boolean changed = userDAO.updatePassword(userId, newPassword);
 
 		if (changed) {
-
-			String changedAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a"));
-
-			try {
-
-				EmailService.sendPasswordChangedEmail(user.getEmail(), user.getName(), changedAt);
-
-			} catch (Exception e) {
-
-				e.printStackTrace();
-			}
 
 			response.sendRedirect(request.getContextPath() + "/profile");
 

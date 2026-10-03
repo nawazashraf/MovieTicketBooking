@@ -42,14 +42,25 @@
 			</div>
 
 
-			<div class="error-message" id="emailError">
+			<%
+			String error = (String) request.getAttribute("error");
+			if (error != null) {
+			%>
 
-				<span class="error-icon">!</span> <span id="emailErrorText"></span>
+			<div class="error-message" id="serverError">
+
+				<span class="error-icon">!</span> <span><%=error%></span>
 
 			</div>
 
+			<%
+			}
+			%>
 
-			<form id="forgotPasswordForm">
+
+			<form id="forgotPasswordForm"
+				action="${pageContext.request.contextPath}/forgotpassword"
+				method="post">
 
 
 				<!-- EMAIL -->
@@ -58,88 +69,83 @@
 
 					<label for="email"> Email Address </label>
 
+					<div class="email-input-wrapper">
 
-					<div class="email-row">
-
-						<div class="email-input-wrapper">
-
-							<span class="input-icon"> ✉ </span> <input type="email"
-								id="email" name="email" placeholder="Enter your email address"
-								autocomplete="email">
-
-						</div>
-
-
-						<button type="button" id="verifyEmailButton"
-							class="verify-email-button" disabled>Verify Email</button>
+						<span class="input-icon"> ✉ </span> <input type="email" id="email"
+							name="email" placeholder="Enter your email address"
+							autocomplete="email"
+							value="<%=request.getAttribute("email") != null ? request.getAttribute("email") : ""%>"
+							<%=request.getAttribute("securityQuestion") != null ? "readonly" : ""%>
+							required>
 
 					</div>
-
 
 					<div class="field-error" id="emailFieldError"></div>
 
+				</div>
+
+
+				<%
+				String securityQuestion = (String) request.getAttribute("securityQuestion");
+
+				if (securityQuestion != null) {
+				%>
+
+				<!-- SECURITY QUESTION -->
+
+				<div class="form-group">
+
+					<label for="securityQuestion"> Security Question </label>
+
+					<div class="email-input-wrapper security-question-wrapper">
+
+						<span class="input-icon"> ? </span> <input type="text"
+							id="securityQuestion" value="<%=securityQuestion%>" readonly
+							disabled>
+
+					</div>
 
 				</div>
 
 
-				<!-- OTP TRAY -->
+				<!-- SECURITY ANSWER -->
 
-				<div class="otp-tray" id="otpTray">
+				<div class="form-group">
 
+					<label for="securityAnswer"> Security Answer </label>
 
-					<div class="otp-header">
+					<div class="email-input-wrapper">
 
-						<div>
-
-							<strong> Enter Verification Code </strong> <small> We
-								sent a 4-digit verification code to your email. </small>
-
-						</div>
-
-
-						<div class="otp-verified-icon" id="otpVerifiedIcon">✓</div>
+						<span class="input-icon"> A </span> <input type="text"
+							id="securityAnswer" name="securityAnswer"
+							placeholder="Enter your answer" autocomplete="off" required>
 
 					</div>
 
-
-					<div class="otp-input-row">
-
-
-						<input type="text" id="otp" maxlength="4" inputmode="numeric"
-							autocomplete="one-time-code" placeholder="••••">
-
-
-						<button type="button" id="verifyOtpButton"
-							class="verify-otp-button" disabled>Verify</button>
-
-
-					</div>
-
-
-					<div class="otp-message" id="otpMessage"></div>
-
-
-					<div class="resend-area">
-
-
-						<span id="resendText"> Resend available in 60 seconds </span>
-
-
-						<button type="button" id="resendOtpButton" disabled>
-
-							Resend Code</button>
-
-
-					</div>
-
+					<div class="field-error" id="securityAnswerFieldError"></div>
 
 				</div>
+
+
+				<input type="hidden" name="action" value="verifyAnswer">
+
+				<button type="submit" id="continueButton" class="continue-button">
+					Continue</button>
+
+				<%
+				} else {
+				%>
 
 
 				<!-- CONTINUE -->
 
-				<button type="submit" id="continueButton" class="continue-button"
-					disabled>Continue</button>
+				<button type="submit" id="continueButton" class="continue-button">
+					Continue</button>
+
+
+				<%
+				}
+				%>
 
 
 			</form>
@@ -153,7 +159,6 @@
 
 
 			<div class="security">Your information is secure and protected.
-
 			</div>
 
 

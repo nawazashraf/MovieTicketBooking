@@ -12,6 +12,8 @@ CREATE TABLE users (
     phone VARCHAR(20) NOT NULL UNIQUE,
     role VARCHAR(20) NOT NULL,
     status BOOLEAN DEFAULT TRUE,
+    security_question VARCHAR(255),
+    security_answer VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

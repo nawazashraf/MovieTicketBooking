@@ -1,3 +1,4 @@
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
@@ -159,79 +160,26 @@
 
 							</div>
 
-							<span id="nameError" class="field-error"> </span>
+							<span id="nameError" class="field-error"></span>
 
 						</div>
 
 
 						<!-- EMAIL -->
+
 						<div class="form-group">
 
 							<label for="email"> Email address </label>
 
-							<div class="email-verification-row">
+							<div class="input-wrapper">
 
-								<div class="input-wrapper email-input-wrapper">
-
-									<span class="input-icon"> @ </span> <input type="email"
-										id="email" name="email" placeholder="you@example.com"
-										autocomplete="email" required>
-
-								</div>
-
-								<button type="button" id="verifyEmailButton"
-									class="verify-email-button" disabled>Verify Email</button>
+								<span class="input-icon"> @ </span> <input type="email"
+									id="email" name="email" placeholder="you@example.com"
+									autocomplete="email" required>
 
 							</div>
 
-							<span id="emailError" class="field-error"> </span>
-
-
-							<!-- OTP TRAY -->
-
-							<div id="otpTray" class="otp-tray">
-
-								<div class="otp-header">
-
-									<div>
-
-										<strong> Verify your email </strong> <small> Enter the
-											4-digit code sent to your email. </small>
-
-									</div>
-
-									<span id="otpVerifiedIcon" class="otp-verified-icon"> ✓
-									</span>
-
-								</div>
-
-
-								<div class="otp-input-row">
-
-									<input type="text" id="otp" name="otp" maxlength="4"
-										inputmode="numeric" autocomplete="one-time-code"
-										placeholder="0000">
-
-									<button type="button" id="verifyOtpButton"
-										class="verify-otp-button">Verify</button>
-
-								</div>
-
-
-								<div id="otpMessage" class="otp-message"></div>
-
-
-								<div id="resendArea" class="resend-area">
-
-									<span id="resendText"> Resend available in 1s </span>
-
-									<button type="button" id="resendOtpButton" disabled>
-
-										Resend Verification Code</button>
-
-								</div>
-
-							</div>
+							<span id="emailError" class="field-error"></span>
 
 						</div>
 
@@ -251,7 +199,80 @@
 
 							</div>
 
-							<span id="phoneError" class="field-error"> </span>
+							<span id="phoneError" class="field-error"></span>
+
+						</div>
+
+
+						<!-- =========================
+                             SECURITY QUESTION
+                        ========================== -->
+
+						<div class="form-group">
+
+							<label for="securityQuestion"> Security question </label>
+
+							<div class="input-wrapper">
+
+								<span class="input-icon"> ? </span> <select
+									id="securityQuestion" name="securityQuestion" required>
+
+									<option value="" selected disabled>Select a security
+										question</option>
+
+									<option value="What was the name of your first school?">
+										What was the name of your first school?</option>
+
+									<option value="What was the name of your first pet?">
+										What was the name of your first pet?</option>
+
+									<option value="What is your favourite movie?">What is
+										your favourite movie?</option>
+
+									<option value="What is your favourite food?">What is
+										your favourite food?</option>
+
+									<option value="What city were you born in?">What city
+										were you born in?</option>
+
+									<option value="What was your childhood nickname?">
+										What was your childhood nickname?</option>
+
+									<option value="What is your favourite book?">What is
+										your favourite book?</option>
+
+									<option value="What is your favourite sport?">What is
+										your favourite sport?</option>
+
+									<option value="What is your favourite place to visit?">
+										What is your favourite place to visit?</option>
+
+								</select>
+
+							</div>
+
+							<span id="securityQuestionError" class="field-error"></span>
+
+						</div>
+
+
+						<!-- =========================
+                             SECURITY ANSWER
+                        ========================== -->
+
+						<div class="form-group">
+
+							<label for="securityAnswer"> Security answer </label>
+
+							<div class="input-wrapper">
+
+								<span class="input-icon"> A </span> <input type="text"
+									id="securityAnswer" name="securityAnswer"
+									placeholder="Enter your answer" autocomplete="off" required>
+
+							</div>
+
+							<span id="securityAnswerError" class="field-error"></span>
 
 						</div>
 
@@ -275,7 +296,7 @@
 
 							</div>
 
-							<span id="passwordError" class="field-error"> </span>
+							<span id="passwordError" class="field-error"></span>
 
 						</div>
 
@@ -297,14 +318,14 @@
 
 						<!-- REGISTER BUTTON -->
 
-						<button type="submit" id="registerButton" class="register-button"
-							disabled>
+						<button type="submit" id="registerButton" class="register-button">
 
-							<span id="buttonText"> Verify Email to Continue </span>
+							<span id="buttonText"> Create Account </span>
 
 						</button>
 
 					</form>
+
 
 					<%
 					String success = request.getParameter("success");
@@ -343,7 +364,6 @@
 
 						<span> Already have an account? </span> <a
 							href="${pageContext.request.contextPath}/login.jsp"> Sign in
-
 						</a>
 
 					</div>

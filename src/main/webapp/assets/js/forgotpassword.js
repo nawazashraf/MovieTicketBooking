@@ -1,628 +1,152 @@
 document.addEventListener("DOMContentLoaded", function() {
 
-const form =
-	document.getElementById("forgotPasswordForm");
+	const form =
+		document.getElementById("forgotPasswordForm");
 
-const email =
-	document.getElementById("email");
+	const email =
+		document.getElementById("email");
 
-const emailError =
-	document.getElementById("emailFieldError");
+	const emailError =
+		document.getElementById("emailFieldError");
 
-const verifyEmailButton =
-	document.getElementById("verifyEmailButton");
+	const continueButton =
+		document.getElementById("continueButton");
 
-const otpTray =
-	document.getElementById("otpTray");
+	const securityAnswer =
+		document.getElementById("securityAnswer");
 
-const otp =
-	document.getElementById("otp");
+	const securityAnswerError =
+		document.getElementById("securityAnswerFieldError");
 
-const verifyOtpButton =
-	document.getElementById("verifyOtpButton");
 
-const otpMessage =
-	document.getElementById("otpMessage");
+	const emailPattern =
+		/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-const resendOtpButton =
-	document.getElementById("resendOtpButton");
 
-const resendText =
-	document.getElementById("resendText");
+	/* EMAIL VALIDATION */
 
-const otpVerifiedIcon =
-	document.getElementById("otpVerifiedIcon");
-
-const continueButton =
-	document.getElementById("continueButton");
-
-
-let emailVerified = false;
-
-let resendTimer = null;
-
-
-const emailPattern =
-	/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-
-/* INITIAL STATE */
-
-verifyEmailButton.disabled = true;
-
-verifyOtpButton.disabled = true;
-
-resendOtpButton.disabled = true;
-
-continueButton.disabled = true;
-
-otpVerifiedIcon.style.display = "none";
-
-
-/* EMAIL VALIDATION */
-
-function validateEmail() {
-
-	const value =
-		email.value.trim();
-
-
-	if (value === "") {
-
-		emailError.textContent =
-			"Email address is required.";
-
-		verifyEmailButton.disabled = true;
-
-		return false;
-	}
-
-
-	if (!emailPattern.test(value)) {
-
-		emailError.textContent =
-			"Please enter a valid email address.";
-
-		verifyEmailButton.disabled = true;
-
-		return false;
-	}
-
-
-	emailError.textContent = "";
-
-	verifyEmailButton.disabled = false;
-
-	return true;
-}
-
-
-/* EMAIL INPUT */
-
-email.addEventListener("input", function() {
-
-	validateEmail();
-
-
-	if (emailVerified) {
-
-		emailVerified = false;
-
-		email.readOnly = false;
-
-		verifyEmailButton.disabled = false;
-
-		verifyEmailButton.textContent =
-			"Verify Email";
-
-		verifyEmailButton.classList.remove(
-			"email-verified-button"
-		);
-
-		otpTray.classList.remove("active");
-
-		otp.value = "";
-
-		otp.readOnly = false;
-
-		verifyOtpButton.disabled = true;
-
-		verifyOtpButton.textContent =
-			"Verify";
-
-		otpMessage.textContent = "";
-
-		otpMessage.className =
-			"otp-message";
-
-		otpVerifiedIcon.style.display =
-			"none";
-
-		resendOtpButton.disabled = true;
-
-		resendText.textContent =
-			"Resend available in 60 seconds";
-
-		continueButton.disabled = true;
-
-		clearInterval(resendTimer);
-	}
-});
-
-
-/* EMAIL BLUR */
-
-email.addEventListener("blur", function() {
-
-	validateEmail();
-
-});
-
-
-/* VERIFY EMAIL */
-
-verifyEmailButton.addEventListener(
-	"click",
-	function() {
-
-		if (!validateEmail()) {
-			return;
-		}
-
+	function validateEmail() {
 
 		const value =
 			email.value.trim();
 
 
-		verifyEmailButton.disabled = true;
-
-		verifyEmailButton.textContent =
-			"Sending...";
-
-
-		fetch("forgotpassword", {
-
-			method: "POST",
-
-			headers: {
-				"Content-Type":
-					"application/x-www-form-urlencoded"
-			},
-
-			body:
-				"action=send&email=" +
-				encodeURIComponent(value)
-
-		})
-
-		.then(function(response) {
-
-			return response.json();
-
-		})
-
-		.then(function(data) {
-
-			if (data.success) {
-
-				emailError.textContent = "";
-
-				verifyEmailButton.textContent =
-					"Code Sent";
-
-				otpTray.classList.add(
-					"active"
-				);
-
-				otp.value = "";
-
-				verifyOtpButton.disabled =
-					true;
-
-				verifyOtpButton.textContent =
-					"Verify";
-
-				otpMessage.textContent =
-					data.message;
-
-				otpMessage.className =
-					"otp-message success";
-
-				resendOtpButton.disabled =
-					true;
-
-				continueButton.disabled =
-					true;
-
-				startResendTimer();
-
-			} else {
-
-				verifyEmailButton.disabled =
-					false;
-
-				verifyEmailButton.textContent =
-					"Verify Email";
-
-				emailError.textContent =
-					data.message;
-			}
-
-		})
-
-		.catch(function() {
-
-			verifyEmailButton.disabled =
-				false;
-
-			verifyEmailButton.textContent =
-				"Verify Email";
+		if (value === "") {
 
 			emailError.textContent =
-				"Unable to send verification code.";
+				"Email address is required.";
 
-		});
-
-	}
-);
-
-
-/* OTP INPUT */
-
-otp.addEventListener(
-	"input",
-	function() {
-
-		otp.value =
-			otp.value
-				.replace(/\D/g, "")
-				.slice(0, 4);
-
-
-		if (otp.value.length === 4) {
-
-			verifyOtpButton.disabled =
-				false;
-
-		} else {
-
-			verifyOtpButton.disabled =
-				true;
-
+			return false;
 		}
 
 
-		otpMessage.textContent = "";
+		if (!emailPattern.test(value)) {
 
-		otpMessage.className =
-			"otp-message";
-	}
-);
+			emailError.textContent =
+				"Please enter a valid email address.";
 
-
-/* VERIFY OTP */
-
-verifyOtpButton.addEventListener(
-	"click",
-	function() {
-
-		const enteredOtp =
-			otp.value.trim();
-
-
-		if (enteredOtp.length !== 4) {
-
-			otpMessage.textContent =
-				"Please enter the 4-digit verification code.";
-
-			otpMessage.className =
-				"otp-message error";
-
-			return;
+			return false;
 		}
 
 
-		verifyOtpButton.disabled =
-			true;
+		emailError.textContent = "";
 
-		verifyOtpButton.textContent =
-			"Verifying...";
-
-
-		fetch("forgotpassword", {
-
-			method: "POST",
-
-			headers: {
-				"Content-Type":
-					"application/x-www-form-urlencoded"
-			},
-
-			body:
-				"action=verify&otp=" +
-				encodeURIComponent(
-					enteredOtp
-				)
-
-		})
-
-		.then(function(response) {
-
-			return response.json();
-
-		})
-
-		.then(function(data) {
-
-			if (data.success) {
-
-				emailVerified = true;
+		return true;
+	}
 
 
-				otpMessage.textContent =
-					data.message;
+	/* SECURITY ANSWER VALIDATION */
 
-				otpMessage.className =
-					"otp-message success";
+	function validateSecurityAnswer() {
 
+		if (!securityAnswer) {
+			return true;
+		}
 
-				otpVerifiedIcon.style.display =
-					"flex";
-
-
-				email.readOnly = true;
+		const value =
+			securityAnswer.value.trim();
 
 
-				otp.readOnly = true;
+		if (value === "") {
+
+			securityAnswerError.textContent =
+				"Security answer is required.";
+
+			return false;
+		}
 
 
-				verifyOtpButton.disabled =
-					true;
+		securityAnswerError.textContent = "";
 
-				verifyOtpButton.textContent =
-					"Verified";
-
-
-				verifyEmailButton.disabled =
-					true;
-
-				verifyEmailButton.textContent =
-					"✓ Verified";
-
-				verifyEmailButton.classList.add(
-					"email-verified-button"
-				);
+		return true;
+	}
 
 
-				/* CLOSE OTP TRAY */
+	/* EMAIL INPUT */
 
-				otpTray.classList.remove(
-					"active"
-				);
+	email.addEventListener("input", function() {
 
+		validateEmail();
 
-				/* ACTIVATE CONTINUE */
-
-				continueButton.disabled =
-					false;
+	});
 
 
-				clearInterval(
-					resendTimer
-				);
+	/* EMAIL BLUR */
+
+	email.addEventListener("blur", function() {
+
+		validateEmail();
+
+	});
 
 
-				resendOtpButton.disabled =
-					true;
+	/* SECURITY ANSWER INPUT */
 
-				resendText.textContent =
-					"Email verified";
+	if (securityAnswer) {
 
-			} else {
+		securityAnswer.addEventListener("input", function() {
 
-				verifyOtpButton.disabled =
-					false;
+			validateSecurityAnswer();
 
-				verifyOtpButton.textContent =
-					"Verify";
+		});
 
-				otpMessage.textContent =
-					data.message;
 
-				otpMessage.className =
-					"otp-message error";
-			}
+		securityAnswer.addEventListener("blur", function() {
 
-		})
-
-		.catch(function() {
-
-			verifyOtpButton.disabled =
-				false;
-
-			verifyOtpButton.textContent =
-				"Verify";
-
-			otpMessage.textContent =
-				"Unable to verify the code.";
-
-			otpMessage.className =
-				"otp-message error";
+			validateSecurityAnswer();
 
 		});
 
 	}
-);
 
 
-/* RESEND OTP */
+	/* FORM SUBMIT */
 
-resendOtpButton.addEventListener(
-	"click",
-	function() {
+	form.addEventListener(
+		"submit",
+		function(event) {
 
-		resendOtpButton.disabled =
-			true;
+			if (!validateEmail()) {
 
-		resendText.textContent =
-			"Sending new code...";
+				event.preventDefault();
 
-
-		fetch("forgotpassword", {
-
-			method: "POST",
-
-			headers: {
-				"Content-Type":
-					"application/x-www-form-urlencoded"
-			},
-
-			body:
-				"action=resend"
-
-		})
-
-		.then(function(response) {
-
-			return response.json();
-
-		})
-
-		.then(function(data) {
-
-			if (data.success) {
-
-				otp.value = "";
-
-				verifyOtpButton.disabled =
-					true;
-
-				verifyOtpButton.textContent =
-					"Verify";
-
-				otpMessage.textContent =
-					data.message;
-
-				otpMessage.className =
-					"otp-message success";
-
-				continueButton.disabled =
-					true;
-
-				emailVerified = false;
-
-				startResendTimer();
-
-			} else {
-
-				otpMessage.textContent =
-					data.message;
-
-				otpMessage.className =
-					"otp-message error";
-
-				resendOtpButton.disabled =
-					false;
-			}
-
-		})
-
-		.catch(function() {
-
-			otpMessage.textContent =
-				"Unable to resend verification code.";
-
-			otpMessage.className =
-				"otp-message error";
-
-			resendOtpButton.disabled =
-				false;
-
-		});
-
-	}
-);
-
-
-/* RESEND TIMER */
-
-function startResendTimer() {
-
-	let seconds = 60;
-
-	resendOtpButton.disabled =
-		true;
-
-	resendText.textContent =
-		"Resend available in " +
-		seconds +
-		" seconds";
-
-
-	clearInterval(resendTimer);
-
-
-	resendTimer =
-		setInterval(function() {
-
-			seconds--;
-
-
-			if (seconds <= 0) {
-
-				clearInterval(
-					resendTimer
-				);
-
-				resendOtpButton.disabled =
-					false;
-
-				resendText.textContent =
-					"You can request a new code.";
+				email.focus();
 
 				return;
 			}
 
 
-			resendText.textContent =
-				"Resend available in " +
-				seconds +
-				" seconds";
+			if (!validateSecurityAnswer()) {
 
-		}, 1000);
+				event.preventDefault();
 
-}
+				securityAnswer.focus();
 
+				return;
+			}
 
-/* CONTINUE */
-
-form.addEventListener(
-	"submit",
-	function(event) {
-
-		event.preventDefault();
-
-
-		if (!emailVerified) {
-
-			otpMessage.textContent =
-				"Please verify your email first.";
-
-			otpMessage.className =
-				"otp-message error";
-
-			continueButton.disabled =
-				true;
-
-			return;
 		}
-
-
-		window.location.href =
-			"changepassword";
-
-	}
-);
+	);
 
 
 });

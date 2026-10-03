@@ -69,8 +69,7 @@ public class AccountStatusFilter implements Filter {
 				|| path.equals("/ticket.jsp") || path.equals("/ticket") || path.equals("/login")
 				|| path.equals("/logout") || path.equals("/profile") || path.equals("/register")
 				|| path.equals("/bookings") || path.equals("/home") || path.equals("/movies/details")
-				|| path.equals("/movies") || path.equals("/movies/search") || path.equals("/shows")
-				|| path.equals("/emailVerification")) {
+				|| path.equals("/movies") || path.equals("/movies/search") || path.equals("/shows")) {
 
 			chain.doFilter(request, response);
 			return;

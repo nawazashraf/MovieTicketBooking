@@ -20,14 +20,10 @@ import com.google.zxing.common.BitMatrix;
 
 import com.movieticket.dao.BookingDAO;
 import com.movieticket.dao.PaymentDAO;
-import com.movieticket.dao.TicketDAO;
 
 import com.movieticket.model.BookingBean;
 import com.movieticket.model.PaymentBean;
-import com.movieticket.model.TicketBean;
 
-import com.movieticket.util.EmailService;
-import com.movieticket.util.PdfService;
 
 @WebServlet("/payment")
 public class PaymentServlet extends HttpServlet {
@@ -166,11 +162,15 @@ public class PaymentServlet extends HttpServlet {
 
 		if (!qrPage) {
 
-			String hostAddress = InetAddress.getLocalHost().getHostAddress();
-
-			String qrUrl = "http://" + hostAddress + ":8081" + request.getContextPath() + "/payment?bookingId="
-					+ bookingId + "&qr=true";
-
+			String qrUrl = request.getScheme() + "://"
+			        + request.getServerName()
+			        + (request.getServerPort() == 80 || request.getServerPort() == 443
+			                ? ""
+			                : ":" + request.getServerPort())
+			        + request.getContextPath()
+			        + "/payment?bookingId="
+			        + bookingId
+			        + "&qr=true";
 			System.out.println("QR URL = " + qrUrl);
 
 			try {
@@ -255,32 +255,7 @@ public class PaymentServlet extends HttpServlet {
 				}
 			}
 
-			/*
-			 * ================================================= SEND EMAIL AFTER SUCCESSFUL
-			 * QR PAYMENT =================================================
-			 */
 
-			if (paymentSuccess) {
-
-				HttpSession session = request.getSession(false);
-
-				if (session != null && session.getAttribute("user") != null) {
-
-					TicketDAO ticketDAO = new TicketDAO();
-
-					TicketBean ticket = ticketDAO.getTicketByBookingId(bookingId);
-
-					if (ticket != null) {
-
-						byte[] pdfBytes = PdfService.generateTicketPdf(ticket);
-
-						if (pdfBytes != null) {
-
-							EmailService.sendTicketEmail(ticket, session, pdfBytes);
-						}
-					}
-				}
-			}
 
 			/*
 			 * ================================================= SUCCESS / FAILURE PAGE

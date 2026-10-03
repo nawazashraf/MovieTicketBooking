@@ -1,17 +1,13 @@
-
 package com.movieticket.controller.auth;
 
 import com.movieticket.dao.UserDAO;
-import com.movieticket.model.EmailVerificationBean;
 import com.movieticket.model.UserBean;
-import com.movieticket.util.EmailService;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
@@ -19,6 +15,7 @@ import java.io.IOException;
 public class RegisterServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
+
 	private UserDAO userDAO;
 
 	@Override
@@ -34,6 +31,9 @@ public class RegisterServlet extends HttpServlet {
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		String phone = request.getParameter("phone");
+
+		String securityQuestion = request.getParameter("securityQuestion");
+		String securityAnswer = request.getParameter("securityAnswer");
 
 		if (name == null || name.trim().isEmpty()) {
 			request.setAttribute("error", "Name is required.");
@@ -61,7 +61,9 @@ public class RegisterServlet extends HttpServlet {
 		StringBuilder formattedName = new StringBuilder();
 
 		for (String word : words) {
+
 			if (!word.isEmpty()) {
+
 				formattedName.append(Character.toUpperCase(word.charAt(0)));
 
 				if (word.length() > 1) {
@@ -86,27 +88,6 @@ public class RegisterServlet extends HttpServlet {
 
 		if (!email.matches(emailRegex)) {
 			request.setAttribute("error", "Please enter a valid email address.");
-			request.getRequestDispatcher("/register.jsp").forward(request, response);
-			return;
-		}
-
-		/*
-		 * SERVER-SIDE EMAIL OTP VERIFICATION
-		 */
-		HttpSession session = request.getSession(false);
-
-		if (session == null) {
-			request.setAttribute("error", "Please verify your email before creating an account.");
-			request.getRequestDispatcher("/register.jsp").forward(request, response);
-			return;
-		}
-
-		EmailVerificationBean verification = (EmailVerificationBean) session.getAttribute("emailVerification");
-
-		if (verification == null || !verification.isVerified() || !email.equalsIgnoreCase(verification.getEmail())) {
-
-			request.setAttribute("error", "Please verify your email before creating an account.");
-
 			request.getRequestDispatcher("/register.jsp").forward(request, response);
 			return;
 		}
@@ -155,6 +136,22 @@ public class RegisterServlet extends HttpServlet {
 			return;
 		}
 
+		if (securityQuestion == null || securityQuestion.trim().isEmpty()) {
+			request.setAttribute("error", "Please select a security question.");
+			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			return;
+		}
+
+		securityQuestion = securityQuestion.trim();
+
+		if (securityAnswer == null || securityAnswer.trim().isEmpty()) {
+			request.setAttribute("error", "Security answer is required.");
+			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			return;
+		}
+
+		securityAnswer = securityAnswer.trim();
+
 		UserBean user = new UserBean();
 
 		user.setName(name);
@@ -163,18 +160,12 @@ public class RegisterServlet extends HttpServlet {
 		user.setPhone(phone);
 		user.setRole("USER");
 		user.setStatus(true);
+		user.setSecurityQuestion(securityQuestion);
+		user.setSecurityAnswer(securityAnswer);
 
 		boolean registered = userDAO.registerUser(user);
 
 		if (registered) {
-
-			session.removeAttribute("emailVerification");
-
-			try {
-				EmailService.sendWelcomeEmail(email, name, request.getContextPath());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 
 			response.sendRedirect(request.getContextPath() + "/register.jsp?success=1");
 

@@ -1,14 +1,15 @@
-
-let activationResendTimer = null;
-
-
-/* INACTIVE POPUP */
+/* =========================================================
+   INACTIVE POPUP
+========================================================= */
 
 function closeInactivePopup() {
 
-	const overlay = document.getElementById("inactiveOverlay");
+	const overlay =
+		document.getElementById("inactiveOverlay");
 
-	if (!overlay) return;
+	if (!overlay) {
+		return;
+	}
 
 	overlay.style.display = "none";
 
@@ -17,13 +18,18 @@ function closeInactivePopup() {
 }
 
 
-/* EDIT PROFILE DRAWER */
+/* =========================================================
+   EDIT PROFILE
+========================================================= */
 
 function openEditProfile() {
 
-	const overlay = document.getElementById("editProfileOverlay");
+	const overlay =
+		document.getElementById("editProfileOverlay");
 
-	if (!overlay) return;
+	if (!overlay) {
+		return;
+	}
 
 	overlay.classList.add("open");
 
@@ -31,7 +37,8 @@ function openEditProfile() {
 
 	setTimeout(function() {
 
-		const name = document.getElementById("editName");
+		const name =
+			document.getElementById("editName");
 
 		if (name) {
 
@@ -56,9 +63,12 @@ function closeEditProfile(event) {
 
 	}
 
-	const overlay = document.getElementById("editProfileOverlay");
+	const overlay =
+		document.getElementById("editProfileOverlay");
 
-	if (!overlay) return;
+	if (!overlay) {
+		return;
+	}
 
 	overlay.classList.remove("open");
 
@@ -67,11 +77,15 @@ function closeEditProfile(event) {
 }
 
 
-/* ESCAPE KEY */
+/* =========================================================
+   ESCAPE
+========================================================= */
 
 document.addEventListener("keydown", function(event) {
 
-	if (event.key !== "Escape") return;
+	if (event.key !== "Escape") {
+		return;
+	}
 
 	const overlay =
 		document.getElementById("editProfileOverlay");
@@ -83,230 +97,21 @@ document.addEventListener("keydown", function(event) {
 
 	}
 
-	const activation =
-		document.getElementById("activationOverlay");
-
-	if (activation &&
-		activation.style.display === "flex") {
-
-		closeActivationPopup();
-
-	}
-
 });
 
 
-/* NAME + PHONE INPUT */
-
-document.addEventListener("DOMContentLoaded", function() {
-
-	const name =
-		document.getElementById("editName");
-
-	const phone =
-		document.getElementById("editPhone");
-
-
-	/* NAME INPUT */
-
-	if (name) {
-
-		name.addEventListener("input", function() {
-
-			name.value =
-				name.value.replace(
-					/[^A-Za-z ]/g,
-					""
-				);
-
-			name.value =
-				name.value.replace(
-					/\s+/g,
-					" "
-				);
-
-			if (name.value.length > 50) {
-
-				name.value =
-					name.value.substring(0, 50);
-
-			}
-
-			if (name.value.trim() !== "") {
-
-				const words =
-					name.value
-						.toLowerCase()
-						.split(" ");
-
-				for (let i = 0; i < words.length; i++) {
-
-					if (words[i].length > 0) {
-
-						words[i] =
-							words[i].charAt(0).toUpperCase() +
-							words[i].substring(1);
-
-					}
-
-				}
-
-				name.value =
-					words.join(" ");
-
-			}
-
-		});
-
-
-		name.addEventListener("blur", function() {
-
-			let value =
-				name.value.trim();
-
-			if (value === "") {
-
-				name.value = "";
-
-				return;
-
-			}
-
-			name.value =
-				value
-					.toLowerCase()
-					.split(" ")
-					.map(function(word) {
-
-						return word.charAt(0).toUpperCase() +
-							word.substring(1);
-
-					})
-					.join(" ");
-
-		});
-
-	}
-
-
-	/* PHONE INPUT */
-
-	if (phone) {
-
-		phone.addEventListener("input", function() {
-
-			phone.value =
-				phone.value.replace(
-					/\D/g,
-					""
-				);
-
-			if (phone.value.length > 10) {
-
-				phone.value =
-					phone.value.substring(0, 10);
-
-			}
-
-			const phoneError =
-				document.getElementById("editPhoneError");
-
-			const value =
-				phone.value.trim();
-
-
-			/* EMPTY */
-
-			if (value === "") {
-
-				if (phoneError) {
-
-					phoneError.textContent = "";
-
-					phoneError.style.display =
-						"none";
-
-				}
-
-				return;
-
-			}
-
-
-			/* STARTS WITH 0 */
-
-			if (value.startsWith("0")) {
-
-				if (phoneError) {
-
-					phoneError.textContent =
-						"Phone number must not start with 0.";
-
-					phoneError.style.display =
-						"block";
-
-					phoneError.style.color =
-						"#d92d20";
-
-				}
-
-				return;
-
-			}
-
-
-			/* LESS THAN 10 DIGITS */
-
-			if (value.length < 10) {
-
-				if (phoneError) {
-
-					phoneError.textContent =
-						"Phone number must be exactly 10 digits.";
-
-					phoneError.style.display =
-						"block";
-
-					phoneError.style.color =
-						"#d92d20";
-
-				}
-
-				return;
-
-			}
-
-
-			/* EXACTLY 10 DIGITS */
-
-			if (value.length === 10) {
-
-				if (phoneError) {
-
-					phoneError.textContent = "";
-
-					phoneError.style.display =
-						"none";
-
-				}
-
-			}
-
-		});
-
-	}
-
-});
-
-
-/* PASSWORD TOGGLE */
+/* =========================================================
+   PASSWORD TOGGLE
+========================================================= */
 
 function togglePassword(inputId, button) {
 
 	const input =
 		document.getElementById(inputId);
 
-	if (!input) return;
+	if (!input) {
+		return;
+	}
 
 	if (input.type === "password") {
 
@@ -314,21 +119,11 @@ function togglePassword(inputId, button) {
 
 		button.textContent = "Hide";
 
-		button.setAttribute(
-			"aria-label",
-			"Hide password"
-		);
-
 	} else {
 
 		input.type = "password";
 
 		button.textContent = "Show";
-
-		button.setAttribute(
-			"aria-label",
-			"Show password"
-		);
 
 	}
 
@@ -342,7 +137,9 @@ function toggleEditPassword(inputId, button) {
 }
 
 
-/* PASSWORD + PROFILE VALIDATION */
+/* =========================================================
+   PROFILE VALIDATION
+========================================================= */
 
 document.addEventListener("DOMContentLoaded", function() {
 
@@ -352,11 +149,23 @@ document.addEventListener("DOMContentLoaded", function() {
 	const phone =
 		document.getElementById("editPhone");
 
+	const securityQuestion =
+		document.getElementById(
+			"editSecurityQuestion"
+		);
+
+	const securityAnswer =
+		document.getElementById(
+			"editSecurityAnswer"
+		);
+
 	const newPassword =
 		document.getElementById("editPassword");
 
 	const confirmPassword =
-		document.getElementById("editConfirmPassword");
+		document.getElementById(
+			"editConfirmPassword"
+		);
 
 	const strengthBar =
 		document.getElementById(
@@ -384,12 +193,13 @@ document.addEventListener("DOMContentLoaded", function() {
 		);
 
 
-	if (!newPassword ||
-		!confirmPassword ||
-		!strengthBar ||
-		!strengthText ||
-		!matchMessage ||
-		!form) {
+	if (!form ||
+		!name ||
+		!phone ||
+		!securityQuestion ||
+		!securityAnswer ||
+		!newPassword ||
+		!confirmPassword) {
 
 		return;
 
@@ -406,6 +216,16 @@ document.addEventListener("DOMContentLoaded", function() {
 			"editPhoneError"
 		);
 
+	const securityQuestionError =
+		document.getElementById(
+			"editSecurityQuestionError"
+		);
+
+	const securityAnswerError =
+		document.getElementById(
+			"editSecurityAnswerError"
+		);
+
 	const passwordError =
 		document.getElementById(
 			"editPasswordError"
@@ -417,39 +237,39 @@ document.addEventListener("DOMContentLoaded", function() {
 		);
 
 
-	/* SHOW ERROR */
+	/* =====================================================
+	   ERROR
+	===================================================== */
 
 	function showError(element, message) {
 
-		if (!element) return;
+		if (!element) {
+			return;
+		}
 
-		element.textContent =
-			message;
+		element.textContent = message;
 
-		element.style.display =
-			"block";
-
-		element.style.color =
-			"#d92d20";
+		element.style.display = "block";
 
 	}
 
-
-	/* CLEAR ERROR */
 
 	function clearError(element) {
 
-		if (!element) return;
+		if (!element) {
+			return;
+		}
 
 		element.textContent = "";
 
-		element.style.display =
-			"none";
+		element.style.display = "none";
 
 	}
 
 
-	/* NAME VALIDATION */
+	/* =====================================================
+	   NAME
+	===================================================== */
 
 	function formatName(value) {
 
@@ -459,44 +279,26 @@ document.addEventListener("DOMContentLoaded", function() {
 				.replace(/\s+/g, " ");
 
 		if (value === "") {
-
 			return "";
-
 		}
 
-		const words =
-			value
-				.toLowerCase()
-				.split(" ");
+		return value
+			.toLowerCase()
+			.split(" ")
+			.map(function(word) {
 
-		const formattedWords = [];
-
-
-		for (let word of words) {
-
-			if (word.length > 0) {
-
-				word =
-					word.charAt(0).toUpperCase() +
+				return word.charAt(0).toUpperCase() +
 					word.substring(1);
 
-				formattedWords.push(word);
-
-			}
-
-		}
-
-
-		return formattedWords.join(" ");
+			})
+			.join(" ");
 
 	}
 
 
 	function validateName() {
 
-		if (!name) return true;
-
-		let value =
+		const value =
 			name.value.trim();
 
 		clearError(nameError);
@@ -526,14 +328,10 @@ document.addEventListener("DOMContentLoaded", function() {
 		}
 
 
-		value =
-			value.replace(
-				/\s+/g,
-				" "
-			);
+		const formatted =
+			value.replace(/\s+/g, " ");
 
-
-		if (value.length < 2) {
+		if (formatted.length < 2) {
 
 			showError(
 				nameError,
@@ -545,7 +343,7 @@ document.addEventListener("DOMContentLoaded", function() {
 		}
 
 
-		if (value.length > 50) {
+		if (formatted.length > 50) {
 
 			showError(
 				nameError,
@@ -558,18 +356,18 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 		name.value =
-			formatName(value);
+			formatName(formatted);
 
 		return true;
 
 	}
 
 
-	/* PHONE VALIDATION */
+	/* =====================================================
+	   PHONE
+	===================================================== */
 
 	function validatePhone() {
-
-		if (!phone) return true;
 
 		const value =
 			phone.value.trim();
@@ -618,7 +416,92 @@ document.addEventListener("DOMContentLoaded", function() {
 	}
 
 
-	/* PASSWORD VALIDATION */
+	/* =====================================================
+	   SECURITY QUESTION
+	===================================================== */
+
+	function validateSecurityQuestion() {
+
+		clearError(
+			securityQuestionError
+		);
+
+
+		if (securityQuestion.value === "") {
+
+			showError(
+				securityQuestionError,
+				"Please select a security question."
+			);
+
+			return false;
+
+		}
+
+
+		return true;
+
+	}
+
+
+	/* =====================================================
+	   SECURITY ANSWER
+	===================================================== */
+
+	function validateSecurityAnswer() {
+
+		const value =
+			securityAnswer.value.trim();
+
+		clearError(
+			securityAnswerError
+		);
+
+
+		if (value === "") {
+
+			showError(
+				securityAnswerError,
+				"Security answer is required."
+			);
+
+			return false;
+
+		}
+
+
+		if (value.length < 2) {
+
+			showError(
+				securityAnswerError,
+				"Security answer must contain at least 2 characters."
+			);
+
+			return false;
+
+		}
+
+
+		if (value.length > 255) {
+
+			showError(
+				securityAnswerError,
+				"Security answer cannot exceed 255 characters."
+			);
+
+			return false;
+
+		}
+
+
+		return true;
+
+	}
+
+
+	/* =====================================================
+	   PASSWORD
+	===================================================== */
 
 	function validatePassword() {
 
@@ -629,9 +512,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 		if (value === "") {
-
 			return true;
-
 		}
 
 
@@ -676,7 +557,9 @@ document.addEventListener("DOMContentLoaded", function() {
 	}
 
 
-	/* PASSWORD STRENGTH */
+	/* =====================================================
+	   PASSWORD STRENGTH
+	===================================================== */
 
 	function updatePasswordStrength() {
 
@@ -686,71 +569,43 @@ document.addEventListener("DOMContentLoaded", function() {
 		let strength = 0;
 
 
-		/*
-		 * EXACT SAME LOGIC AS register.js
-		 */
-
 		if (value.length >= 8) {
-
 			strength++;
-
 		}
-
 
 		if (/[A-Z]/.test(value)) {
-
 			strength++;
-
 		}
-
 
 		if (/[a-z]/.test(value)) {
-
 			strength++;
-
 		}
-
 
 		if (/\d/.test(value)) {
-
 			strength++;
-
 		}
 
-
 		if (/[^A-Za-z0-9]/.test(value)) {
-
 			strength++;
-
 		}
 
 
 		if (value.length === 0) {
 
-			strengthBar.style.width =
-				"0%";
+			strengthBar.style.width = "0%";
 
 			strengthText.textContent =
 				"Use 8 or more characters";
 
-			if (strengthContainer) {
-
-				strengthContainer.style.display =
-					"none";
-
-			}
+			strengthContainer.style.display =
+				"none";
 
 		} else if (strength <= 2) {
 
-			if (strengthContainer) {
+			strengthContainer.style.display =
+				"block";
 
-				strengthContainer.style.display =
-					"block";
-
-			}
-
-			strengthBar.style.width =
-				"35%";
+			strengthBar.style.width = "35%";
 
 			strengthBar.style.backgroundColor =
 				"#d92d20";
@@ -760,15 +615,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
 		} else if (strength <= 4) {
 
-			if (strengthContainer) {
+			strengthContainer.style.display =
+				"block";
 
-				strengthContainer.style.display =
-					"block";
-
-			}
-
-			strengthBar.style.width =
-				"65%";
+			strengthBar.style.width = "65%";
 
 			strengthBar.style.backgroundColor =
 				"#f79009";
@@ -778,15 +628,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
 		} else {
 
-			if (strengthContainer) {
+			strengthContainer.style.display =
+				"block";
 
-				strengthContainer.style.display =
-					"block";
-
-			}
-
-			strengthBar.style.width =
-				"100%";
+			strengthBar.style.width = "100%";
 
 			strengthBar.style.backgroundColor =
 				"#12b76a";
@@ -799,37 +644,9 @@ document.addEventListener("DOMContentLoaded", function() {
 	}
 
 
-	/* PASSWORD EVENTS */
-
-	newPassword.addEventListener(
-		"input",
-		function() {
-
-			updatePasswordStrength();
-
-			validatePassword();
-
-			if (confirmPassword.value !== "") {
-
-				validateConfirmPassword();
-
-			}
-
-		}
-	);
-
-
-	newPassword.addEventListener(
-		"blur",
-		function() {
-
-			validatePassword();
-
-		}
-	);
-
-
-	/* CONFIRM PASSWORD */
+	/* =====================================================
+	   CONFIRM PASSWORD
+	===================================================== */
 
 	function validateConfirmPassword() {
 
@@ -840,10 +657,7 @@ document.addEventListener("DOMContentLoaded", function() {
 			confirmPassword.value;
 
 
-		clearError(
-			confirmPasswordError
-		);
-
+		clearError(confirmPasswordError);
 
 		matchMessage.textContent = "";
 
@@ -889,59 +703,140 @@ document.addEventListener("DOMContentLoaded", function() {
 	}
 
 
-	confirmPassword.addEventListener(
+	/* =====================================================
+	   INPUT EVENTS
+	===================================================== */
+
+	name.addEventListener(
 		"input",
 		function() {
 
-			validateConfirmPassword();
+			name.value =
+				name.value.replace(
+					/[^A-Za-z ]/g,
+					""
+				);
+
+			name.value =
+				name.value.replace(
+					/\s+/g,
+					" "
+				);
+
+			if (name.value.length > 50) {
+
+				name.value =
+					name.value.substring(0, 50);
+
+			}
+
+			if (name.value.trim() !== "") {
+
+				name.value =
+					formatName(name.value);
+
+			}
 
 		}
 	);
 
 
-	/* NAME EVENTS */
-
-	if (name) {
-
-		name.addEventListener(
-			"blur",
-			function() {
-
-				validateName();
-
-			}
-		);
-
-	}
+	name.addEventListener(
+		"blur",
+		validateName
+	);
 
 
-	/* PHONE EVENTS */
+	phone.addEventListener(
+		"input",
+		function() {
 
-	if (phone) {
+			phone.value =
+				phone.value.replace(
+					/\D/g,
+					""
+				);
 
-		phone.addEventListener(
-			"blur",
-			function() {
+			if (phone.value.length > 10) {
 
-				validatePhone();
+				phone.value =
+					phone.value.substring(0, 10);
 
 			}
-		);
 
-	}
+		}
+	);
 
 
-	/* FORM SUBMIT */
+	phone.addEventListener(
+		"blur",
+		validatePhone
+	);
+
+
+	securityQuestion.addEventListener(
+		"change",
+		validateSecurityQuestion
+	);
+
+
+	securityQuestion.addEventListener(
+		"blur",
+		validateSecurityQuestion
+	);
+
+
+	securityAnswer.addEventListener(
+		"input",
+		validateSecurityAnswer
+	);
+
+
+	securityAnswer.addEventListener(
+		"blur",
+		validateSecurityAnswer
+	);
+
+
+	newPassword.addEventListener(
+		"input",
+		function() {
+
+			updatePasswordStrength();
+
+			validatePassword();
+
+			if (confirmPassword.value !== "") {
+
+				validateConfirmPassword();
+
+			}
+
+		}
+	);
+
+
+	newPassword.addEventListener(
+		"blur",
+		validatePassword
+	);
+
+
+	confirmPassword.addEventListener(
+		"input",
+		validateConfirmPassword
+	);
+
+
+	/* =====================================================
+	   FORM SUBMIT
+	===================================================== */
 
 	form.addEventListener(
 		"submit",
 		function(event) {
 
-			const validName =
-				validateName();
-
-
-			if (!validName) {
+			if (!validateName()) {
 
 				event.preventDefault();
 
@@ -952,11 +847,7 @@ document.addEventListener("DOMContentLoaded", function() {
 			}
 
 
-			const validPhone =
-				validatePhone();
-
-
-			if (!validPhone) {
+			if (!validatePhone()) {
 
 				event.preventDefault();
 
@@ -967,11 +858,29 @@ document.addEventListener("DOMContentLoaded", function() {
 			}
 
 
-			const validPassword =
-				validatePassword();
+			if (!validateSecurityQuestion()) {
+
+				event.preventDefault();
+
+				securityQuestion.focus();
+
+				return;
+
+			}
 
 
-			if (!validPassword) {
+			if (!validateSecurityAnswer()) {
+
+				event.preventDefault();
+
+				securityAnswer.focus();
+
+				return;
+
+			}
+
+
+			if (!validatePassword()) {
 
 				event.preventDefault();
 
@@ -982,11 +891,7 @@ document.addEventListener("DOMContentLoaded", function() {
 			}
 
 
-			const validConfirmPassword =
-				validateConfirmPassword();
-
-
-			if (!validConfirmPassword) {
+			if (!validateConfirmPassword()) {
 
 				event.preventDefault();
 
@@ -1003,553 +908,18 @@ document.addEventListener("DOMContentLoaded", function() {
 			phone.value =
 				phone.value.trim();
 
-		}
+			securityAnswer.value =
+				securityAnswer.value.trim();
 
+		}
 	);
 
 });
 
 
-/* ACTIVATION POPUP */
-
-function openActivationPopup() {
-
-	const overlay =
-		document.getElementById(
-			"activationOverlay"
-		);
-
-	if (overlay) {
-
-		overlay.style.display =
-			"flex";
-
-		document.body.style.overflow =
-			"hidden";
-
-	}
-
-}
-
-
-function closeActivationPopup() {
-
-	const overlay =
-		document.getElementById(
-			"activationOverlay"
-		);
-
-	if (overlay) {
-
-		overlay.style.display =
-			"none";
-
-		document.body.style.overflow =
-			"";
-
-	}
-
-}
-
-
-/* SEND ACTIVATION OTP */
-
-function sendActivationOtp() {
-
-	const contextPath =
-		document.body.dataset.contextPath || "";
-
-
-	const message =
-		document.getElementById(
-			"activationMessage"
-		);
-
-
-	const sendButton =
-		document.querySelector(
-			".activation-send-btn"
-		);
-
-
-	if (message) {
-
-		message.textContent =
-			"Sending verification code...";
-
-	}
-
-
-	if (sendButton) {
-
-		sendButton.disabled =
-			true;
-
-	}
-
-
-	fetch(
-		contextPath + "/emailVerification",
-		{
-			method: "POST",
-			headers: {
-				"Content-Type":
-					"application/x-www-form-urlencoded"
-			},
-			body:
-				"action=activateSend"
-		}
-	)
-
-		.then(function(response) {
-
-			return response.json();
-
-		})
-
-		.then(function(data) {
-
-
-			if (message) {
-
-				message.textContent =
-					data.message;
-
-			}
-
-
-			if (data.success) {
-
-				const sendSection =
-					document.getElementById(
-						"activationSendSection"
-					);
-
-				const otpSection =
-					document.getElementById(
-						"activationOtpSection"
-					);
-
-				const otp =
-					document.getElementById(
-						"activationOtp"
-					);
-
-
-				if (sendSection) {
-
-					sendSection.style.display =
-						"none";
-
-				}
-
-
-				if (otpSection) {
-
-					otpSection.style.display =
-						"block";
-
-				}
-
-
-				if (otp) {
-
-					otp.value = "";
-
-					otp.focus();
-
-				}
-
-
-				startActivationResendTimer();
-
-			} else {
-
-				if (sendButton) {
-
-					sendButton.disabled =
-						false;
-
-				}
-
-			}
-
-		})
-
-		.catch(function(error) {
-
-			console.error(error);
-
-			if (message) {
-
-				message.textContent =
-					"Unable to send verification code.";
-
-			}
-
-			if (sendButton) {
-
-				sendButton.disabled =
-					false;
-
-			}
-
-		});
-
-}
-
-
-/* VERIFY ACTIVATION OTP */
-
-function verifyActivationOtp() {
-
-	const otpElement =
-		document.getElementById(
-			"activationOtp"
-		);
-
-	const message =
-		document.getElementById(
-			"activationMessage"
-		);
-
-
-	if (!otpElement || !message) {
-
-		return;
-
-	}
-
-
-	const otp =
-		otpElement.value.trim();
-
-
-	if (otp === "") {
-
-		message.textContent =
-			"Please enter the verification code.";
-
-		return;
-
-	}
-
-
-	fetch(
-		(document.body.dataset.contextPath || "") +
-		"/emailVerification",
-		{
-			method: "POST",
-			headers: {
-				"Content-Type":
-					"application/x-www-form-urlencoded"
-			},
-			body:
-				"action=activateVerify&otp=" +
-				encodeURIComponent(otp)
-		}
-	)
-
-		.then(function(response) {
-
-			return response.json();
-
-		})
-
-		.then(function(data) {
-
-			message.textContent =
-				data.message;
-
-
-			if (data.success) {
-
-				clearInterval(
-					activationResendTimer
-				);
-
-
-				const resendButton =
-					document.getElementById(
-						"activationResendButton"
-					);
-
-
-				if (resendButton) {
-
-					resendButton.disabled =
-						true;
-
-				}
-
-
-				const resendText =
-					document.getElementById(
-						"activationResendText"
-					);
-
-
-				if (resendText) {
-
-					resendText.textContent =
-						"Account activated successfully.";
-
-				}
-
-
-				setTimeout(function() {
-
-					location.reload();
-
-				}, 1000);
-
-			}
-
-		})
-
-		.catch(function(error) {
-
-			console.error(error);
-
-			message.textContent =
-				"Unable to verify the code.";
-
-		});
-
-}
-
-
-/* RESEND ACTIVATION OTP */
-
-function resendActivationOtp() {
-
-	const message =
-		document.getElementById(
-			"activationMessage"
-		);
-
-	const resendButton =
-		document.getElementById(
-			"activationResendButton"
-		);
-
-
-	if (resendButton &&
-		resendButton.disabled) {
-
-		return;
-
-	}
-
-
-	if (message) {
-
-		message.textContent =
-			"Requesting new verification code...";
-
-	}
-
-
-	if (resendButton) {
-
-		resendButton.disabled =
-			true;
-
-	}
-
-
-	fetch(
-		(document.body.dataset.contextPath || "") +
-		"/emailVerification",
-		{
-			method: "POST",
-			headers: {
-				"Content-Type":
-					"application/x-www-form-urlencoded"
-			},
-			body:
-				"action=activateResend"
-		}
-	)
-
-		.then(function(response) {
-
-			return response.json();
-
-		})
-
-		.then(function(data) {
-
-
-			if (message) {
-
-				message.textContent =
-					data.message;
-
-			}
-
-
-			if (data.success) {
-
-				const otp =
-					document.getElementById(
-						"activationOtp"
-					);
-
-
-				if (otp) {
-
-					otp.value = "";
-
-					otp.focus();
-
-				}
-
-
-				startActivationResendTimer();
-
-
-			} else {
-
-				if (resendButton) {
-
-					resendButton.disabled =
-						false;
-
-				}
-
-
-				const resendText =
-					document.getElementById(
-						"activationResendText"
-					);
-
-
-				if (resendText) {
-
-					resendText.textContent =
-						"You can request a new code.";
-
-				}
-
-			}
-
-		})
-
-		.catch(function(error) {
-
-			console.error(error);
-
-
-			if (message) {
-
-				message.textContent =
-					"Unable to resend verification code.";
-
-			}
-
-
-			if (resendButton) {
-
-				resendButton.disabled =
-					false;
-
-			}
-
-
-			const resendText =
-				document.getElementById(
-					"activationResendText"
-				);
-
-
-			if (resendText) {
-
-				resendText.textContent =
-					"You can request a new code.";
-
-			}
-
-		});
-
-}
-
-
-/* RESEND TIMER */
-
-function startActivationResendTimer() {
-
-	let seconds = 60;
-
-
-	const resendButton =
-		document.getElementById(
-			"activationResendButton"
-		);
-
-	const resendText =
-		document.getElementById(
-			"activationResendText"
-		);
-
-
-	if (!resendButton ||
-		!resendText) {
-
-		return;
-
-	}
-
-
-	resendButton.disabled =
-		true;
-
-
-	resendText.textContent =
-		"Resend available in " +
-		seconds +
-		" seconds";
-
-
-	clearInterval(
-		activationResendTimer
-	);
-
-
-	activationResendTimer =
-		setInterval(function() {
-
-			seconds--;
-
-
-			if (seconds <= 0) {
-
-				clearInterval(
-					activationResendTimer
-				);
-
-				resendButton.disabled =
-					false;
-
-				resendText.textContent =
-					"You can request a new code.";
-
-				return;
-
-			}
-
-
-			resendText.textContent =
-				"Resend available in " +
-				seconds +
-				" seconds";
-
-		}, 1000);
-
-}
-
-
-/* PROFILE UPDATE SUCCESS POPUP */
+/* =========================================================
+   SUCCESS POPUP
+========================================================= */
 
 function closeProfileUpdatePopup() {
 
@@ -1558,27 +928,24 @@ function closeProfileUpdatePopup() {
 			"profileUpdatePopup"
 		);
 
-
-	if (!popup) return;
-
+	if (!popup) {
+		return;
+	}
 
 	popup.classList.add("hide");
 
-
 	setTimeout(function() {
 
-		if (popup) {
-
-			popup.remove();
-
-		}
+		popup.remove();
 
 	}, 300);
 
 }
 
 
-/* PROFILE UPDATE ERROR POPUP */
+/* =========================================================
+   ERROR POPUP
+========================================================= */
 
 function closeProfileUpdateErrorPopup() {
 
@@ -1587,64 +954,57 @@ function closeProfileUpdateErrorPopup() {
 			"profileUpdateErrorPopup"
 		);
 
-
-	if (!popup) return;
-
+	if (!popup) {
+		return;
+	}
 
 	popup.classList.add("hide");
 
-
 	setTimeout(function() {
 
-		if (popup) {
-
-			popup.remove();
-
-		}
+		popup.remove();
 
 	}, 300);
 
 }
 
 
-/* PROFILE UPDATE POPUPS */
+/* =========================================================
+   AUTO CLOSE POPUPS
+========================================================= */
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener(
+	"DOMContentLoaded",
+	function() {
 
-	const successPopup =
-		document.getElementById(
-			"profileUpdatePopup"
-		);
+		const successPopup =
+			document.getElementById(
+				"profileUpdatePopup"
+			);
+
+		if (successPopup) {
+
+			setTimeout(
+				closeProfileUpdatePopup,
+				4000
+			);
+
+		}
 
 
-	if (successPopup) {
+		const errorPopup =
+			document.getElementById(
+				"profileUpdateErrorPopup"
+			);
 
-		setTimeout(function() {
+		if (errorPopup) {
 
-			closeProfileUpdatePopup();
+			setTimeout(
+				closeProfileUpdateErrorPopup,
+				4000
+			);
 
-		}, 4000);
+		}
 
 	}
-
-
-	const errorPopup =
-		document.getElementById(
-			"profileUpdateErrorPopup"
-		);
-
-
-	if (errorPopup) {
-
-		setTimeout(function() {
-
-			closeProfileUpdateErrorPopup();
-
-		}, 4000);
-
-	}
-
-});
-
-
-
+);

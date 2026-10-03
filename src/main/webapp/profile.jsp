@@ -4,7 +4,6 @@
 <%@ page import="com.movieticket.model.UserBean"%>
 
 <!DOCTYPE html>
-
 <html>
 
 <head>
@@ -21,15 +20,12 @@
 
 </head>
 
-
 <body data-context-path="<%=request.getContextPath()%>">
 
 	<%@ include file="/common/navbar.jsp"%>
 
-
 	<%
 	String updateSuccess = (String) request.getAttribute("updateSuccess");
-
 	String updateError = (String) request.getAttribute("updateError");
 
 	UserBean user = (UserBean) request.getAttribute("user");
@@ -43,8 +39,8 @@
 
 
 	<!-- =========================================================
-         SUCCESS POPUP
-    ========================================================= -->
+	     SUCCESS POPUP
+	========================================================= -->
 
 	<%
 	if (updateSuccess != null) {
@@ -77,8 +73,8 @@
 
 
 	<!-- =========================================================
-         ERROR POPUP
-    ========================================================= -->
+	     ERROR POPUP
+	========================================================= -->
 
 	<%
 	if (updateError != null) {
@@ -94,9 +90,7 @@
 
 				<h3>Update Failed</h3>
 
-				<p>
-					<%=updateError%>
-				</p>
+				<p><%=updateError%></p>
 
 			</div>
 
@@ -113,8 +107,8 @@
 
 
 	<!-- =========================================================
-         INACTIVE ACCOUNT NOTICE
-    ========================================================= -->
+	     INACTIVE ACCOUNT POPUP
+	========================================================= -->
 
 	<%
 	if (Boolean.TRUE.equals(accountInactive)) {
@@ -144,15 +138,12 @@
 
 
 	<!-- =========================================================
-         PROFILE PAGE
-    ========================================================= -->
+	     PROFILE PAGE
+	========================================================= -->
 
 	<div class="profile-page">
 
 		<div class="profile-container">
-
-
-			<!-- PAGE HEADER -->
 
 			<div class="page-header">
 
@@ -173,15 +164,7 @@
 			if (user != null) {
 			%>
 
-
-			<!-- =====================================================
-                 MAIN PROFILE CARD
-            ===================================================== -->
-
 			<div class="profile-card">
-
-
-				<!-- HEADER -->
 
 				<div class="profile-banner"></div>
 
@@ -192,9 +175,7 @@
 
 					<div class="identity-row">
 
-
 						<div class="identity-left">
-
 
 							<div class="profile-avatar">
 
@@ -202,22 +183,13 @@
 
 							</div>
 
-
 							<div class="identity-info">
 
-								<h2>
-
-									<%=user.getName()%>
-
-								</h2>
-
+								<h2><%=user.getName()%></h2>
 
 								<div class="identity-email">
-
 									<%=user.getEmail()%>
-
 								</div>
-
 
 								<div class="identity-status-row">
 
@@ -257,7 +229,7 @@
 						<button type="button" class="edit-profile-button"
 							onclick="openEditProfile()">
 
-							<span class="edit-icon"> ✎ </span> Edit Profile
+							<span class="edit-icon">✎</span> Edit Profile
 
 						</button>
 
@@ -265,21 +237,16 @@
 						}
 						%>
 
-
 					</div>
 
 				</div>
 
 
-				<!-- =================================================
-                     ACCOUNT INFORMATION
-                ================================================= -->
+				<!-- PROFILE CONTENT -->
 
 				<div class="profile-content">
 
-
 					<section class="profile-section">
-
 
 						<div class="section-heading">
 
@@ -296,64 +263,45 @@
 
 						<div class="information-grid">
 
-
-							<!-- NAME -->
-
 							<div class="information-item">
 
 								<div class="information-label">FULL NAME</div>
 
 								<div class="information-value">
-
 									<%=user.getName()%>
-
 								</div>
 
 							</div>
 
-
-							<!-- EMAIL -->
 
 							<div class="information-item">
 
 								<div class="information-label">EMAIL ADDRESS</div>
 
 								<div class="information-value">
-
 									<%=user.getEmail()%>
-
 								</div>
 
 							</div>
 
-
-							<!-- PHONE -->
 
 							<div class="information-item">
 
 								<div class="information-label">PHONE NUMBER</div>
 
 								<div class="information-value">
-
 									+91
 									<%=user.getPhone()%>
-
 								</div>
 
 							</div>
-
 
 						</div>
 
 					</section>
 
 
-					<!-- =================================================
-                         ACCOUNT STATUS
-                    ================================================= -->
-
 					<section class="profile-section">
-
 
 						<div class="section-heading">
 
@@ -372,14 +320,13 @@
 						if (user.isStatus()) {
 						%>
 
-
 						<div class="security-panel security-active">
 
 							<div class="security-icon">✓</div>
 
 							<div class="security-info">
 
-								<strong> Account Active </strong> <span> Your account is
+								<strong>Account Active</strong> <span> Your account is
 									active and booking features are available. </span>
 
 							</div>
@@ -388,11 +335,9 @@
 
 						</div>
 
-
 						<%
 						} else {
 						%>
-
 
 						<div class="security-panel security-inactive">
 
@@ -400,8 +345,8 @@
 
 							<div class="security-info">
 
-								<strong> Account Inactive </strong> <span> Booking
-									features are restricted until your account is activated. </span>
+								<strong>Account Inactive</strong> <span> Booking features
+									are restricted until your account is activated. </span>
 
 							</div>
 
@@ -409,25 +354,14 @@
 
 						</div>
 
-
-						<button type="button" class="activate-account-btn"
-							onclick="openActivationPopup()">Activate Account</button>
-
-
 						<%
 						}
 						%>
 
-
 					</section>
 
 
-					<!-- =================================================
-                         ACCOUNT ACTION
-                    ================================================= -->
-
 					<section class="profile-actions">
-
 
 						<div>
 
@@ -437,14 +371,10 @@
 
 						</div>
 
-
 						<a href="<%=request.getContextPath()%>/logout" class="logout-btn">
-
 							Logout </a>
 
-
 					</section>
-
 
 				</div>
 
@@ -454,9 +384,6 @@
 			<%
 			} else {
 			%>
-
-
-			<!-- EMPTY PROFILE -->
 
 			<div class="empty-profile">
 
@@ -468,11 +395,9 @@
 
 			</div>
 
-
 			<%
 			}
 			%>
-
 
 		</div>
 
@@ -480,13 +405,12 @@
 
 
 	<!-- =========================================================
-         EDIT PROFILE DRAWER
-    ========================================================= -->
+	     EDIT PROFILE DRAWER
+	========================================================= -->
 
 	<%
 	if (user != null && user.isStatus()) {
 	%>
-
 
 	<div id="editProfileOverlay" class="drawer-overlay"
 		onclick="closeEditProfile(event)">
@@ -495,7 +419,7 @@
 		<div class="profile-drawer" onclick="event.stopPropagation()">
 
 
-			<!-- DRAWER HEADER -->
+			<!-- HEADER -->
 
 			<div class="drawer-header">
 
@@ -516,15 +440,12 @@
 			</div>
 
 
-			<!-- DRAWER BODY -->
+			<!-- BODY -->
 
 			<div class="drawer-body">
 
 
-				<!-- PROFILE SUMMARY -->
-
 				<div class="drawer-profile-summary">
-
 
 					<div class="drawer-avatar">
 
@@ -535,12 +456,9 @@
 
 					<div>
 
-						<strong> <%=user.getName()%>
-						</strong> <span> <%=user.getEmail()%>
-						</span>
+						<strong><%=user.getName()%></strong> <span><%=user.getEmail()%></span>
 
 					</div>
-
 
 				</div>
 
@@ -548,9 +466,7 @@
 				<div class="drawer-divider"></div>
 
 
-				<!-- =================================================
-                     FORM
-                ================================================= -->
+				<!-- FORM -->
 
 				<form action="<%=request.getContextPath()%>/update-profile"
 					method="post" id="editProfileForm" class="drawer-form">
@@ -562,17 +478,13 @@
 
 						<label for="editName"> Full Name </label>
 
-
 						<div class="drawer-input-wrapper">
 
-							<span class="field-prefix"> A </span> <input type="text"
+							<span class="field-prefix">A</span> <input type="text"
 								id="editName" name="name" value="<%=user.getName()%>"
 								autocomplete="name" required>
 
 						</div>
-
-
-						<!-- NAME ERROR -->
 
 						<small id="editNameError" class="field-error"></small>
 
@@ -585,7 +497,6 @@
 
 						<label for="editPhone"> Phone Number </label>
 
-
 						<div class="phone-input-group">
 
 							<span class="phone-prefix"> +91 </span> <input type="tel"
@@ -595,13 +506,98 @@
 
 						</div>
 
+						<small class="field-hint"> 10-digit mobile number </small> <small
+							id="editPhoneError" class="field-error"></small>
 
-						<small class="field-hint"> 10-digit mobile number </small>
+					</div>
 
 
-						<!-- PHONE ERROR -->
+					<!-- SECURITY QUESTION -->
 
-						<small id="editPhoneError" class="field-error"></small>
+					<div class="drawer-field">
+
+						<label for="editSecurityQuestion"> Security Question </label>
+
+						<div class="drawer-input-wrapper">
+
+							<span class="field-prefix"> ? </span> <select
+								id="editSecurityQuestion" name="securityQuestion" required>
+
+								<option value="" disabled
+									<%=user.getSecurityQuestion() == null || user.getSecurityQuestion().trim().isEmpty() ? "selected" : ""%>>
+									Select a security question</option>
+
+
+								<option value="What was the name of your first school?"
+									<%="What was the name of your first school?".equals(user.getSecurityQuestion()) ? "selected" : ""%>>
+									What was the name of your first school?</option>
+
+
+								<option value="What was the name of your first pet?"
+									<%="What was the name of your first pet?".equals(user.getSecurityQuestion()) ? "selected" : ""%>>
+									What was the name of your first pet?</option>
+
+
+								<option value="What is your favourite movie?"
+									<%="What is your favourite movie?".equals(user.getSecurityQuestion()) ? "selected" : ""%>>
+									What is your favourite movie?</option>
+
+
+								<option value="What is your favourite food?"
+									<%="What is your favourite food?".equals(user.getSecurityQuestion()) ? "selected" : ""%>>
+									What is your favourite food?</option>
+
+
+								<option value="What city were you born in?"
+									<%="What city were you born in?".equals(user.getSecurityQuestion()) ? "selected" : ""%>>
+									What city were you born in?</option>
+
+
+								<option value="What was your childhood nickname?"
+									<%="What was your childhood nickname?".equals(user.getSecurityQuestion()) ? "selected" : ""%>>
+									What was your childhood nickname?</option>
+
+
+								<option value="What is your favourite book?"
+									<%="What is your favourite book?".equals(user.getSecurityQuestion()) ? "selected" : ""%>>
+									What is your favourite book?</option>
+
+
+								<option value="What is your favourite sport?"
+									<%="What is your favourite sport?".equals(user.getSecurityQuestion()) ? "selected" : ""%>>
+									What is your favourite sport?</option>
+
+
+								<option value="What is your favourite place to visit?"
+									<%="What is your favourite place to visit?".equals(user.getSecurityQuestion()) ? "selected" : ""%>>
+									What is your favourite place to visit?</option>
+
+							</select>
+
+						</div>
+
+						<small id="editSecurityQuestionError" class="field-error"></small>
+
+					</div>
+
+
+					<!-- SECURITY ANSWER -->
+
+					<div class="drawer-field">
+
+						<label for="editSecurityAnswer"> Security Answer </label>
+
+						<div class="drawer-input-wrapper">
+
+							<span class="field-prefix"> A </span> <input type="text"
+								id="editSecurityAnswer" name="securityAnswer"
+								value="<%=user.getSecurityAnswer() != null ? user.getSecurityAnswer() : ""%>"
+								autocomplete="off" maxlength="255"
+								placeholder="Enter your answer" required>
+
+						</div>
+
+						<small id="editSecurityAnswerError" class="field-error"></small>
 
 					</div>
 
@@ -612,7 +608,6 @@
 
 						<label> Email Address </label>
 
-
 						<div class="drawer-readonly">
 
 							<span class="readonly-icon"> @ </span> <span
@@ -621,20 +616,16 @@
 
 						</div>
 
-
 						<small> Email address cannot be changed. </small>
 
 					</div>
 
 
-					<!-- =================================================
-                         NEW PASSWORD
-                    ================================================= -->
+					<!-- PASSWORD -->
 
 					<div class="drawer-field">
 
 						<label for="editPassword"> New Password </label>
-
 
 						<div class="password-input-wrapper">
 
@@ -642,16 +633,12 @@
 								autocomplete="new-password"
 								placeholder="Leave blank to keep current password">
 
-
 							<button type="button" class="password-toggle"
 								onclick="toggleEditPassword('editPassword', this)">
-
 								Show</button>
 
 						</div>
 
-
-						<!-- PASSWORD STRENGTH -->
 
 						<div id="editPasswordStrength" class="password-strength"
 							style="display: none;">
@@ -663,28 +650,22 @@
 
 							</div>
 
-
 							<div id="editPasswordStrengthText" class="password-strength-text">
 							</div>
 
 						</div>
 
 
-						<!-- PASSWORD ERROR -->
-
 						<small id="editPasswordError" class="field-error"></small>
 
 					</div>
 
 
-					<!-- =================================================
-                         CONFIRM PASSWORD
-                    ================================================= -->
+					<!-- CONFIRM PASSWORD -->
 
 					<div class="drawer-field">
 
 						<label for="editConfirmPassword"> Confirm New Password </label>
-
 
 						<div class="password-input-wrapper">
 
@@ -692,21 +673,15 @@
 								name="confirmPassword" autocomplete="new-password"
 								placeholder="Re-enter new password">
 
-
 							<button type="button" class="password-toggle"
 								onclick="toggleEditPassword('editConfirmPassword', this)">
-
 								Show</button>
 
 						</div>
 
 
-						<!-- PASSWORD MATCH -->
-
 						<div id="editPasswordMatch" class="password-match"></div>
 
-
-						<!-- CONFIRM PASSWORD ERROR -->
 
 						<small id="editConfirmPasswordError" class="field-error"></small>
 
@@ -717,138 +692,35 @@
 
 					<div class="drawer-actions">
 
-
 						<button type="button" class="drawer-cancel"
 							onclick="closeEditProfile()">Cancel</button>
-
 
 						<button type="submit" class="drawer-save"
 							id="editProfileSaveButton">
 
-							<span> Save Changes </span> <span class="save-arrow"> → </span>
+							<span>Save Changes</span> <span class="save-arrow">→</span>
 
 						</button>
-
 
 					</div>
 
 
 				</form>
 
-
 			</div>
 
 		</div>
 
 	</div>
 
-
 	<%
 	}
 	%>
 
-
-	<!-- =========================================================
-         ACTIVATION POPUP
-    ========================================================= -->
-
-	<%
-	if (user != null && !user.isStatus()) {
-	%>
-
-
-	<div id="activationOverlay" class="activation-overlay"
-		style="display: none;">
-
-
-		<div class="activation-card">
-
-
-			<button type="button" class="activation-close"
-				onclick="closeActivationPopup()">×</button>
-
-
-			<div class="activation-brand">
-
-				<div class="activation-logo">M</div>
-
-				<strong> MovieBook </strong>
-
-			</div>
-
-
-			<div class="activation-icon">@</div>
-
-
-			<h2>Activate Account</h2>
-
-
-			<p id="activationMessage" class="activation-message">Verify your
-				email address to activate your account.</p>
-
-
-			<div id="activationSendSection">
-
-				<button type="button" class="activation-send-btn"
-					onclick="sendActivationOtp()">Send Verification Code</button>
-
-			</div>
-
-
-			<div id="activationOtpSection" style="display: none;">
-
-
-				<div class="otp-tray">
-
-					<label for="activationOtp"> Verification Code </label> <input
-						type="text" id="activationOtp" maxlength="4" inputmode="numeric"
-						autocomplete="one-time-code" placeholder="••••">
-
-				</div>
-
-
-				<button type="button" class="activation-verify-btn"
-					onclick="verifyActivationOtp()">Verify &amp; Activate</button>
-
-
-				<div class="activation-resend-area">
-
-					<span id="activationResendText"> Resend available in 60
-						seconds </span>
-
-
-					<button type="button" id="activationResendButton"
-						class="activation-resend-btn" onclick="resendActivationOtp()"
-						disabled>Resend Code</button>
-
-				</div>
-
-
-			</div>
-
-
-			<button type="button" class="activation-cancel-btn"
-				onclick="closeActivationPopup()">Cancel</button>
-
-
-		</div>
-
-	</div>
-
-
-	<%
-	}
-	%>
-
-
-	<!-- =========================================================
-         PROFILE JS
-    ========================================================= -->
 
 	<script src="${pageContext.request.contextPath}/assets/js/profile.js">
 		
 	</script>
-
 
 </body>
 

@@ -8,7 +8,6 @@
 
 <meta charset="UTF-8">
 
-<!-- IMPORTANT FOR MOBILE RESPONSIVENESS -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Payment</title>
@@ -28,35 +27,20 @@
 
 	<%@ include file="/common/navbar.jsp"%>
 
-
 	<main class="payment-page">
 
 		<div class="payment-container">
 
 			<h1>Secure Checkout</h1>
 
-
-			<!-- ================================================= -->
-			<!-- MAIN PAYMENT FORM -->
-			<!-- ================================================= -->
-
 			<form action="${pageContext.request.contextPath}/payment"
 				method="post" class="checkout-container">
 
-
-				<!-- BOOKING ID -->
-
 				<input type="hidden" name="bookingId" value="${booking.id}">
-
-
-				<!-- ================================================= -->
-				<!-- LEFT SIDE -->
-				<!-- ================================================= -->
 
 				<section class="payment-left">
 
-
-					<!-- ================= MOVIE CARD ================= -->
+					<!-- MOVIE CARD -->
 
 					<div class="movie-banner">
 
@@ -85,7 +69,7 @@
 					</div>
 
 
-					<!-- ================= BOOKING CARD ================= -->
+					<!-- BOOKING CARD -->
 
 					<div class="booking-details-card">
 
@@ -96,12 +80,11 @@
 
 						</div>
 
-
 						<div class="booking-details-content">
 
 							<div>
 
-								<strong> Booking </strong> <span>
+								<strong>Booking</strong> <span>
 									${booking.bookingReference} </span>
 
 							</div>
@@ -113,7 +96,7 @@
 					</div>
 
 
-					<!-- ================= CANCELLATION ================= -->
+					<!-- CANCELLATION -->
 
 					<div class="info-card">
 
@@ -123,13 +106,13 @@
 					</div>
 
 
-					<!-- ================= OFFERS ================= -->
+					<!-- OFFERS -->
 
 					<div class="offers-card">
 
 						<div class="offers-title">
 
-							<i class="fa-solid fa-percent"></i> <strong> Offers </strong>
+							<i class="fa-solid fa-percent"></i> <strong>Offers</strong>
 
 						</div>
 
@@ -138,14 +121,12 @@
 					</div>
 
 
-					<!-- ================= PAYMENT OPTIONS ================= -->
+					<!-- PAYMENT OPTIONS -->
 
 					<h2 class="payment-options-title">Payment Options</h2>
 
 
-					<!-- ================================================= -->
 					<!-- UPI -->
-					<!-- ================================================= -->
 
 					<div class="payment-option-block">
 
@@ -169,7 +150,7 @@
 						</label>
 
 
-						<!-- ================= QR PAYMENT ================= -->
+						<!-- QR PAYMENT -->
 
 						<div class="qr-payment-card" style="display: none;">
 
@@ -193,9 +174,7 @@
 					</div>
 
 
-					<!-- ================================================= -->
 					<!-- CARD -->
-					<!-- ================================================= -->
 
 					<div class="payment-option-block">
 
@@ -219,17 +198,23 @@
 						</label>
 
 
-						<!-- ================= CARD INPUTS ================= -->
+						<!-- CARD INPUTS -->
 
 						<div class="payment-inputs card-details">
 
 							<label for="cardNumber"> Card Number </label> <input type="text"
 								id="cardNumber" name="cardNumber"
 								placeholder="1234 5678 9012 3456" maxlength="19"
-								autocomplete="cc-number" inputmode="numeric"> <label
-								for="cardHolder"> Card Holder Name </label> <input type="text"
-								id="cardHolder" name="cardHolder" placeholder="Name as on card"
-								autocomplete="cc-name">
+								autocomplete="cc-number" inputmode="numeric">
+
+							<p class="field-error" id="cardNumberError"></p>
+
+
+							<label for="cardHolder"> Card Holder Name </label> <input
+								type="text" id="cardHolder" name="cardHolder"
+								placeholder="Name as on card" autocomplete="cc-name">
+
+							<p class="field-error" id="cardHolderError"></p>
 
 
 							<div class="card-row">
@@ -241,14 +226,18 @@
 										placeholder="MM/YY" maxlength="5" autocomplete="cc-exp"
 										inputmode="numeric">
 
+									<p class="field-error" id="expiryDateError"></p>
+
 								</div>
 
 
 								<div class="card-field">
 
 									<label for="cvv"> CVV </label> <input type="password" id="cvv"
-										name="cvv" placeholder="•••" maxlength="4"
+										name="cvv" placeholder="•••" maxlength="3"
 										autocomplete="cc-csc" inputmode="numeric">
+
+									<p class="field-error" id="cvvError"></p>
 
 								</div>
 
@@ -269,20 +258,14 @@
 				</section>
 
 
-				<!-- ================================================= -->
 				<!-- RIGHT SIDE -->
-				<!-- ================================================= -->
 
 				<aside class="booking-summary">
-
-
-					<!-- ================= SUMMARY TITLE ================= -->
 
 					<h2>Payment summary</h2>
 
 
 					<div class="summary-container">
-
 
 						<div class="summary-row">
 
@@ -309,7 +292,7 @@
 					</div>
 
 
-					<!-- ================= BOOKING DETAILS ================= -->
+					<!-- BOOKING DETAILS -->
 
 					<h2 class="details-title">Booking details</h2>
 
@@ -335,7 +318,7 @@
 					</div>
 
 
-					<!-- ================= TERMS ================= -->
+					<!-- TERMS -->
 
 					<div class="terms-card">
 
@@ -345,9 +328,10 @@
 					</div>
 
 
-					<!-- ================= PAY BUTTON ================= -->
+					<!-- PAY BUTTON -->
 
-					<button type="submit" class="pay-button" id="proceedPayButton">
+					<button type="submit" class="pay-button" id="proceedPayButton"
+						disabled>
 
 						<span> ₹${booking.totalAmount} </span> <span> Proceed To
 							Pay </span>
@@ -362,10 +346,6 @@
 
 	</main>
 
-
-	<!-- ================================================= -->
-	<!-- JAVASCRIPT -->
-	<!-- ================================================= -->
 
 	<script>
 		window.contextPath = "${pageContext.request.contextPath}";

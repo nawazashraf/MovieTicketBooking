@@ -13,11 +13,7 @@ import java.util.UUID;
 import com.movieticket.dao.BookingDAO;
 import com.movieticket.dao.PaymentDAO;
 import com.movieticket.dao.TicketDAO;
-import com.movieticket.model.BookingBean;
-import com.movieticket.model.PaymentBean;
 import com.movieticket.model.TicketBean;
-import com.movieticket.util.EmailService;
-import com.movieticket.util.PdfService;
 
 @WebServlet("/payment/process")
 public class PaymentProcessingServlet extends HttpServlet {
@@ -69,19 +65,6 @@ public class PaymentProcessingServlet extends HttpServlet {
 		TicketDAO ticketDAO = new TicketDAO();
 
 		TicketBean ticket = ticketDAO.getTicketByBookingId(bookingId);
-
-		/*
-		 * SEND EMAIL ONCE AFTER SUCCESSFUL BOOKING
-		 */
-		if (ticket != null) {
-
-			byte[] pdfBytes = PdfService.generateTicketPdf(ticket);
-
-			if (pdfBytes != null) {
-
-				EmailService.sendTicketEmail(ticket, session, pdfBytes);
-			}
-		}
 
 		/*
 		 * SHOW TICKET

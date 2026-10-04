@@ -2,7 +2,7 @@ FROM tomcat:11-jdk21-temurin
 
 RUN rm -rf /usr/local/tomcat/webapps/*
 
-COPY ROOT.war /usr/local/tomcat/webapps/MovieTicketBooking.war
+COPY ROOT.war /usr/local/tomcat/webapps/ROOT.war
 
 EXPOSE 10000
 

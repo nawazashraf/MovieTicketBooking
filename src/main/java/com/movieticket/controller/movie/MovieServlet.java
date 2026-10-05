@@ -1,6 +1,8 @@
+
 package com.movieticket.controller.movie;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import jakarta.servlet.ServletException;
@@ -14,26 +16,37 @@ import com.movieticket.model.MovieBean;
 
 @WebServlet("/movies")
 public class MovieServlet extends HttpServlet {
+
 	private static final long serialVersionUID = 1L;
 
 	private final MovieDAO movieDAO = new MovieDAO();
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-		String status = request.getParameter("status");
+        try {
 
-		List<MovieBean> movies;
+            String status = request.getParameter("status");
 
-		if (status != null && !status.isBlank()) {
-			movies = movieDAO.getMoviesByStatus(status);
-		} else {
-			movies = movieDAO.getAllMovies();
-		}
+            List<MovieBean> movies;
 
-		request.setAttribute("movies", movies);
+            if (status != null && !status.isBlank()) {
 
-		request.getRequestDispatcher("/movie/movies.jsp").forward(request, response);
-	}
+                movies = movieDAO.getMoviesByStatus(status);
+
+            } else {
+
+                movies = movieDAO.getAllMovies();
+            }
+
+            request.setAttribute("movies", movies);
+
+            request.getRequestDispatcher("/movie/movies.jsp").forward(request, response);
+
+        } catch (SQLException e) {
+
+            request.getRequestDispatcher("/error.jsp").forward(request, response);
+        }
+    }
 }

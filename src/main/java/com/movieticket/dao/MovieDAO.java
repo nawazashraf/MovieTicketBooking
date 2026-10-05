@@ -4,12 +4,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
+import java.util.UUID;
 import com.movieticket.model.MovieBean;
 import com.movieticket.util.DBConnection;
 
@@ -31,13 +32,17 @@ public class MovieDAO {
 			try {
 
 				if (movie.getId() == null || movie.getId().isBlank()) {
+
 					movie.setId(UUID.randomUUID().toString());
+
 				}
 
 				try (PreparedStatement ps = conn.prepareStatement(sql)) {
 
 					setInsertValues(ps, movie);
+
 					ps.executeUpdate();
+
 				}
 
 				insertMovieGenres(conn, movie.getId(), movie.getGenreIds());
@@ -49,9 +54,11 @@ public class MovieDAO {
 			} catch (Exception e) {
 
 				conn.rollback();
+
 				e.printStackTrace();
 
 				return false;
+
 			}
 
 		} catch (Exception e) {
@@ -59,7 +66,9 @@ public class MovieDAO {
 			e.printStackTrace();
 
 			return false;
+
 		}
+
 	}
 
 	public MovieBean getMovieById(String movieId) {
@@ -79,15 +88,19 @@ public class MovieDAO {
 					movie.setGenreIds(getGenreIds(conn, movieId));
 
 					return movie;
+
 				}
+
 			}
 
 		} catch (Exception e) {
 
 			e.printStackTrace();
+
 		}
 
 		return null;
+
 	}
 
 	public List<MovieBean> getAllMovies() {
@@ -111,17 +124,20 @@ public class MovieDAO {
 				movie.setGenreIds(getGenreIds(conn, movie.getId()));
 
 				movies.add(movie);
+
 			}
 
 		} catch (Exception e) {
 
 			e.printStackTrace();
+
 		}
 
 		return movies;
+
 	}
 
-	public List<MovieBean> getMoviesByStatus(String status) {
+	public List<MovieBean> getMoviesByStatus(String status) throws SQLException {
 
 		String sql = """
 				SELECT *
@@ -145,15 +161,15 @@ public class MovieDAO {
 					movie.setGenreIds(getGenreIds(conn, movie.getId()));
 
 					movies.add(movie);
+
 				}
+
 			}
 
-		} catch (Exception e) {
-
-			e.printStackTrace();
 		}
 
 		return movies;
+
 	}
 
 	public boolean updateMovie(MovieBean movie) {
@@ -187,13 +203,17 @@ public class MovieDAO {
 						conn.rollback();
 
 						return false;
+
 					}
+
 				}
 
 				try (PreparedStatement ps = conn.prepareStatement("DELETE FROM movie_genres WHERE movie_id = ?")) {
 
 					ps.setString(1, movie.getId());
+
 					ps.executeUpdate();
+
 				}
 
 				insertMovieGenres(conn, movie.getId(), movie.getGenreIds());
@@ -205,9 +225,11 @@ public class MovieDAO {
 			} catch (Exception e) {
 
 				conn.rollback();
+
 				e.printStackTrace();
 
 				return false;
+
 			}
 
 		} catch (Exception e) {
@@ -215,7 +237,9 @@ public class MovieDAO {
 			e.printStackTrace();
 
 			return false;
+
 		}
+
 	}
 
 	public boolean deleteMovie(String movieId) {
@@ -233,13 +257,17 @@ public class MovieDAO {
 			e.printStackTrace();
 
 			return false;
+
 		}
+
 	}
 
 	private void insertMovieGenres(Connection conn, String movieId, List<String> genreIds) throws SQLException {
 
 		if (genreIds == null || genreIds.isEmpty()) {
+
 			return;
+
 		}
 
 		String sql = """
@@ -254,14 +282,19 @@ public class MovieDAO {
 				if (genreId != null && !genreId.isBlank()) {
 
 					ps.setString(1, movieId);
+
 					ps.setString(2, genreId);
 
 					ps.addBatch();
+
 				}
+
 			}
 
 			ps.executeBatch();
+
 		}
+
 	}
 
 	private List<String> getGenreIds(Connection conn, String movieId) throws SQLException {
@@ -283,11 +316,15 @@ public class MovieDAO {
 				while (rs.next()) {
 
 					genreIds.add(rs.getString("genre_id"));
+
 				}
+
 			}
+
 		}
 
 		return genreIds;
+
 	}
 
 	private MovieBean mapMovie(ResultSet rs) throws SQLException {
@@ -295,46 +332,77 @@ public class MovieDAO {
 		MovieBean movie = new MovieBean();
 
 		movie.setId(rs.getString("id"));
+
 		movie.setTitle(rs.getString("title"));
+
 		movie.setDescription(rs.getString("description"));
+
 		movie.setDurationMinutes(rs.getInt("duration_minutes"));
+
 		movie.setLanguage(rs.getString("language"));
+
 		movie.setReleaseDate(rs.getDate("release_date"));
+
 		movie.setCertificate(rs.getString("certificate"));
+
 		movie.setPosterUrl(rs.getString("poster_url"));
+
 		movie.setTrailerUrl(rs.getString("trailer_url"));
+
 		movie.setStatus(rs.getString("status"));
+
 		movie.setCreatedAt(rs.getTimestamp("created_at"));
 
 		return movie;
+
 	}
 
 	private void setInsertValues(PreparedStatement ps, MovieBean movie) throws SQLException {
 
 		ps.setString(1, movie.getId());
+
 		ps.setString(2, movie.getTitle());
+
 		ps.setString(3, movie.getDescription());
+
 		ps.setInt(4, movie.getDurationMinutes());
+
 		ps.setString(5, movie.getLanguage());
+
 		ps.setDate(6, movie.getReleaseDate());
+
 		ps.setString(7, movie.getCertificate());
+
 		ps.setString(8, movie.getPosterUrl());
+
 		ps.setString(9, movie.getTrailerUrl());
+
 		ps.setString(10, movie.getStatus());
+
 	}
 
 	private void setUpdateValues(PreparedStatement ps, MovieBean movie) throws SQLException {
 
 		ps.setString(1, movie.getTitle());
+
 		ps.setString(2, movie.getDescription());
+
 		ps.setInt(3, movie.getDurationMinutes());
+
 		ps.setString(4, movie.getLanguage());
+
 		ps.setDate(5, movie.getReleaseDate());
+
 		ps.setString(6, movie.getCertificate());
+
 		ps.setString(7, movie.getPosterUrl());
+
 		ps.setString(8, movie.getTrailerUrl());
+
 		ps.setString(9, movie.getStatus());
+
 		ps.setString(10, movie.getId());
+
 	}
 
 	public List<MovieBean> searchMoviesByTitle(String query) {
@@ -361,15 +429,19 @@ public class MovieDAO {
 					movie.setGenreIds(getGenreIds(conn, movie.getId()));
 
 					movies.add(movie);
+
 				}
+
 			}
 
 		} catch (Exception e) {
 
 			e.printStackTrace();
+
 		}
 
 		return movies;
+
 	}
 
 	public Map<String, String> getAllGenres() {
@@ -389,13 +461,17 @@ public class MovieDAO {
 			while (rs.next()) {
 
 				genres.put(rs.getString("id"), rs.getString("name"));
+
 			}
 
 		} catch (Exception e) {
 
 			e.printStackTrace();
+
 		}
 
 		return genres;
+
 	}
+
 }

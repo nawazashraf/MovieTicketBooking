@@ -24,7 +24,6 @@ import com.movieticket.dao.PaymentDAO;
 import com.movieticket.model.BookingBean;
 import com.movieticket.model.PaymentBean;
 
-
 @WebServlet("/payment")
 public class PaymentServlet extends HttpServlet {
 
@@ -162,57 +161,63 @@ public class PaymentServlet extends HttpServlet {
 
 		if (!qrPage) {
 
-			String qrUrl = request.getScheme() + "://"
-			        + request.getServerName()
-			        + (request.getServerPort() == 80 || request.getServerPort() == 443
-			                ? ""
-			                : ":" + request.getServerPort())
-			        + request.getContextPath()
-			        + "/payment?bookingId="
-			        + bookingId
-			        + "&qr=true";
-			System.out.println("QR URL = " + qrUrl);
+			String host = request.getServerName();
 
-			try {
-
-				BitMatrix matrix = new MultiFormatWriter().encode(qrUrl, BarcodeFormat.QR_CODE, 250, 250);
-
-				ByteArrayOutputStream output = new ByteArrayOutputStream();
-
-				MatrixToImageWriter.writeToStream(matrix, "PNG", output);
-
-				String qrImage = Base64.getEncoder().encodeToString(output.toByteArray());
-
-				request.setAttribute("qrImage", qrImage);
-
-			} catch (Exception e) {
-
-				e.printStackTrace();
+			if ("localhost".equalsIgnoreCase(host) || "127.0.0.1".equals(host)) {
+				host = InetAddress.getLocalHost().getHostAddress();
 			}
+
+			String qrUrl = request.getScheme() + "://" + host
+					+ (request.getServerPort() == 80 || request.getServerPort() == 443 ? ""
+							: ":" + request.getServerPort())
+					+ request.getContextPath() + "/payment?bookingId=" + bookingId + "&qr=true";
+
+			System.out.println("QR URL = " + qrUrl);
 		}
 
-		/*
-		 * ================================================= SEND BOOKING TO JSP
-		 * =================================================
-		 */
+		try {
 
-		request.setAttribute("booking", booking);
+			BitMatrix matrix = new MultiFormatWriter().encode(qrUrl, BarcodeFormat.QR_CODE, 250, 250);
 
-		request.setAttribute("qrPage", qrPage);
+			ByteArrayOutputStream output = new ByteArrayOutputStream();
 
-		/*
-		 * ================================================= OPEN CORRECT PAGE
-		 * =================================================
-		 */
+			MatrixToImageWriter.writeToStream(matrix, "PNG", output);
 
-		if (qrPage) {
+			String qrImage = Base64.getEncoder().encodeToString(output.toByteArray());
 
-			request.getRequestDispatcher("/payment/qr-payment.jsp").forward(request, response);
+			request.setAttribute("qrImage", qrImage);
 
-		} else {
+		} catch (Exception e) {
 
-			request.getRequestDispatcher("/payment/payment.jsp").forward(request, response);
+			e.printStackTrace();
 		}
+	}
+
+	/*
+	 * ================================================= SEND BOOKING TO JSP
+	 * =================================================
+	 */
+
+	request.setAttribute("booking",booking);
+
+	request.setAttribute("qrPage",qrPage);
+
+	/*
+	 * ================================================= OPEN CORRECT PAGE
+	 * =================================================
+	 */
+
+	if(qrPage)
+
+	{
+
+		request.getRequestDispatcher("/payment/qr-payment.jsp").forward(request, response);
+
+	}else
+	{
+
+		request.getRequestDispatcher("/payment/payment.jsp").forward(request, response);
+	}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)

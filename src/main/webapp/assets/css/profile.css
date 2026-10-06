@@ -2,8 +2,7 @@
 	box-sizing: border-box;
 }
 
-html,
-body {
+html, body {
 	margin: 0;
 	padding: 0;
 	width: 100%;
@@ -853,7 +852,8 @@ body.drawer-open {
 ========================================================= */
 .drawer-actions {
 	display: flex;
-	justify-content: flex-end;
+	width: 100%;
+	justify-content: stretch;
 	gap: 8px;
 	margin-top: auto;
 	padding-top: 8px;
@@ -862,6 +862,8 @@ body.drawer-open {
 }
 
 .drawer-cancel {
+	width: 50%;
+	flex: 1 1 0;
 	border: 1px solid #d8dce0;
 	background: #fff;
 	color: #555b62;
@@ -870,9 +872,14 @@ body.drawer-open {
 	font-size: 10px;
 	font-weight: 700;
 	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .drawer-save {
+	width: 50%;
+	flex: 1 1 0;
 	border: none;
 	background: #111827;
 	color: #fff;
@@ -883,6 +890,7 @@ body.drawer-open {
 	cursor: pointer;
 	display: flex;
 	align-items: center;
+	justify-content: center;
 	gap: 8px;
 }
 
@@ -1081,99 +1089,168 @@ body.drawer-open {
 /* =========================================================
    ANIMATION
 ========================================================= */
-@keyframes profileUpdatePopupIn {
-	from {
-		opacity: 0;
-		transform: translateX(35px);
-	}
 
-	to {
-		opacity: 1;
-		transform: translateX(0);
-	}
+keyframes profileUpdatePopupIn {from { opacity:0;
+	transform: translateX(35px);
 }
 
-@keyframes profileUpdatePopupOut {
-	from {
-		opacity: 1;
-		transform: translateX(0);
-	}
+to {
+	opacity: 1;
+	transform: translateX(0);
+}
 
-	to {
-		opacity: 0;
-		transform: translateX(35px);
-	}
+}
+
+keyframes profileUpdatePopupOut {from { opacity:1;
+	transform: translateX(0);
+}
+
+to {
+	opacity: 0;
+	transform: translateX(35px);
+}
+
 }
 
 /* =========================================================
    800px
 ========================================================= */
-@media (max-width: 800px) {
-	.profile-page {
-		padding: 30px 18px 50px;
+@media ( max-width : 800px) {
+	html, body {
+		height: 100%;
+		min-height: 100%;
+		overflow: hidden;
 	}
-
-	.identity-section,
-	.profile-content {
+	body {
+		height: 100dvh;
+	}
+	.profile-page {
+		height: calc(100dvh - 70px);
+		min-height: 0;
+		padding: 20px 18px;
+		overflow: hidden;
+		display: flex;
+	}
+	.profile-container {
+		height: 100%;
+		min-height: 0;
+		display: flex;
+		flex-direction: column;
+	}
+	.page-header {
+		flex-shrink: 0;
+		margin-bottom: 15px;
+	}
+	.profile-card {
+		flex: 1 1 auto;
+		min-height: 0;
+		display: flex;
+		flex-direction: column;
+	}
+	.profile-banner {
+		flex-shrink: 0;
+	}
+	.identity-section, .profile-content {
 		padding-left: 22px;
 		padding-right: 22px;
+	}
+	.identity-section {
+		flex-shrink: 0;
+	}
+	.profile-content {
+		min-height: 0;
+		overflow: hidden;
+	}
+	.profile-drawer {
+		height: 100dvh;
+		max-height: 100dvh;
+		overflow: hidden;
+	}
+	.drawer-body {
+		min-height: 0;
+		overflow: hidden;
+	}
+	#editProfileForm {
+		min-height: 0;
+		overflow: hidden;
 	}
 }
 
 /* =========================================================
    600px
 ========================================================= */
-@media (max-width: 600px) {
-	.page-header h1 {
-		font-size: 26px;
+@media ( max-width : 600px) {
+	.profile-page {
+		height: calc(100dvh - 70px);
+		min-height: 0;
+		padding: 10px;
 	}
-
+	.page-header {
+		margin-bottom: 8px;
+	}
+	.page-header-label {
+		font-size: 9px;
+		margin-bottom: 3px;
+	}
+	.page-header h1 {
+		font-size: 22px;
+	}
+	.page-header p {
+		margin-top: 3px;
+		font-size: 10px;
+	}
+	.profile-card {
+		flex: 1 1 auto;
+		min-height: 0;
+	}
+	.profile-banner {
+		height: 20px;
+	}
 	.identity-row {
 		align-items: flex-start;
 		flex-direction: column;
 	}
-
+	.identity-section {
+		padding: 15px 18px;
+	}
+	.profile-content {
+		padding: 15px 18px 18px;
+		overflow: hidden;
+	}
 	.edit-profile-button {
 		width: 100%;
 	}
-
 	.information-grid {
 		grid-template-columns: 1fr;
 	}
-
 	.information-item {
 		border-right: none !important;
 		border-bottom: 1px solid #e9ebee !important;
 	}
-
 	.information-item:last-child {
 		border-bottom: none !important;
 	}
-
 	.profile-actions {
 		align-items: flex-start;
 		flex-direction: column;
 	}
-
 	.logout-btn {
 		width: 100%;
 		text-align: center;
 	}
-
 	.profile-drawer {
 		width: 100%;
+		height: 100dvh;
+		max-height: 100dvh;
 	}
-
 	.drawer-header {
 		padding-left: 20px;
 		padding-right: 20px;
 	}
-
 	.drawer-body {
 		padding-left: 20px;
 		padding-right: 20px;
 	}
-
 	.profile-update-popup {
 		top: 75px;
 		right: 15px;
@@ -1185,103 +1262,152 @@ body.drawer-open {
 /* =========================================================
    500px
 ========================================================= */
-@media (max-width: 500px) {
+@media ( max-width : 500px) {
 	.profile-page {
-		padding: 22px 12px 40px;
+		height: calc(100dvh - 70px);
+		padding: 8px;
 	}
-
+	.page-header {
+		margin-bottom: 6px;
+	}
+	.page-header h1 {
+		font-size: 20px;
+	}
+	.page-header p {
+		font-size: 9px;
+	}
+	.profile-banner {
+		height: 16px;
+	}
 	.identity-section {
-		padding: 20px;
+		padding: 12px 15px;
 	}
-
 	.profile-content {
-		padding: 25px 20px 30px;
+		padding: 12px 15px 15px;
 	}
-
 	.profile-avatar {
 		width: 65px;
 		height: 65px;
 		min-width: 65px;
 		font-size: 23px;
 	}
-
 	.identity-info h2 {
 		font-size: 18px;
 	}
-
 	.identity-email {
 		font-size: 11px;
 	}
-
+	.profile-section {
+		margin-bottom: 18px;
+	}
+	.section-heading {
+		margin-bottom: 9px;
+	}
+	.section-heading h3 {
+		font-size: 14px;
+	}
+	.section-heading p {
+		font-size: 9px;
+	}
+	.information-item {
+		min-height: 55px;
+		padding: 11px 13px;
+	}
+	.information-label {
+		font-size: 8px;
+		margin-bottom: 5px;
+	}
+	.information-value {
+		font-size: 11px;
+	}
+	.security-panel {
+		gap: 9px;
+		padding: 10px;
+	}
+	.security-icon {
+		width: 30px;
+		height: 30px;
+		min-width: 30px;
+	}
+	.security-info {
+		gap: 2px;
+	}
+	.security-info strong {
+		font-size: 10px;
+	}
+	.security-info span {
+		font-size: 9px;
+		line-height: 1.3;
+	}
+	.security-status {
+		font-size: 8px;
+	}
+	.profile-actions {
+		padding: 11px 13px;
+		gap: 9px;
+	}
+	.profile-actions h3 {
+		font-size: 11px;
+	}
+	.profile-actions p {
+		font-size: 9px;
+	}
+	.logout-btn {
+		padding: 8px 12px;
+		font-size: 10px;
+	}
 	.drawer-header {
 		padding: 14px 18px 11px;
 	}
-
 	.drawer-body {
 		padding: 10px 18px 11px;
 	}
-
 	.drawer-profile-summary {
 		gap: 8px;
 	}
-
 	.drawer-avatar {
 		width: 36px;
 		height: 36px;
 		min-width: 36px;
 		font-size: 13px;
 	}
-
 	.drawer-profile-summary strong {
 		font-size: 11px;
 	}
-
 	.drawer-profile-summary span {
 		font-size: 8px;
 	}
-
 	.drawer-divider {
 		margin: 7px 0;
 	}
-
 	.drawer-field {
 		margin-bottom: 5px;
 	}
-
 	.drawer-field label {
 		font-size: 9px;
 		margin-bottom: 2px;
 	}
-
 	.drawer-input-wrapper {
 		height: 34px;
 	}
-
-	.phone-prefix,
-	.phone-input-group input {
+	.phone-prefix, .phone-input-group input {
 		height: 34px;
 	}
-
-	.drawer-input-wrapper input,
-	.drawer-input-wrapper select {
+	.drawer-input-wrapper input, .drawer-input-wrapper select {
 		font-size: 10px;
 	}
-
 	.field-prefix {
 		width: 34px;
 		min-width: 34px;
 	}
-
 	.drawer-field small {
 		font-size: 7px;
 		margin-top: 1px;
 	}
-
 	.password-input-wrapper input {
 		height: 34px;
 		font-size: 10px;
 	}
-
 	.drawer-readonly {
 		height: 34px;
 		min-height: 34px;
@@ -1291,116 +1417,176 @@ body.drawer-open {
 /* =========================================================
    380px
 ========================================================= */
-@media (max-width: 380px) {
+@media ( max-width : 380px) {
 	.profile-page {
-		padding: 18px 10px 30px;
+		height: calc(100dvh - 70px);
+		padding: 6px;
 	}
-
+	.page-header {
+		margin-bottom: 5px;
+	}
+	.page-header h1 {
+		font-size: 18px;
+	}
+	.page-header p {
+		font-size: 8px;
+	}
+	.profile-banner {
+		height: 12px;
+	}
+	.identity-section {
+		padding: 9px 12px;
+	}
+	.profile-content {
+		padding: 9px 12px 12px;
+	}
 	.profile-avatar {
 		width: 58px;
 		height: 58px;
 		min-width: 58px;
 		font-size: 20px;
 	}
-
 	.identity-info h2 {
 		font-size: 16px;
 	}
-
+	.identity-email {
+		font-size: 9px;
+		margin-bottom: 7px;
+	}
+	.status-badge {
+		padding: 4px 8px;
+		font-size: 8px;
+	}
+	.profile-section {
+		margin-bottom: 12px;
+	}
+	.section-heading {
+		margin-bottom: 6px;
+	}
+	.section-heading h3 {
+		font-size: 12px;
+	}
+	.section-heading p {
+		font-size: 8px;
+		margin-top: 2px;
+	}
+	.information-item {
+		min-height: 45px;
+		padding: 8px 10px;
+	}
+	.information-label {
+		font-size: 7px;
+		margin-bottom: 3px;
+	}
+	.information-value {
+		font-size: 9px;
+	}
+	.security-panel {
+		padding: 8px;
+	}
+	.security-icon {
+		width: 26px;
+		height: 26px;
+		min-width: 26px;
+		font-size: 10px;
+	}
+	.security-info strong {
+		font-size: 9px;
+	}
+	.security-info span {
+		font-size: 8px;
+	}
+	.security-status {
+		font-size: 7px;
+	}
+	.profile-actions {
+		padding: 8px 10px;
+	}
+	.profile-actions h3 {
+		font-size: 10px;
+	}
+	.profile-actions p {
+		font-size: 8px;
+		margin-top: 2px;
+	}
+	.logout-btn {
+		padding: 6px 10px;
+		font-size: 9px;
+	}
 	.drawer-header {
 		padding: 11px 15px 9px;
 	}
-
 	.drawer-body {
 		padding: 8px 15px 9px;
 	}
-
 	.drawer-header h2 {
 		font-size: 16px;
 	}
-
 	.drawer-header p {
 		font-size: 8px;
 	}
-
 	.drawer-close {
 		width: 27px;
 		height: 27px;
 		min-width: 27px;
 	}
-
 	.drawer-avatar {
 		width: 32px;
 		height: 32px;
 		min-width: 32px;
 	}
-
 	.drawer-profile-summary strong {
 		font-size: 10px;
 	}
-
 	.drawer-profile-summary span {
 		font-size: 7px;
 	}
-
 	.drawer-divider {
 		margin: 5px 0;
 	}
-
 	.drawer-field {
 		margin-bottom: 4px;
 	}
-
 	.drawer-field label {
 		font-size: 8px;
 	}
-
 	.drawer-input-wrapper {
 		height: 31px;
 	}
-
-	.phone-prefix,
-	.phone-input-group input {
+	.phone-prefix, .phone-input-group input {
 		height: 31px;
 	}
-
 	.password-input-wrapper input {
 		height: 31px;
 	}
-
 	.drawer-readonly {
 		height: 31px;
 		min-height: 31px;
 	}
-
 	.field-prefix {
 		width: 31px;
 		min-width: 31px;
 		font-size: 9px;
 	}
-
-	.drawer-input-wrapper input,
-	.drawer-input-wrapper select {
+	.drawer-input-wrapper input, .drawer-input-wrapper select {
 		font-size: 9px;
 		padding-left: 8px;
 		padding-right: 8px;
 	}
-
 	.phone-prefix {
 		min-width: 43px;
 		font-size: 9px;
 	}
-
 	.drawer-field small {
 		display: none;
 	}
-
 	.drawer-actions {
 		padding-top: 5px;
 	}
-
-	.drawer-cancel,
-	.drawer-save {
+	.drawer-cancel, .drawer-save {
+		flex: 1 1 0;
+		width: 50%;
+		justify-content: center;
 		padding: 7px 10px;
 		font-size: 9px;
 	}
@@ -1409,57 +1595,52 @@ body.drawer-open {
 /* =========================================================
    SHORT HEIGHT
 ========================================================= */
-@media (max-height: 750px) {
+@media ( max-height : 750px) {
+	.profile-page {
+		padding-top: 8px;
+		padding-bottom: 8px;
+	}
+	.page-header {
+		margin-bottom: 6px;
+	}
 	.drawer-header {
 		padding-top: 11px;
 		padding-bottom: 9px;
 	}
-
 	.drawer-body {
 		padding-top: 8px;
 		padding-bottom: 9px;
 	}
-
 	.drawer-profile-summary {
 		gap: 7px;
 	}
-
 	.drawer-avatar {
 		width: 34px;
 		height: 34px;
 		min-width: 34px;
 	}
-
 	.drawer-divider {
 		margin: 6px 0;
 	}
-
 	.drawer-field {
 		margin-bottom: 4px;
 	}
-
 	.drawer-field label {
 		margin-bottom: 2px;
 	}
-
 	.drawer-input-wrapper {
 		height: 32px;
 	}
-
-	.phone-prefix,
-	.phone-input-group input {
+	.phone-prefix, .phone-input-group input {
 		height: 32px;
 	}
-
 	.drawer-readonly {
 		height: 32px;
 		min-height: 32px;
 	}
-
 	.password-input-wrapper input {
 		height: 32px;
 	}
-
 	.drawer-actions {
 		padding-top: 5px;
 	}
@@ -1468,101 +1649,106 @@ body.drawer-open {
 /* =========================================================
    VERY SHORT SCREEN
 ========================================================= */
-@media (max-height: 650px) {
+@media ( max-height : 650px) {
+	.profile-page {
+		padding-top: 5px;
+		padding-bottom: 5px;
+	}
+	.page-header {
+		margin-bottom: 4px;
+	}
+	.page-header h1 {
+		font-size: 17px;
+	}
+	.page-header p {
+		font-size: 8px;
+		margin-top: 2px;
+	}
+	.profile-banner {
+		height: 10px;
+	}
+	.identity-section {
+		padding-top: 7px;
+		padding-bottom: 7px;
+	}
+	.profile-content {
+		padding-top: 7px;
+		padding-bottom: 8px;
+	}
 	.drawer-header {
 		padding-top: 8px;
 		padding-bottom: 7px;
 	}
-
 	.drawer-header h2 {
 		font-size: 16px;
 	}
-
 	.drawer-header p {
 		font-size: 8px;
 	}
-
 	.drawer-body {
 		padding-top: 6px;
 		padding-bottom: 7px;
 	}
-
 	.drawer-profile-summary {
 		gap: 6px;
 	}
-
 	.drawer-avatar {
 		width: 30px;
 		height: 30px;
 		min-width: 30px;
 		font-size: 11px;
 	}
-
 	.drawer-profile-summary strong {
 		font-size: 9px;
 	}
-
 	.drawer-profile-summary span {
 		font-size: 7px;
 	}
-
 	.drawer-divider {
 		margin: 4px 0;
 	}
-
 	.drawer-field {
 		margin-bottom: 3px;
 	}
-
 	.drawer-field label {
 		font-size: 8px;
 		margin-bottom: 1px;
 	}
-
 	.drawer-input-wrapper {
 		height: 29px;
 	}
-
-	.phone-prefix,
-	.phone-input-group input {
+	.phone-prefix, .phone-input-group input {
 		height: 29px;
 	}
-
 	.drawer-readonly {
 		height: 29px;
 		min-height: 29px;
 	}
-
 	.password-input-wrapper input {
 		height: 29px;
 	}
-
-	.drawer-input-wrapper input,
-	.drawer-input-wrapper select {
+	.drawer-input-wrapper input, .drawer-input-wrapper select {
 		font-size: 8px;
 	}
-
 	.field-prefix {
 		width: 29px;
 		min-width: 29px;
 		font-size: 8px;
 	}
-
 	.phone-prefix {
 		min-width: 40px;
 		font-size: 8px;
 	}
-
 	.drawer-field small {
 		display: none;
 	}
-
 	.drawer-actions {
 		padding-top: 4px;
 	}
-
-	.drawer-cancel,
-	.drawer-save {
+	.drawer-cancel, .drawer-save {
+		flex: 1 1 0;
+		width: 50%;
+		justify-content: center;
 		padding: 6px 9px;
 		font-size: 8px;
 	}

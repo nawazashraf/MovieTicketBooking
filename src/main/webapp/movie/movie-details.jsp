@@ -19,6 +19,7 @@ Map<String, List<ShowBean>> showsByDate = (Map<String, List<ShowBean>>) request.
 
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Movie Details</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">

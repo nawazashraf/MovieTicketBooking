@@ -141,39 +141,40 @@ public class PaymentServlet extends HttpServlet {
 		 * ================================================= LOGIN REQUIRED ONLY FOR PC
 		 * PAGE =================================================
 		 */
-
 		if (!qrPage) {
 
 			HttpSession session = request.getSession(false);
 
 			if (session == null || session.getAttribute("user") == null) {
-
 				response.sendRedirect(request.getContextPath() + "/login.jsp");
-
 				return;
 			}
 		}
 
 		/*
-		 * ================================================= CREATE QR ONLY FOR PC PAGE
+		 * ================================================= CREATE QR URL
 		 * =================================================
 		 */
 
-		if (!qrPage) {
+		String qrUrl;
 
-			String host = request.getServerName();
+		String host = request.getServerName();
 
-			if ("localhost".equalsIgnoreCase(host) || "127.0.0.1".equals(host)) {
-				host = InetAddress.getLocalHost().getHostAddress();
-			}
+		if ("localhost".equalsIgnoreCase(host) || "127.0.0.1".equals(host) || "::1".equals(host)) {
 
-			String qrUrl = request.getScheme() + "://" + host
-					+ (request.getServerPort() == 80 || request.getServerPort() == 443 ? ""
-							: ":" + request.getServerPort())
-					+ request.getContextPath() + "/payment?bookingId=" + bookingId + "&qr=true";
-
-			System.out.println("QR URL = " + qrUrl);
+			host = InetAddress.getLocalHost().getHostAddress();
 		}
+
+		qrUrl = request.getScheme() + "://" + host
+				+ (request.getServerPort() == 80 || request.getServerPort() == 443 ? "" : ":" + request.getServerPort())
+				+ request.getContextPath() + "/payment?bookingId=" + bookingId + "&qr=true";
+
+		System.out.println("QR URL = " + qrUrl);
+
+		/*
+		 * ================================================= CREATE QR IMAGE
+		 * =================================================
+		 */
 
 		try {
 
@@ -188,36 +189,31 @@ public class PaymentServlet extends HttpServlet {
 			request.setAttribute("qrImage", qrImage);
 
 		} catch (Exception e) {
-
 			e.printStackTrace();
 		}
-	}
 
-	/*
-	 * ================================================= SEND BOOKING TO JSP
-	 * =================================================
-	 */
+		/*
+		 * ================================================= SEND BOOKING TO JSP
+		 * =================================================
+		 */
 
-	request.setAttribute("booking",booking);
+		request.setAttribute("booking", booking);
 
-	request.setAttribute("qrPage",qrPage);
+		request.setAttribute("qrPage", qrPage);
 
-	/*
-	 * ================================================= OPEN CORRECT PAGE
-	 * =================================================
-	 */
+		/*
+		 * ================================================= OPEN CORRECT PAGE
+		 * =================================================
+		 */
 
-	if(qrPage)
+		if (qrPage) {
 
-	{
+			request.getRequestDispatcher("/payment/qr-payment.jsp").forward(request, response);
 
-		request.getRequestDispatcher("/payment/qr-payment.jsp").forward(request, response);
+		} else {
 
-	}else
-	{
-
-		request.getRequestDispatcher("/payment/payment.jsp").forward(request, response);
-	}
+			request.getRequestDispatcher("/payment/payment.jsp").forward(request, response);
+		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -259,8 +255,6 @@ public class PaymentServlet extends HttpServlet {
 					paymentSuccess = false;
 				}
 			}
-
-
 
 			/*
 			 * ================================================= SUCCESS / FAILURE PAGE

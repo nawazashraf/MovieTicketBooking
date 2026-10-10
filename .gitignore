@@ -1,18 +1,57 @@
-# Compiled class file
+# ==============================
+# Compiled Java Files
+# ==============================
 *.class
 
-# Log file
+# ==============================
+# Log and Crash Files
+# ==============================
 *.log
-
-# BlueJ files
-*.ctxt
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
 
-# env
-/src/main/java/db.properties
-/build/
-/bin/
+# ==============================
+# Eclipse IDE and Classpath
+# ==============================
+.metadata/
+.recommenders/
+.classpath
+.project
+.settings/
+*.launch
 
+# ==============================
+# Build Output
+# ==============================
+/bin/
+/build/
+/target/
+/out/
+
+# ==============================
+# Database Credentials
+# ==============================
+/src/main/java/db.properties
+.env
+.env.*
+!.env.example
+
+# ==============================
+# Temporary Files
+# ==============================
+*.tmp
+*.bak
+*.swp
+*~
+
+# ==============================
+# Operating System Files
+# ==============================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==============================
+# Tomcat Logs
+# ==============================
+catalina.out

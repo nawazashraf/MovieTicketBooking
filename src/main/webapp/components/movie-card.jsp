@@ -1,5 +1,5 @@
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/assets/css/moviecard.css">
+	href="${pageContext.request.contextPath}/assets/css/moviecard.css?v=10">
 
 <%@ page import="com.movieticket.model.MovieBean"%>
 

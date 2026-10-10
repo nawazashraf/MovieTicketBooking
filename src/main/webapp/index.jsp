@@ -85,11 +85,7 @@
 	</div>
 	<div id="mobile-debug"></div>
 
-	<script>
-		document.getElementById("mobile-debug").innerHTML = "Width: "
-				+ window.innerWidth + "px | Height: " + window.innerHeight
-				+ "px | DPR: " + window.devicePixelRatio;
-	</script>
+
 
 </body>
 </html>

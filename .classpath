@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v11.0"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/angus-activation-2.0.2.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/angus-mail-2.0.5.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/core-3.5.3.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/fontbox-2.0.24.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/graphics2d-0.30.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/HikariCP-7.1.0.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/jakarta.activation-api-2.1.4.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/jakarta.mail-api-2.1.3.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/javase-3.5.3.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/mysql-connector-j-26.7.0.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/openhtmltopdf-core-1.0.10.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/openhtmltopdf-pdfbox-1.0.10.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/pdfbox-2.0.24.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/slf4j-api-2.0.17.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/xmpbox-2.0.24.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

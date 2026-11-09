@@ -10,10 +10,12 @@
 <title>Home Page</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/assets/css/common.css?v=2">
+	href="${pageContext.request.contextPath}/assets/css/common.css?v=5">
 
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/assets/css/movie.css?v=3">
+	href="${pageContext.request.contextPath}/assets/css/moviecard.css?v=15">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/assets/css/movie.css?v=7">
 
 
 </head>

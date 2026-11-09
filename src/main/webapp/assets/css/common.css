@@ -11,34 +11,29 @@ body {
 	padding: 0;
 }
 
-.home-page {
+.home-page,
+.movies-page {
 	padding: 0 48px;
 	background-color: #F1F1F1;
 }
 
-.movies-page {
-	padding: 0;
-	background-color: #F1F1F1;
-}
-
-.movies-page .movie-container {
-	padding: 0;
-}
-
 @media (max-width: 1024px) {
-	.home-page {
+	.home-page,
+	.movies-page {
 		padding: 0 24px;
 	}
 }
 
 @media (max-width: 768px) {
-	.home-page {
+	.home-page,
+	.movies-page {
 		padding: 0 16px;
 	}
 }
 
 @media (max-width: 480px) {
-	.home-page {
+	.home-page,
+	.movies-page {
 		padding: 0 12px;
 	}
 }

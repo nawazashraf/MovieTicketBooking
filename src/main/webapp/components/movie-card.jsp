@@ -1,6 +1,3 @@
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/assets/css/moviecard.css?v=13">
-
 <%@ page import="com.movieticket.model.MovieBean"%>
 
 <%

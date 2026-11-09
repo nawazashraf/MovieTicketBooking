@@ -15,11 +15,11 @@ List<MovieBean> movies = (List<MovieBean>) request.getAttribute("movies");
 <title>Movies</title>
 
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/assets/css/common.css?v=3">
+	href="${pageContext.request.contextPath}/assets/css/common.css?v=5">
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/assets/css/moviecard.css?v=13">
+	href="${pageContext.request.contextPath}/assets/css/moviecard.css?v=15">
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/assets/css/movie.css?v=4">
+	href="${pageContext.request.contextPath}/assets/css/movie.css?v=7">
 </head>
 
 <body>

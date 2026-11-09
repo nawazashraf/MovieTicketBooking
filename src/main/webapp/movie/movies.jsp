@@ -86,7 +86,7 @@ h1 {
 	.movie-card {
 		width: 100% !important;
 		min-width: 0 !important;
-		height: 270px !important;
+		height: 290px !important;
 		border-radius: 8px !important;
 		box-sizing: border-box !important;
 	}
@@ -99,7 +99,7 @@ h1 {
 	}
 
 	.movie-info {
-		padding: 5px 5px 7px !important;
+		padding: 5px 5px 12px !important;
 		min-width: 0 !important;
 		overflow: hidden !important;
 		box-sizing: border-box !important;
@@ -158,7 +158,7 @@ h1 {
 	.movie-card {
 		width: 100% !important;
 		min-width: 0 !important;
-		height: 285px !important;
+		height: 305px !important;
 		border-radius: 8px !important;
 		box-sizing: border-box !important;
 	}
@@ -171,7 +171,7 @@ h1 {
 	}
 
 	.movie-info {
-		padding: 7px 7px 9px !important;
+		padding: 7px 7px 14px !important;
 		min-width: 0 !important;
 		overflow: hidden !important;
 	}
@@ -205,7 +205,7 @@ h1 {
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/assets/css/common.css">
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/assets/css/moviecard.css?v=10">
+	href="${pageContext.request.contextPath}/assets/css/moviecard.css?v=13">
 </head>
 
 <body>

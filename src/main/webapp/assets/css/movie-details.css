@@ -212,10 +212,37 @@ body {
 /* =========================================================
    MALL
 ========================================================= */
-.show-list {
+.theatre-list {
+	display: flex;
+	gap: 16px;
 	width: 100%;
-	padding: 20px 0;
-	border-bottom: 1px solid #dddddd;
+	padding: 2px 2px 14px;
+	overflow-x: auto;
+	scroll-snap-type: x proximity;
+	scrollbar-width: thin;
+}
+
+.theatre-list::-webkit-scrollbar {
+	height: 6px;
+}
+
+.theatre-list::-webkit-scrollbar-thumb {
+	background: #cccccc;
+	border-radius: 3px;
+}
+
+.show-list {
+	flex: 0 0 210px;
+	width: 210px;
+	min-width: 0;
+	margin-bottom: 0;
+	padding: 18px;
+	text-align: center;
+	background: #ffffff;
+	border: 1px solid #e5e5e5;
+	border-radius: 10px;
+	box-shadow: 0 2px 7px rgba(0, 0, 0, 0.06);
+	scroll-snap-align: start;
 }
 
 .show-mall {
@@ -233,6 +260,7 @@ body {
 .show-times {
 	display: flex;
 	flex-wrap: wrap;
+	justify-content: center;
 	gap: 12px;
 	width: 100%;
 }
@@ -495,14 +523,14 @@ body {
 	/* =====================================================
        MALL CARD
     ===================================================== */
-	.show-list {
-		width: 100%;
-		margin-bottom: 12px;
+	.theatre-list {
+		gap: 12px;
+	}
+	.theatre-list > .show-list {
+		flex-basis: min(60vw, 210px);
+		width: auto;
+		margin-bottom: 0;
 		padding: 15px;
-		background: #ffffff;
-		border: 1px solid #e5e5e5;
-		border-radius: 10px;
-		box-shadow: 0 2px 7px rgba(0, 0, 0, 0.06);
 	}
 	.show-mall {
 		margin: 0 0 13px;

@@ -28,7 +28,7 @@ Map<String, List<ShowBean>> showsByDate = (Map<String, List<ShowBean>>) request.
 	href="${pageContext.request.contextPath}/assets/css/common.css">
 
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/assets/css/movie-details.css">
+	href="${pageContext.request.contextPath}/assets/css/movie-details.css?v=3">
 </head>
 
 <body>
@@ -168,6 +168,7 @@ Map<String, List<ShowBean>> showsByDate = (Map<String, List<ShowBean>>) request.
 
 			</div>
 
+			<div class="theatre-list">
 
 			<%
 			String currentMall = null;
@@ -238,6 +239,8 @@ Map<String, List<ShowBean>> showsByDate = (Map<String, List<ShowBean>>) request.
 	<%
 	}
 	%>
+
+			</div>
 
 	</div>
 

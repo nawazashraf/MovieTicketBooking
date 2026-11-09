@@ -3,6 +3,7 @@ package com.movieticket.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import com.movieticket.util.DBConnection;
 
 public class AnalyticsDAO {
 
+	// Gather the totals shown on the dashboard.
 	public AnalyticsBean getDashboardAnalytics() {
 
 		String sql = """
@@ -71,41 +73,27 @@ public class AnalyticsDAO {
 				    ) AS revenue_this_month
 				""";
 
-		try {
-			Connection conn = DBConnection.getConnection();
-
-			PreparedStatement ps = conn.prepareStatement(sql);
-
-			ResultSet rs = ps.executeQuery();
-
+		try (Connection conn = DBConnection.getConnection();
+				PreparedStatement ps = conn.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery()) {
 			AnalyticsBean analytics = new AnalyticsBean();
-
 			if (rs.next()) {
-
 				analytics.setTotalRevenue(rs.getBigDecimal("total_revenue"));
-
 				analytics.setTotalBookings(rs.getInt("total_bookings"));
-
 				analytics.setConfirmedBookings(rs.getInt("confirmed_bookings"));
-
 				analytics.setTotalTicketsSold(rs.getInt("total_tickets_sold"));
-
 				analytics.setTotalUsers(rs.getInt("total_users"));
-
 				analytics.setRevenueToday(rs.getBigDecimal("revenue_today"));
-
 				analytics.setRevenueThisMonth(rs.getBigDecimal("revenue_this_month"));
-
 				return analytics;
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return null;
 	}
 
+	// Pick out the five best-selling movies.
 	public List<MovieAnalyticsBean> getTopMovies() {
 
 		List<MovieAnalyticsBean> movies = new ArrayList<>();
@@ -139,18 +127,21 @@ public class AnalyticsDAO {
 		try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 			try (ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {
-					MovieAnalyticsBean movie = new MovieAnalyticsBean();
-
-					movie.setMovieTitle(rs.getString("title"));
-					movie.setTicketsSold(rs.getInt("tickets_sold"));
-					movie.setRevenue(rs.getDouble("revenue"));
-
-					movies.add(movie);
+					movies.add(mapMovieAnalytics(rs));
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return movies;
+	}
+
+	// Fill a movie summary from the current row.
+	private MovieAnalyticsBean mapMovieAnalytics(ResultSet rs) throws SQLException {
+		MovieAnalyticsBean movie = new MovieAnalyticsBean();
+		movie.setMovieTitle(rs.getString("title"));
+		movie.setTicketsSold(rs.getInt("tickets_sold"));
+		movie.setRevenue(rs.getDouble("revenue"));
+		return movie;
 	}
 }

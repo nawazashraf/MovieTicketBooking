@@ -12,17 +12,13 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
+/** Handles password changes for signed-in users and verified reset requests. */
 @WebServlet("/changepassword")
 public class ChangePasswordServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private UserDAO userDAO;
-
-	@Override
-	public void init() {
-		userDAO = new UserDAO();
-	}
+	private final UserDAO userDAO = new UserDAO();
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -30,9 +26,6 @@ public class ChangePasswordServlet extends HttpServlet {
 
 		HttpSession session = request.getSession(false);
 
-		/*
-		 * FORGOT PASSWORD FLOW
-		 */
 		if (session != null && session.getAttribute("forgotUserId") != null) {
 
 			Boolean verified = (Boolean) session.getAttribute("forgotPasswordVerified");
@@ -49,9 +42,6 @@ public class ChangePasswordServlet extends HttpServlet {
 			return;
 		}
 
-		/*
-		 * NORMAL LOGGED-IN FLOW
-		 */
 		if (session == null || session.getAttribute("userId") == null) {
 
 			response.sendRedirect(request.getContextPath() + "/login.jsp");
@@ -63,9 +53,6 @@ public class ChangePasswordServlet extends HttpServlet {
 
 		UserBean user = userDAO.getUserById(userId);
 
-		/*
-		 * INACTIVE USER CANNOT CHANGE PASSWORD
-		 */
 		if (user == null || !user.isStatus()) {
 
 			response.sendRedirect(request.getContextPath() + "/profile");
@@ -82,17 +69,10 @@ public class ChangePasswordServlet extends HttpServlet {
 
 		HttpSession session = request.getSession(false);
 
-		/*
-		 * ======================================== FORGOT PASSWORD FLOW
-		 * ========================================
-		 */
 		if (session != null && session.getAttribute("forgotUserId") != null) {
 
 			Boolean verified = (Boolean) session.getAttribute("forgotPasswordVerified");
 
-			/*
-			 * FORGOT PASSWORD MUST HAVE BEEN VERIFIED (EMAIL FOUND)
-			 */
 			if (!Boolean.TRUE.equals(verified)) {
 
 				response.sendRedirect(request.getContextPath() + "/forgotpassword");
@@ -102,11 +82,7 @@ public class ChangePasswordServlet extends HttpServlet {
 
 			String userId = String.valueOf(session.getAttribute("forgotUserId"));
 
-			/*
-			 * GET USER AGAIN FROM DATABASE
-			 *
-			 * Do not trust user information supplied by browser.
-			 */
+			// Use the account ID saved in the verified session, not a form value.
 			UserBean user = userDAO.getUserById(userId);
 
 			if (user == null) {
@@ -124,9 +100,6 @@ public class ChangePasswordServlet extends HttpServlet {
 
 			String confirmPassword = request.getParameter("confirmPassword");
 
-			/*
-			 * REQUIRED
-			 */
 			if (newPassword == null || confirmPassword == null || newPassword.isEmpty() || confirmPassword.isEmpty()) {
 
 				request.setAttribute("error", "All fields are required.");
@@ -136,9 +109,6 @@ public class ChangePasswordServlet extends HttpServlet {
 				return;
 			}
 
-			/*
-			 * NO LEADING OR TRAILING SPACES
-			 */
 			if (!newPassword.equals(newPassword.trim())) {
 
 				request.setAttribute("error", "Password must not contain leading or trailing spaces.");
@@ -148,9 +118,6 @@ public class ChangePasswordServlet extends HttpServlet {
 				return;
 			}
 
-			/*
-			 * PASSWORD LENGTH
-			 */
 			if (newPassword.length() < 8) {
 
 				request.setAttribute("error", "Password must contain at least 8 characters.");
@@ -169,9 +136,6 @@ public class ChangePasswordServlet extends HttpServlet {
 				return;
 			}
 
-			/*
-			 * CONFIRM PASSWORD
-			 */
 			if (!newPassword.equals(confirmPassword)) {
 
 				request.setAttribute("error", "New password and confirm password do not match.");
@@ -181,24 +145,12 @@ public class ChangePasswordServlet extends HttpServlet {
 				return;
 			}
 
-			/*
-			 * UPDATE PASSWORD
-			 */
 			boolean changed = userDAO.updatePassword(userId, newPassword);
 
 			if (changed) {
-
-				/*
-				 * FORGOT PASSWORD SUCCESS ALSO ACTIVATE ACCOUNT
-				 */
 				userDAO.activateAccount(userId);
 
-				/*
-				 * CONSUME FORGOT PASSWORD AUTHORIZATION
-				 *
-				 * This prevents the same verified session from being reused after the password
-				 * reset.
-				 */
+				// Don't let the same verification authorize another reset.
 				session.removeAttribute("forgotUserId");
 				session.removeAttribute("forgotUserEmail");
 				session.removeAttribute("forgotPasswordVerified");
@@ -217,11 +169,6 @@ public class ChangePasswordServlet extends HttpServlet {
 			return;
 		}
 
-		/*
-		 * ======================================== NORMAL LOGGED-IN ACTIVE USER
-		 * ========================================
-		 */
-
 		if (session == null || session.getAttribute("userId") == null) {
 
 			response.sendRedirect(request.getContextPath() + "/login.jsp");
@@ -233,9 +180,6 @@ public class ChangePasswordServlet extends HttpServlet {
 
 		UserBean user = userDAO.getUserById(userId);
 
-		/*
-		 * ONLY ACTIVE USERS CAN CHANGE PASSWORD
-		 */
 		if (user == null || !user.isStatus()) {
 
 			response.sendRedirect(request.getContextPath() + "/profile");
@@ -243,16 +187,10 @@ public class ChangePasswordServlet extends HttpServlet {
 			return;
 		}
 
-		/*
-		 * PASSWORD
-		 */
 		String newPassword = request.getParameter("newPassword");
 
 		String confirmPassword = request.getParameter("confirmPassword");
 
-		/*
-		 * REQUIRED
-		 */
 		if (newPassword == null || confirmPassword == null || newPassword.isEmpty() || confirmPassword.isEmpty()) {
 
 			request.setAttribute("error", "All fields are required.");
@@ -262,9 +200,6 @@ public class ChangePasswordServlet extends HttpServlet {
 			return;
 		}
 
-		/*
-		 * NO LEADING OR TRAILING SPACES
-		 */
 		if (!newPassword.equals(newPassword.trim())) {
 
 			request.setAttribute("error", "Password must not contain leading or trailing spaces.");
@@ -274,9 +209,6 @@ public class ChangePasswordServlet extends HttpServlet {
 			return;
 		}
 
-		/*
-		 * PASSWORD LENGTH
-		 */
 		if (newPassword.length() < 8) {
 
 			request.setAttribute("error", "Password must contain at least 8 characters.");
@@ -295,9 +227,6 @@ public class ChangePasswordServlet extends HttpServlet {
 			return;
 		}
 
-		/*
-		 * CONFIRM PASSWORD
-		 */
 		if (!newPassword.equals(confirmPassword)) {
 
 			request.setAttribute("error", "New password and confirm password do not match.");
@@ -307,9 +236,6 @@ public class ChangePasswordServlet extends HttpServlet {
 			return;
 		}
 
-		/*
-		 * CHANGE PASSWORD DIRECTLY
-		 */
 		boolean changed = userDAO.updatePassword(userId, newPassword);
 
 		if (changed) {

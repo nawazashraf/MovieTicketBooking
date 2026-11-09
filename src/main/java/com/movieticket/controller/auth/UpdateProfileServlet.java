@@ -15,17 +15,13 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/** Validates and saves changes to the signed-in user's profile. */
 @WebServlet("/update-profile")
 public class UpdateProfileServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private UserDAO userDAO;
-
-	@Override
-	public void init() {
-		userDAO = new UserDAO();
-	}
+	private final UserDAO userDAO = new UserDAO();
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -59,12 +55,6 @@ public class UpdateProfileServlet extends HttpServlet {
 
 		String securityAnswer = request.getParameter("securityAnswer");
 
-		/*
-		 * ========================================
-		 * REQUIRED FIELDS
-		 * ========================================
-		 */
-
 		if (name == null || name.trim().isEmpty()
 				|| phone == null || phone.trim().isEmpty()) {
 
@@ -82,12 +72,6 @@ public class UpdateProfileServlet extends HttpServlet {
 		name = name.trim();
 
 		phone = phone.trim();
-
-		/*
-		 * ========================================
-		 * NAME VALIDATION
-		 * ========================================
-		 */
 
 		name = name.replaceAll("\\s+", " ");
 
@@ -117,12 +101,6 @@ public class UpdateProfileServlet extends HttpServlet {
 			return;
 		}
 
-		/*
-		 * ========================================
-		 * FORMAT NAME
-		 * ========================================
-		 */
-
 		String[] words = name.toLowerCase().split(" ");
 
 		StringBuilder formattedName = new StringBuilder();
@@ -144,12 +122,6 @@ public class UpdateProfileServlet extends HttpServlet {
 		}
 
 		name = formattedName.toString().trim();
-
-		/*
-		 * ========================================
-		 * PHONE VALIDATION
-		 * ========================================
-		 */
 
 		if (!phone.matches("\\d{10}")) {
 
@@ -177,12 +149,6 @@ public class UpdateProfileServlet extends HttpServlet {
 			return;
 		}
 
-		/*
-		 * ========================================
-		 * SECURITY QUESTION
-		 * ========================================
-		 */
-
 		if (securityQuestion == null
 				|| securityQuestion.trim().isEmpty()) {
 
@@ -198,12 +164,6 @@ public class UpdateProfileServlet extends HttpServlet {
 		}
 
 		securityQuestion = securityQuestion.trim();
-
-		/*
-		 * ========================================
-		 * SECURITY ANSWER
-		 * ========================================
-		 */
 
 		if (securityAnswer == null
 				|| securityAnswer.trim().isEmpty()) {
@@ -233,12 +193,6 @@ public class UpdateProfileServlet extends HttpServlet {
 
 			return;
 		}
-
-		/*
-		 * ========================================
-		 * PASSWORD
-		 * ========================================
-		 */
 
 		boolean changePassword =
 				password != null && !password.trim().isEmpty();
@@ -299,12 +253,7 @@ public class UpdateProfileServlet extends HttpServlet {
 			}
 		}
 
-		/*
-		 * ========================================
-		 * UPDATE PROFILE
-		 * ========================================
-		 */
-
+		// Keep the existing password when the password field is left blank.
 		boolean updated;
 
 		if (changePassword) {
@@ -329,12 +278,6 @@ public class UpdateProfileServlet extends HttpServlet {
 			);
 		}
 
-		/*
-		 * ========================================
-		 * RESULT
-		 * ========================================
-		 */
-
 		if (updated) {
 
 			UserBean updatedUser =
@@ -351,12 +294,6 @@ public class UpdateProfileServlet extends HttpServlet {
 					"userRole",
 					updatedUser.getRole()
 			);
-
-			/*
-			 * ========================================
-			 * PASSWORD CHANGE EMAIL
-			 * ========================================
-			 */
 
 			if (changePassword) {
 

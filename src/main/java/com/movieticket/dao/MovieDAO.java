@@ -9,13 +9,13 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
 import java.util.UUID;
 import com.movieticket.model.MovieBean;
 import com.movieticket.util.DBConnection;
 
 public class MovieDAO {
 
+	// Save the movie and its genre selections together.
 	public boolean addMovie(MovieBean movie) {
 
 		String sql = """
@@ -26,7 +26,7 @@ public class MovieDAO {
 				""";
 
 		try (Connection conn = DBConnection.getConnection()) {
-
+			// Keep the movie and its genres in sync if either insert fails.
 			conn.setAutoCommit(false);
 
 			try {
@@ -71,6 +71,7 @@ public class MovieDAO {
 
 	}
 
+	// Look up a movie and its genres.
 	public MovieBean getMovieById(String movieId) {
 
 		String sql = "SELECT * FROM movies WHERE id = ?";
@@ -83,11 +84,7 @@ public class MovieDAO {
 
 				if (rs.next()) {
 
-					MovieBean movie = mapMovie(rs);
-
-					movie.setGenreIds(getGenreIds(conn, movieId));
-
-					return movie;
+					return mapMovieWithGenres(conn, rs);
 
 				}
 
@@ -103,6 +100,7 @@ public class MovieDAO {
 
 	}
 
+	// Get every movie with its genre IDs.
 	public List<MovieBean> getAllMovies() {
 
 		String sql = """
@@ -119,11 +117,7 @@ public class MovieDAO {
 
 			while (rs.next()) {
 
-				MovieBean movie = mapMovie(rs);
-
-				movie.setGenreIds(getGenreIds(conn, movie.getId()));
-
-				movies.add(movie);
+				movies.add(mapMovieWithGenres(conn, rs));
 
 			}
 
@@ -137,6 +131,7 @@ public class MovieDAO {
 
 	}
 
+	// Get movies with this status, along with their genre IDs.
 	public List<MovieBean> getMoviesByStatus(String status) throws SQLException {
 
 		String sql = """
@@ -156,11 +151,7 @@ public class MovieDAO {
 
 				while (rs.next()) {
 
-					MovieBean movie = mapMovie(rs);
-
-					movie.setGenreIds(getGenreIds(conn, movie.getId()));
-
-					movies.add(movie);
+					movies.add(mapMovieWithGenres(conn, rs));
 
 				}
 
@@ -172,6 +163,7 @@ public class MovieDAO {
 
 	}
 
+	// Save the edits and replace the movie's genre selections.
 	public boolean updateMovie(MovieBean movie) {
 
 		String sql = """
@@ -189,7 +181,7 @@ public class MovieDAO {
 				""";
 
 		try (Connection conn = DBConnection.getConnection()) {
-
+			// Roll back the movie edit too if replacing its genres fails.
 			conn.setAutoCommit(false);
 
 			try {
@@ -242,6 +234,7 @@ public class MovieDAO {
 
 	}
 
+	// Remove a movie.
 	public boolean deleteMovie(String movieId) {
 
 		String sql = "DELETE FROM movies WHERE id = ?";
@@ -262,6 +255,7 @@ public class MovieDAO {
 
 	}
 
+	// Add the selected genres using the open transaction.
 	private void insertMovieGenres(Connection conn, String movieId, List<String> genreIds) throws SQLException {
 
 		if (genreIds == null || genreIds.isEmpty()) {
@@ -297,6 +291,7 @@ public class MovieDAO {
 
 	}
 
+	// Get the genre IDs attached to this movie.
 	private List<String> getGenreIds(Connection conn, String movieId) throws SQLException {
 
 		List<String> genreIds = new ArrayList<>();
@@ -327,6 +322,7 @@ public class MovieDAO {
 
 	}
 
+	// Copy the movie columns from this row into a bean.
 	private MovieBean mapMovie(ResultSet rs) throws SQLException {
 
 		MovieBean movie = new MovieBean();
@@ -357,6 +353,14 @@ public class MovieDAO {
 
 	}
 
+	// Fill in the movie and its genres.
+	private MovieBean mapMovieWithGenres(Connection conn, ResultSet rs) throws SQLException {
+		MovieBean movie = mapMovie(rs);
+		movie.setGenreIds(getGenreIds(conn, movie.getId()));
+		return movie;
+	}
+
+	// Put the movie fields into the insert statement.
 	private void setInsertValues(PreparedStatement ps, MovieBean movie) throws SQLException {
 
 		ps.setString(1, movie.getId());
@@ -381,6 +385,7 @@ public class MovieDAO {
 
 	}
 
+	// Put the edited fields into the update statement.
 	private void setUpdateValues(PreparedStatement ps, MovieBean movie) throws SQLException {
 
 		ps.setString(1, movie.getTitle());
@@ -405,6 +410,7 @@ public class MovieDAO {
 
 	}
 
+	// Search movie titles.
 	public List<MovieBean> searchMoviesByTitle(String query) {
 
 		String sql = """
@@ -444,6 +450,7 @@ public class MovieDAO {
 
 	}
 
+	// Get the genre names keyed by ID.
 	public Map<String, String> getAllGenres() {
 
 		Map<String, String> genres = new LinkedHashMap<>();

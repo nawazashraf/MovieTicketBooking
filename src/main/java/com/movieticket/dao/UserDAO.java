@@ -13,8 +13,7 @@ import java.util.UUID;
 
 public class UserDAO {
 
-	// Register a new user (with security question + answer)
-
+	// Register
 	public boolean registerUser(UserBean user) {
 
 		String sql = "INSERT INTO users "
@@ -44,8 +43,7 @@ public class UserDAO {
 		}
 	}
 
-	// Login user using email and password
-
+	// Login
 	public UserBean loginUser(String email, String password) {
 
 		String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
@@ -72,62 +70,33 @@ public class UserDAO {
 		return null;
 	}
 
-	// Find user using ID
-
+	// Find user by id
 	public UserBean getUserById(String id) {
-
-		String sql = "SELECT * FROM users WHERE id = ?";
-
-		try (Connection connection = DBConnection.getConnection();
-				PreparedStatement statement = connection.prepareStatement(sql)) {
-
-			statement.setString(1, id);
-
-			try (ResultSet resultSet = statement.executeQuery()) {
-
-				if (resultSet.next()) {
-
-					return mapResultSet(resultSet);
-				}
-			}
-
-		} catch (SQLException e) {
-
-			e.printStackTrace();
-		}
-
-		return null;
+		return findUser("SELECT * FROM users WHERE id = ?", id);
 	}
 
-	// Find user using email
-
+	// Find user by email.
 	public UserBean getUserByEmail(String email) {
+		return findUser("SELECT * FROM users WHERE email = ?", email);
+	}
 
-		String sql = "SELECT * FROM users WHERE email = ?";
-
+	// Run either lookup above and turn the row into a user.
+	private UserBean findUser(String sql, String value) {
 		try (Connection connection = DBConnection.getConnection();
 				PreparedStatement statement = connection.prepareStatement(sql)) {
-
-			statement.setString(1, email);
-
+			statement.setString(1, value);
 			try (ResultSet resultSet = statement.executeQuery()) {
-
 				if (resultSet.next()) {
-
 					return mapResultSet(resultSet);
 				}
 			}
-
 		} catch (SQLException e) {
-
 			e.printStackTrace();
 		}
-
 		return null;
 	}
 
-	// Get only the security question for a given email
-
+	// Get the recovery question for this email.
 	public String getSecurityQuestionByEmail(String email) {
 
 		String sql = "SELECT security_question FROM users WHERE email = ?";
@@ -153,8 +122,7 @@ public class UserDAO {
 		return null;
 	}
 
-	// Verify security answer for a given email
-
+	// Check the recovery answer
 	public boolean verifySecurityAnswer(String email, String answer) {
 
 		String sql = "SELECT security_answer FROM users WHERE email = ?";
@@ -186,8 +154,7 @@ public class UserDAO {
 		return false;
 	}
 
-	// Update password
-
+	// Change password
 	public boolean updatePassword(String userId, String newPassword) {
 
 		String sql = "UPDATE users SET password = ? WHERE id = ?";
@@ -208,8 +175,7 @@ public class UserDAO {
 		return false;
 	}
 
-	// Update user profile
-
+	// Update name and phone no.
 	public boolean updateProfile(String userId, String name, String phone) {
 
 		String sql = "UPDATE users SET name = ?, phone = ? WHERE id = ?";
@@ -231,8 +197,7 @@ public class UserDAO {
 		return false;
 	}
 
-	// Update user profile with password
-
+	// Update name phone and password
 	public boolean updateProfile(String userId, String name, String phone, String password) {
 
 		String sql = "UPDATE users " + "SET name = ?, phone = ?, password = ? " + "WHERE id = ?";
@@ -255,8 +220,7 @@ public class UserDAO {
 		return false;
 	}
 
-	// Update user profile with security question + answer
-
+	// Update name, phone, security question and security answer
 	public boolean updateProfile(String userId, String name, String phone, String securityQuestion,
 			String securityAnswer) {
 
@@ -282,8 +246,7 @@ public class UserDAO {
 		return false;
 	}
 
-	// Update user profile with password + security question + answer
-
+	// Update All details
 	public boolean updateProfile(String userId, String name, String phone, String password, String securityQuestion,
 			String securityAnswer) {
 
@@ -310,8 +273,7 @@ public class UserDAO {
 		return false;
 	}
 
-	// Activate account
-
+	// Reactivate an account after its password has been reset.
 	public boolean activateAccount(String id) {
 
 		String sql = "UPDATE users SET status = 1 WHERE id = ?";
@@ -331,8 +293,7 @@ public class UserDAO {
 		}
 	}
 
-	// ==================== PRIVATE HELPERS ====================
-
+	// Fill a user bean from the current row.
 	private UserBean mapResultSet(ResultSet rs) throws SQLException {
 
 		UserBean user = new UserBean();

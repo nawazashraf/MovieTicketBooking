@@ -55,36 +55,9 @@
 
 
 	<script>
-		var paymentMethod = "${paymentMethod}";
-
-		/* =================================================
-		   CARD PAYMENT
-		   ================================================= */
-
-		if (paymentMethod === "CARD") {
-
-			setTimeout(function() {
-
-				document.getElementById("processPaymentForm").submit();
-
-			}, 2500);
-
-		}
-
-		/* =================================================
-		   QR / UPI PAYMENT
-		   ================================================= */
-
-		else {
-
-			setTimeout(
-					function() {
-
-						window.location.href = "${pageContext.request.contextPath}/ticket?bookingId=${bookingId}";
-
-					}, 2500);
-
-		}
+		setTimeout(function() {
+			document.getElementById("processPaymentForm").submit();
+		}, 2500);
 	</script>
 
 </body>

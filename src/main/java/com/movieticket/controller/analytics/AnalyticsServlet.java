@@ -12,13 +12,14 @@ import com.movieticket.dao.AnalyticsDAO;
 import com.movieticket.model.AnalyticsBean;
 import com.movieticket.model.MovieAnalyticsBean;
 
+/** Loads dashboard totals and the top movies for the analytics page. */
 @WebServlet("/analytics")
 public class AnalyticsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		AnalyticsDAO analyticsDAO = new AnalyticsDAO();
 
 		AnalyticsBean analytics = analyticsDAO.getDashboardAnalytics();

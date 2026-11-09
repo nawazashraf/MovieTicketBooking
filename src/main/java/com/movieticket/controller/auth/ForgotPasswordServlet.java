@@ -12,17 +12,13 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
+/** Guides a user through account lookup and security-answer verification. */
 @WebServlet("/forgotpassword")
 public class ForgotPasswordServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private UserDAO userDAO;
-
-	@Override
-	public void init() {
-		userDAO = new UserDAO();
-	}
+	private final UserDAO userDAO = new UserDAO();
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -39,8 +35,7 @@ public class ForgotPasswordServlet extends HttpServlet {
 
 		HttpSession session = request.getSession();
 
-		/* SECURITY ANSWER VERIFICATION */
-
+		// Completing the reset requires the answer from the earlier email step.
 		if ("verifyAnswer".equals(action)) {
 
 			String email = (String) session.getAttribute("forgotUserEmail");
@@ -94,8 +89,6 @@ public class ForgotPasswordServlet extends HttpServlet {
 
 			return;
 		}
-
-		/* EMAIL VERIFICATION */
 
 		String email = request.getParameter("email");
 

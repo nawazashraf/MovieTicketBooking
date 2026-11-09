@@ -1,5 +1,6 @@
 package com.movieticket.dao;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,6 +12,7 @@ import com.movieticket.util.DBConnection;
 
 public class TicketDAO {
 
+	// Get the ticket details and group its seats by type.
 	public TicketBean getTicketByBookingId(String bookingId) {
 
 		String sql = """
@@ -82,7 +84,7 @@ public class TicketDAO {
 				TicketBean ticket = null;
 
 				Map<String, StringBuilder> seatsByType = new LinkedHashMap<>();
-				Map<String, java.math.BigDecimal> priceByType = new LinkedHashMap<>();
+				Map<String, BigDecimal> priceByType = new LinkedHashMap<>();
 
 				while (rs.next()) {
 
@@ -90,7 +92,6 @@ public class TicketDAO {
 
 						ticket = new TicketBean();
 
-						// Booking details
 						ticket.setBookingId(rs.getString("booking_id"));
 
 						ticket.setBookingReference(rs.getString("booking_reference"));
@@ -101,14 +102,12 @@ public class TicketDAO {
 
 						ticket.setBookingDate(rs.getTimestamp("booking_date"));
 
-						// Customer details
 						ticket.setCustomerName(rs.getString("customer_name"));
 
 						ticket.setCustomerEmail(rs.getString("customer_email"));
 
 						ticket.setCustomerPhone(rs.getString("customer_phone"));
 
-						// Movie details
 						ticket.setMovieTitle(rs.getString("movie_title"));
 
 						ticket.setLanguage(rs.getString("language"));
@@ -121,7 +120,6 @@ public class TicketDAO {
 
 						ticket.setPosterUrl(rs.getString("poster_url"));
 
-						// Cinema details
 						ticket.setMallName(rs.getString("mall_name"));
 
 						ticket.setMallAddress(rs.getString("mall_address"));
@@ -132,14 +130,12 @@ public class TicketDAO {
 
 						ticket.setPincode(rs.getInt("pincode"));
 
-						// Show details
 						ticket.setShowDate(rs.getDate("show_date"));
 
 						ticket.setStartTime(rs.getTime("start_time"));
 
 						ticket.setEndTime(rs.getTime("end_time"));
 
-						// Payment details
 						ticket.setPaymentMethod(rs.getString("payment_method"));
 
 						ticket.setTransactionId(rs.getString("transaction_id"));
@@ -153,17 +149,9 @@ public class TicketDAO {
 
 					String seat = rs.getString("row_name") + rs.getInt("seat_number");
 
-					java.math.BigDecimal seatPrice = rs.getBigDecimal("seat_price");
-
-					// Create entry for seat type
-					if (!seatsByType.containsKey(seatType)) {
-
-						seatsByType.put(seatType, new StringBuilder());
-
-						priceByType.put(seatType, java.math.BigDecimal.ZERO);
-					}
-
-					StringBuilder typeSeats = seatsByType.get(seatType);
+					BigDecimal seatPrice = rs.getBigDecimal("seat_price");
+					// The query has one row per seat, so gather them by type here.
+					StringBuilder typeSeats = seatsByType.computeIfAbsent(seatType, key -> new StringBuilder());
 
 					if (typeSeats.length() > 0) {
 						typeSeats.append(", ");
@@ -171,8 +159,7 @@ public class TicketDAO {
 
 					typeSeats.append(seat);
 
-					// Add price to seat type total
-					priceByType.put(seatType, priceByType.get(seatType).add(seatPrice));
+					priceByType.merge(seatType, seatPrice, BigDecimal::add);
 				}
 
 				if (ticket != null) {

@@ -3,6 +3,7 @@ package com.movieticket.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -11,6 +12,7 @@ import com.movieticket.model.SeatBean;
 import com.movieticket.util.DBConnection;
 
 public class SeatManagementDAO {
+	// Add a seat to a theatre.
 	public boolean addSeat(SeatBean seat) {
 		if (seat.getSeatId() == null || seat.getSeatId().isBlank())
 			seat.setSeatId(UUID.randomUUID().toString());
@@ -29,6 +31,7 @@ public class SeatManagementDAO {
 		}
 	}
 
+	// Save changes to a seat.
 	public boolean updateSeat(SeatBean seat) {
 		String sql = "UPDATE seats SET mall_id=?, seat_type_id=?, row_name=?, seat_number=?, status=? WHERE id=?";
 		try (Connection c = DBConnection.getConnection(); PreparedStatement p = c.prepareStatement(sql)) {
@@ -45,6 +48,7 @@ public class SeatManagementDAO {
 		}
 	}
 
+	// Remove a seat.
 	public boolean deleteSeat(String id) {
 		String sql = "DELETE FROM seats WHERE id=?";
 		try (Connection c = DBConnection.getConnection(); PreparedStatement p = c.prepareStatement(sql)) {
@@ -56,6 +60,7 @@ public class SeatManagementDAO {
 		}
 	}
 
+	// Get all seats with their theatre and type names.
 	public List<SeatBean> getAllSeats() {
 		String sql = "SELECT s.id, s.mall_id, s.seat_type_id, s.row_name, s.seat_number, s.status, "
 				+ "m.name AS mall_name, st.type_name FROM seats s JOIN malls m ON m.id=s.mall_id "
@@ -72,6 +77,7 @@ public class SeatManagementDAO {
 		return list;
 	}
 
+	// Get the seats in one theatre.
 	public List<SeatBean> getSeatsByTheatre(String mallId) {
 		String sql = "SELECT s.id, s.mall_id, s.seat_type_id, s.row_name, s.seat_number, s.status, m.name AS mall_name, st.type_name "
 				+ "FROM seats s JOIN malls m ON m.id=s.mall_id JOIN seat_types st ON st.id=s.seat_type_id WHERE s.mall_id=? "
@@ -89,6 +95,7 @@ public class SeatManagementDAO {
 		return list;
 	}
 
+	// Get the seat types for the admin form.
 	public List<SeatBean> getSeatTypes() {
 		List<SeatBean> list = new ArrayList<>();
 		String sql = "SELECT id,type_name FROM seat_types ORDER BY type_name";
@@ -107,6 +114,7 @@ public class SeatManagementDAO {
 		return list;
 	}
 
+	// Look up a seat with its theatre and type names.
 	public SeatBean getSeatById(String id) {
 		String sql = "SELECT s.id, s.mall_id, s.seat_type_id, s.row_name, s.seat_number, s.status, m.name AS mall_name, st.type_name "
 				+ "FROM seats s JOIN malls m ON m.id=s.mall_id JOIN seat_types st ON st.id=s.seat_type_id WHERE s.id=?";
@@ -122,7 +130,8 @@ public class SeatManagementDAO {
 		return null;
 	}
 
-	private SeatBean map(ResultSet r) throws Exception {
+	// Fill a seat bean from the current row.
+	private SeatBean map(ResultSet r) throws SQLException {
 		SeatBean s = new SeatBean();
 		s.setSeatId(r.getString("id"));
 		s.setMallId(r.getString("mall_id"));

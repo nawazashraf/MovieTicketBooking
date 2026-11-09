@@ -17,6 +17,7 @@ import com.movieticket.model.BookingBean;
 import com.movieticket.model.BookingSeatBean;
 import com.movieticket.model.PaymentBean;
 
+/** Creates a pending booking and payment for the selected seats. */
 @WebServlet("/booking")
 public class BookingServlet extends HttpServlet {
 
@@ -56,14 +57,9 @@ public class BookingServlet extends HttpServlet {
 
 			String[] showSeatIds = selectedSeats.split(",");
 
-			System.out.println("Selected seats: " + selectedSeats);
-
-			for (String showSeatId : showSeatIds) {
-				System.out.println("Show Seat ID: [" + showSeatId.trim() + "]");
-			}
-
 			BookingDAO dao = new BookingDAO();
 
+			// Use the stored seat prices rather than trusting values from the form.
 			BigDecimal totalAmount = BigDecimal.ZERO;
 
 			for (String showSeatId : showSeatIds) {
@@ -79,10 +75,6 @@ public class BookingServlet extends HttpServlet {
 
 				totalAmount = totalAmount.add(price);
 			}
-			// =========================================
-			// CREATE BOOKING
-			// =========================================
-
 			BookingBean booking = new BookingBean();
 
 			String bookingId = UUID.randomUUID().toString();
@@ -99,14 +91,6 @@ public class BookingServlet extends HttpServlet {
 
 			booking.setBookingStatus("PENDING");
 
-			// =========================================
-			// DAO
-			// =========================================
-
-			// =========================================
-			// INSERT BOOKING
-			// =========================================
-
 			boolean bookingSaved = dao.createBooking(booking);
 
 			if (!bookingSaved) {
@@ -115,10 +99,6 @@ public class BookingServlet extends HttpServlet {
 
 				return;
 			}
-
-			// =========================================
-			// INSERT SEATS
-			// =========================================
 
 			for (String showSeatId : showSeatIds) {
 
@@ -168,10 +148,6 @@ public class BookingServlet extends HttpServlet {
 
 				return;
 			}
-
-			// =========================================
-			// GO TO PAYMENT
-			// =========================================
 
 			response.sendRedirect(request.getContextPath() + "/payment?bookingId=" + bookingId);
 

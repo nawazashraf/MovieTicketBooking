@@ -12,14 +12,14 @@ import java.util.UUID;
 
 import com.movieticket.dao.BookingDAO;
 import com.movieticket.dao.PaymentDAO;
-import com.movieticket.dao.TicketDAO;
-import com.movieticket.model.TicketBean;
 
+/** Records payment completion and confirms the associated booking. */
 @WebServlet("/payment/process")
 public class PaymentProcessingServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
@@ -33,7 +33,8 @@ public class PaymentProcessingServlet extends HttpServlet {
 		String bookingId = request.getParameter("bookingId");
 		String paymentMethod = request.getParameter("paymentMethod");
 
-		if (bookingId == null || paymentMethod == null) {
+		if (bookingId == null || bookingId.isBlank()
+				|| !("CARD".equals(paymentMethod) || "UPI".equals(paymentMethod))) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid payment request");
 			return;
 		}
@@ -51,6 +52,7 @@ public class PaymentProcessingServlet extends HttpServlet {
 
 		BookingDAO bookingDAO = new BookingDAO();
 
+		// Only confirm the booking after payment has been recorded as successful.
 		boolean bookingConfirmed = bookingDAO.confirmBookingAndSeats(bookingId);
 
 		if (!bookingConfirmed) {
@@ -59,16 +61,6 @@ public class PaymentProcessingServlet extends HttpServlet {
 			return;
 		}
 
-		/*
-		 * GET TICKET
-		 */
-		TicketDAO ticketDAO = new TicketDAO();
-
-		TicketBean ticket = ticketDAO.getTicketByBookingId(bookingId);
-
-		/*
-		 * SHOW TICKET
-		 */
 		response.sendRedirect(request.getContextPath() + "/ticket?bookingId=" + bookingId);
 	}
 }

@@ -39,59 +39,37 @@ function togglePaymentInputs() {
 			'input[name="paymentMethod"][value="UPI"]'
 		);
 
-	var qrCard =
-		document.querySelector(
-			".qr-payment-card"
-		);
-
 	var cardDetails =
 		document.querySelector(
 			".card-details"
+		);
+
+	var upiDetails =
+		document.querySelector(
+			".upi-details"
 		);
 
 	if (!upiRadio) {
 		return;
 	}
 
-
 	if (upiRadio.checked) {
-
-		if (qrCard) {
-
-			qrCard.style.display = "block";
-
+		if (upiDetails) {
+			upiDetails.classList.add("active");
 		}
-
 		if (cardDetails) {
-
 			cardDetails.classList.remove("active");
-
 		}
-
-		disablePayButton();
-
-		startPaymentStatusCheck();
-
+		updatePayButton(false);
 	} else {
-
-		if (qrCard) {
-
-			qrCard.style.display = "none";
-
+		if (upiDetails) {
+			upiDetails.classList.remove("active");
 		}
-
 		if (cardDetails) {
-
 			cardDetails.classList.add("active");
-
 		}
-
-		stopPaymentStatusCheck();
-
-		validateCardForm(false);
-
+		updatePayButton(false);
 	}
-
 }
 
 
@@ -333,7 +311,7 @@ if (cardNumber) {
 			/*
 			 * UPDATE BUTTON IMMEDIATELY
 			 */
-			validateCardForm(false);
+			updatePayButton(false);
 
 		}
 	);
@@ -345,7 +323,7 @@ if (cardNumber) {
 
 			validateCardNumber(true);
 
-			validateCardForm(false);
+			updatePayButton(false);
 
 		}
 	);
@@ -471,7 +449,7 @@ if (cardHolder) {
 			/*
 			 * UPDATE BUTTON IMMEDIATELY
 			 */
-			validateCardForm(false);
+			updatePayButton(false);
 
 		}
 	);
@@ -483,7 +461,7 @@ if (cardHolder) {
 
 			validateCardHolder(true);
 
-			validateCardForm(false);
+			updatePayButton(false);
 
 		}
 	);
@@ -663,7 +641,7 @@ if (expiry) {
 			/*
 			 * UPDATE BUTTON IMMEDIATELY
 			 */
-			validateCardForm(false);
+			updatePayButton(false);
 
 		}
 	);
@@ -675,7 +653,7 @@ if (expiry) {
 
 			validateExpiry(true);
 
-			validateCardForm(false);
+			updatePayButton(false);
 
 		}
 	);
@@ -772,7 +750,7 @@ if (cvv) {
 			/*
 			 * UPDATE BUTTON IMMEDIATELY
 			 */
-			validateCardForm(false);
+			updatePayButton(false);
 
 		}
 	);
@@ -784,7 +762,7 @@ if (cvv) {
 
 			validateCVV(true);
 
-			validateCardForm(false);
+			updatePayButton(false);
 
 		}
 	);
@@ -836,6 +814,50 @@ function validateCardForm(showErrors) {
 
 }
 
+var upiId = document.getElementById("upiId");
+var upiIdError = document.getElementById("upiIdError");
+
+function validateUpiId(showError) {
+	if (!upiId) {
+		return false;
+	}
+
+	var value = upiId.value.trim();
+	var valid = /^[A-Za-z0-9._-]{2,}@[A-Za-z][A-Za-z0-9.-]{1,62}$/.test(value);
+
+	if (!valid && showError) {
+		setFieldError(upiId, upiIdError, "Enter a valid UPI ID, for example name@bank");
+	} else if (valid) {
+		clearFieldError(upiId, upiIdError);
+	}
+
+	return valid;
+}
+
+function updatePayButton(showErrors) {
+	var upiRadio = document.querySelector('input[name="paymentMethod"][value="UPI"]');
+	if (upiRadio && upiRadio.checked) {
+		if (validateUpiId(showErrors)) {
+			enablePayButton();
+		} else {
+			disablePayButton();
+		}
+		return;
+	}
+
+	validateCardForm(showErrors);
+}
+
+if (upiId) {
+	upiId.addEventListener("input", function() {
+		updatePayButton(true);
+	});
+
+	upiId.addEventListener("blur", function() {
+		updatePayButton(true);
+	});
+}
+
 
 /* =====================================================
    FORM SUBMIT
@@ -858,56 +880,15 @@ if (paymentForm) {
 					'input[name="paymentMethod"][value="UPI"]'
 				);
 
-
-			/* =========================
-			   UPI
-			========================= */
-
-			if (
-				upiRadio &&
-				upiRadio.checked
-			) {
-
-				event.preventDefault();
-
-
-				disablePayButton();
-
-
-				var qrStatus =
-					document.getElementById(
-						"qrStatus"
-					);
-
-
-				if (qrStatus) {
-
-					qrStatus.innerText =
-						"Waiting for payment from phone...";
-
+			if (upiRadio && upiRadio.checked) {
+				if (!validateUpiId(true)) {
+					event.preventDefault();
 				}
-
-
-				startPaymentStatusCheck();
-
-
 				return;
-
 			}
 
-
-			/* =========================
-			   CARD
-			========================= */
-
-			if (
-				!validateCardForm(true)
-			) {
-
+			if (!validateCardForm(true)) {
 				event.preventDefault();
-
-				return;
-
 			}
 
 		}
@@ -917,154 +898,8 @@ if (paymentForm) {
 
 
 /* =====================================================
-   QR PAYMENT STATUS CHECK
-===================================================== */
-
-var paymentCheckInterval = null;
-
-
-function startPaymentStatusCheck() {
-
-	if (paymentCheckInterval !== null) {
-
-		return;
-
-	}
-
-
-	var bookingInput =
-		document.querySelector(
-			'input[name="bookingId"]'
-		);
-
-
-	if (!bookingInput) {
-
-		return;
-
-	}
-
-
-	var bookingId =
-		bookingInput.value;
-
-
-	if (!bookingId) {
-
-		return;
-
-	}
-
-
-	var qrStatus =
-		document.getElementById("qrStatus");
-
-
-	if (qrStatus) {
-
-		qrStatus.innerText =
-			"Waiting for payment from phone...";
-
-	}
-
-
-	paymentCheckInterval =
-		setInterval(function() {
-
-			fetch(
-				window.contextPath +
-				"/payment?bookingId=" +
-				encodeURIComponent(bookingId) +
-				"&check=true"
-			)
-
-				.then(function(response) {
-
-					return response.text();
-
-				})
-
-				.then(function(status) {
-
-					status =
-						status.trim();
-
-
-					console.log(
-						"Payment Status:",
-						status
-					);
-
-
-					if (
-						status === "SUCCESS"
-					) {
-
-						stopPaymentStatusCheck();
-
-
-						if (qrStatus) {
-
-							qrStatus.innerText =
-								"Payment received! Opening payment processing...";
-
-						}
-
-
-						setTimeout(
-							function() {
-
-								window.location.href =
-									window.contextPath +
-									"/payment?bookingId=" +
-									encodeURIComponent(
-										bookingId
-									) +
-									"&processing=true&paymentMethod=UPI";
-
-							},
-							500
-						);
-
-					}
-
-				})
-
-				.catch(function(error) {
-
-					console.log(
-						"Payment status check error:",
-						error
-					);
-
-				});
-
-		}, 2000);
-
-}
-
-
-function stopPaymentStatusCheck() {
-
-	if (
-		paymentCheckInterval !== null
-	) {
-
-		clearInterval(
-			paymentCheckInterval
-		);
-
-		paymentCheckInterval = null;
-
-	}
-
-}
-
-
-/* =====================================================
    INITIAL STATE
 ===================================================== */
 
-disablePayButton();
-
 togglePaymentInputs();
+disablePayButton();

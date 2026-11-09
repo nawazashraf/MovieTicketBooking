@@ -3,12 +3,14 @@ package com.movieticket.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import com.movieticket.model.PaymentBean;
 import com.movieticket.util.DBConnection;
 
 public class PaymentDAO {
 
+	// Save a payment for a booking.
 	public boolean createPayment(PaymentBean payment) {
 
 		String sql = """
@@ -37,6 +39,7 @@ public class PaymentDAO {
 	}
 
 
+	// Look up the payment for this booking.
 	public PaymentBean getPaymentByBookingId(String bookingId) {
 
 		String sql = "SELECT * FROM payments WHERE booking_id = ?";
@@ -48,26 +51,7 @@ public class PaymentDAO {
 			try (ResultSet rs = ps.executeQuery()) {
 
 				if (rs.next()) {
-
-					PaymentBean payment = new PaymentBean();
-
-					payment.setId(rs.getString("id"));
-
-					payment.setBookingId(rs.getString("booking_id"));
-
-					payment.setAmount(rs.getBigDecimal("amount"));
-
-					payment.setPaymentMethod(rs.getString("payment_method"));
-
-					payment.setTransactionId(rs.getString("transaction_id"));
-
-					payment.setPaymentStatus(rs.getString("payment_status"));
-
-					payment.setPaidAt(rs.getTimestamp("paid_at"));
-
-					payment.setCreatedAt(rs.getTimestamp("created_at"));
-
-					return payment;
+					return mapPayment(rs);
 				}
 			}
 
@@ -79,7 +63,22 @@ public class PaymentDAO {
 		return null;
 	}
 
+	// Copy this payment row into a bean.
+	private PaymentBean mapPayment(ResultSet rs) throws SQLException {
+		PaymentBean payment = new PaymentBean();
+		payment.setId(rs.getString("id"));
+		payment.setBookingId(rs.getString("booking_id"));
+		payment.setAmount(rs.getBigDecimal("amount"));
+		payment.setPaymentMethod(rs.getString("payment_method"));
+		payment.setTransactionId(rs.getString("transaction_id"));
+		payment.setPaymentStatus(rs.getString("payment_status"));
+		payment.setPaidAt(rs.getTimestamp("paid_at"));
+		payment.setCreatedAt(rs.getTimestamp("created_at"));
+		return payment;
+	}
 
+
+	// Record a successful payment and its transaction details.
 	public boolean markPaymentSuccess(String bookingId, String paymentMethod, String transactionId) {
 
 		String sql = """
@@ -109,6 +108,7 @@ public class PaymentDAO {
 
 
 
+	// Mark the booking's payment as failed.
 	public boolean markPaymentFailed(String bookingId) {
 
 		String sql = """

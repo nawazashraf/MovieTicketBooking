@@ -12,17 +12,13 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
+/** Authenticates users and sets up their session. */
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private UserDAO userDAO;
-
-	@Override
-	public void init() {
-		userDAO = new UserDAO();
-	}
+	private final UserDAO userDAO = new UserDAO();
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)

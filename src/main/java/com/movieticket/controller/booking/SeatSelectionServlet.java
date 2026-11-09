@@ -1,7 +1,7 @@
 package com.movieticket.controller.booking;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.sql.SQLException;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -12,9 +12,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import com.movieticket.model.ShowBean;
-import com.movieticket.model.SeatBean;
 import com.movieticket.dao.SeatSelectionDAO;
 
+/** Loads show details and available seat data for the selection page. */
 @WebServlet("/booking/seats")
 public class SeatSelectionServlet extends HttpServlet {
 
@@ -23,76 +23,33 @@ public class SeatSelectionServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
-		
 		HttpSession session = request.getSession(false);
-
-		if (session == null ||
-		    session.getAttribute("user") == null) {
-
-		    response.sendRedirect(
-		        request.getContextPath() + "/login.jsp"
-		    );
-
-		    return;
+		if (session == null || session.getAttribute("user") == null) {
+			response.sendRedirect(request.getContextPath() + "/login.jsp");
+			return;
 		}
 
-		 String showId = request.getParameter("showId");
-//		String showId = "show-001";
-
-		// Check showId
-		if (showId == null || showId.trim().isEmpty()) {
-
+		String showId = request.getParameter("showId");
+		if (showId == null || showId.isBlank()) {
 			response.getWriter().println("Show ID is missing");
-
 			return;
 		}
 
 		try {
-
 			SeatSelectionDAO dao = new SeatSelectionDAO();
-
-			// =============================================
-			// GET SHOW INFORMATION
-			// =============================================
-
 			ShowBean show = dao.getShowDetails(showId);
-
 			if (show == null) {
-
 				response.getWriter().println("Show not found");
-
 				return;
 			}
 
-			// =============================================
-			// GET SEATS
-			// =============================================
-
-			ArrayList<SeatBean> seats = dao.getSeatsByShowId(showId);
-
-			// =============================================
-			// SEND DATA TO JSP
-			// =============================================
-
 			request.setAttribute("show", show);
-
-			request.setAttribute("seats", seats);
-
+			request.setAttribute("seats", dao.getSeatsByShowId(showId));
 			request.setAttribute("showId", showId);
-
-			// =============================================
-			// OPEN SEAT SELECTION JSP
-			// =============================================
-
-			RequestDispatcher rd = request.getRequestDispatcher("/seat_selection.jsp");
-
-			rd.forward(request, response);
-
-		} catch (Exception e) {
-
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/seat_selection.jsp");
+			dispatcher.forward(request, response);
+		} catch (SQLException | IllegalStateException e) {
 			e.printStackTrace();
-
 			response.getWriter().println("Database Error: " + e.getMessage());
 		}
 	}
@@ -100,8 +57,6 @@ public class SeatSelectionServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
 		doPost(request, response);
 	}
-
 }

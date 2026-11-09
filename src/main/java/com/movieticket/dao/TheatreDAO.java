@@ -3,6 +3,7 @@ package com.movieticket.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -12,6 +13,7 @@ import com.movieticket.util.DBConnection;
 
 public class TheatreDAO {
 
+    // Add a theatre.
     public boolean addTheatre(TheatreBean theatre) {
         String sql = """
             INSERT INTO malls
@@ -42,6 +44,7 @@ public class TheatreDAO {
         }
     }
 
+    // Look up a theatre.
     public TheatreBean getTheatreById(String theatreId) {
         String sql = "SELECT * FROM malls WHERE id = ?";
 
@@ -63,6 +66,7 @@ public class TheatreDAO {
         return null;
     }
 
+    // Get all theatres, sorted by name.
     public List<TheatreBean> getAllTheatres() {
         String sql = "SELECT * FROM malls ORDER BY name";
         List<TheatreBean> theatres = new ArrayList<>();
@@ -82,6 +86,7 @@ public class TheatreDAO {
         return theatres;
     }
 
+    // Save changes to a theatre.
     public boolean updateTheatre(TheatreBean theatre) {
         String sql = """
             UPDATE malls
@@ -113,6 +118,7 @@ public class TheatreDAO {
         }
     }
 
+    // Remove a theatre.
     public boolean deleteTheatre(String theatreId) {
         String sql = "DELETE FROM malls WHERE id = ?";
 
@@ -128,7 +134,8 @@ public class TheatreDAO {
         }
     }
 
-    private TheatreBean mapTheatre(ResultSet rs) throws Exception {
+    // Fill a theatre bean from the current row.
+    private TheatreBean mapTheatre(ResultSet rs) throws SQLException {
         TheatreBean theatre = new TheatreBean();
 
         theatre.setId(rs.getString("id"));

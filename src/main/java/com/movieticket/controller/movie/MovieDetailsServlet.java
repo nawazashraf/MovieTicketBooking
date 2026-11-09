@@ -17,6 +17,7 @@ import com.movieticket.dao.ShowDAO;
 import com.movieticket.model.MovieBean;
 import com.movieticket.model.ShowBean;
 
+/** Loads a movie and groups its showtimes by date. */
 @WebServlet("/movies/details")
 public class MovieDetailsServlet extends HttpServlet {
 
@@ -44,8 +45,9 @@ public class MovieDetailsServlet extends HttpServlet {
 
 		List<ShowBean> shows = showDAO.getShowsByMovieId(movieId);
 
-		Map<String, List<ShowBean>> showsByDate = new LinkedHashMap<String, List<ShowBean>>();
+		Map<String, List<ShowBean>> showsByDate = new LinkedHashMap<>();
 
+		// Preserve the DAO's show order when grouping sessions by date.
 		for (ShowBean show : shows) {
 			showsByDate.computeIfAbsent(show.getShowDate(), key -> new ArrayList<>()).add(show);
 		}
@@ -55,6 +57,5 @@ public class MovieDetailsServlet extends HttpServlet {
 		request.setAttribute("showsByDate", showsByDate);
 
 		request.getRequestDispatcher("/movie/movie-details.jsp").forward(request, response);
-
 	}
 }

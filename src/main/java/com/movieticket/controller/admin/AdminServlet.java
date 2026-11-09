@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.Date;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import com.movieticket.dao.MovieDAO;
 import com.movieticket.dao.SeatManagementDAO;
@@ -22,6 +21,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+/** Handles the admin dashboard and its movie, theatre, show, and seat actions. */
 @WebServlet("/admin")
 public class AdminServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -34,7 +34,9 @@ public class AdminServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        if (!isAdmin(request, response)) return;
+        if (!isAdmin(request, response)) {
+            return;
+        }
 
         loadData(request);
         request.getRequestDispatcher("/admin/admin.jsp").forward(request, response);
@@ -43,7 +45,9 @@ public class AdminServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        if (!isAdmin(request, response)) return;
+        if (!isAdmin(request, response)) {
+            return;
+        }
 
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");

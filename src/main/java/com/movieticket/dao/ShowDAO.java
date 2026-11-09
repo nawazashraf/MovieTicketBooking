@@ -3,6 +3,7 @@ package com.movieticket.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -12,6 +13,7 @@ import com.movieticket.util.DBConnection;
 
 public class ShowDAO {
 
+	// Save a new show.
 	public boolean addShow(ShowBean show) {
 		String sql = """
 				INSERT INTO shows
@@ -34,6 +36,7 @@ public class ShowDAO {
 		}
 	}
 
+	// Look up a show with its movie and theatre names.
 	public ShowBean getShowById(String showId) {
 		String sql = """
 				SELECT sh.*, m.title AS movie_name, ma.name AS mall_name
@@ -60,6 +63,7 @@ public class ShowDAO {
 		return null;
 	}
 
+	// Get all shows and how many seats are still available.
 	public List<ShowBean> getAllShows() {
 		String sql = """
 				SELECT sh.*, m.title AS movie_name, ma.name AS mall_name
@@ -88,6 +92,7 @@ public class ShowDAO {
 		return shows;
 	}
 
+	// Get this movie's shows and their remaining seat counts.
 	public List<ShowBean> getShowsByMovieId(String movieId) {
 		String sql = """
 				SELECT
@@ -122,6 +127,7 @@ public class ShowDAO {
 
 	}
 
+	// Count the seats still open for booking.
 	public int getAvailableSeatCount(String showId) {
 		String sql = """
 				SELECT COUNT(*)
@@ -148,6 +154,7 @@ public class ShowDAO {
 		return 0;
 	}
 
+	// Save changes to a show.
 	public boolean updateShow(ShowBean show) {
 		String sql = """
 				UPDATE shows
@@ -178,6 +185,7 @@ public class ShowDAO {
 		}
 	}
 
+	// Remove a show.
 	public boolean deleteShow(String showId) {
 		String sql = "DELETE FROM shows WHERE id = ?";
 
@@ -192,7 +200,8 @@ public class ShowDAO {
 		}
 	}
 
-	private ShowBean mapShow(ResultSet rs) throws Exception {
+	// Fill a show bean from the current row.
+	private ShowBean mapShow(ResultSet rs) throws SQLException {
 		ShowBean show = new ShowBean();
 
 		show.setShowId(rs.getString("id"));
@@ -209,7 +218,8 @@ public class ShowDAO {
 		return show;
 	}
 
-	private void setInsertValues(PreparedStatement ps, ShowBean show) throws Exception {
+	// Put the show fields into the insert statement.
+	private void setInsertValues(PreparedStatement ps, ShowBean show) throws SQLException {
 
 		ps.setString(1, show.getShowId());
 		ps.setString(2, show.getMovieId());
@@ -219,9 +229,11 @@ public class ShowDAO {
 		ps.setString(6, show.getEndTime());
 		ps.setString(7, show.getStatus());
 	}
+	// Add any missing seats and update prices on seats that aren't booked.
 	public boolean syncShowSeats(String showId, String mallId, double price) {
 		String insertSql = "INSERT IGNORE INTO show_seats (id, show_id, seat_id, price, status) "
 				+ "SELECT UUID(), ?, id, ?, 'AVAILABLE' FROM seats WHERE mall_id = ? AND status = TRUE";
+		// Leave booked seats alone when refreshing prices.
 		String updateSql = "UPDATE show_seats SET price=? WHERE show_id=? AND status <> 'BOOKED'";
 		try (Connection conn = DBConnection.getConnection()) {
 			conn.setAutoCommit(false);

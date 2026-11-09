@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/** Searches movies by title and shows the matching results. */
 @WebServlet("/movies/search")
 public class SearchMovieServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -21,8 +22,7 @@ public class SearchMovieServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String query = request.getParameter("search");
-        if (query == null) query = "";
-        query = query.trim();
+        query = query == null ? "" : query.trim();
 
         List<MovieBean> movies = query.isBlank() ? movieDAO.getAllMovies() : movieDAO.searchMoviesByTitle(query);
         request.setAttribute("movies", movies);

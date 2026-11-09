@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+/** Shows the signed-in user's booking history. */
 @WebServlet("/bookings")
 public class BookingHistoryServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -26,8 +27,8 @@ public class BookingHistoryServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
-        String userId = String.valueOf(session.getAttribute("userId"));
-        List<BookingBean> bookings = bookingDAO.getBookingsByUserId(userId);
+
+        List<BookingBean> bookings = bookingDAO.getBookingsByUserId(String.valueOf(session.getAttribute("userId")));
         request.setAttribute("bookings", bookings);
         request.getRequestDispatcher("/booking-history.jsp").forward(request, response);
     }

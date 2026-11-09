@@ -8,16 +8,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
 import com.movieticket.dao.TicketDAO;
 import com.movieticket.model.TicketBean;
 import com.movieticket.util.PdfService;
 
+/** Displays a booking's ticket or downloads it as a PDF. */
 @WebServlet("/ticket")
 public class TicketServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
@@ -44,9 +47,6 @@ public class TicketServlet extends HttpServlet {
 			return;
 		}
 
-		/*
-		 * DOWNLOAD / VIEW PDF
-		 */
 		if ("pdf".equalsIgnoreCase(request.getParameter("format"))) {
 
 			byte[] pdfBytes = PdfService.generateTicketPdf(ticket);
@@ -63,20 +63,19 @@ public class TicketServlet extends HttpServlet {
 
 			response.setContentLength(pdfBytes.length);
 
-			response.getOutputStream().write(pdfBytes);
-			response.getOutputStream().flush();
+			OutputStream output = response.getOutputStream();
+			output.write(pdfBytes);
+			output.flush();
 
 			return;
 		}
 
-		/*
-		 * VIEW TICKET
-		 */
 		request.setAttribute("ticket", ticket);
 
 		request.getRequestDispatcher("/ticket/ticket.jsp").forward(request, response);
 	}
 
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 

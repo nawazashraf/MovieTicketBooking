@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import com.movieticket.util.DBConnection;
 
 public class BookingDAO {
 
-	// GET BOOKING
+	// Look up a booking along with its show details.
 	public BookingBean getBookingById(String id) {
 
 		String sql = """
@@ -49,25 +50,7 @@ public class BookingDAO {
 			try (ResultSet rs = ps.executeQuery()) {
 
 				if (rs.next()) {
-
-					BookingBean booking = new BookingBean();
-
-					booking.setId(rs.getString("id"));
-					booking.setBookingReference(rs.getString("booking_reference"));
-					booking.setUserId(rs.getString("user_id"));
-					booking.setShowId(rs.getString("show_id"));
-					booking.setTotalAmount(rs.getBigDecimal("total_amount"));
-					booking.setBookingStatus(rs.getString("booking_status"));
-					booking.setMovieTitle(rs.getString("movie_title"));
-					booking.setPosterUrl(rs.getString("poster_url"));
-					booking.setMallName(rs.getString("mall_name"));
-					booking.setShowDate(rs.getDate("show_date"));
-					booking.setStartTime(rs.getTime("start_time"));
-					booking.setEndTime(rs.getTime("end_time"));
-					booking.setCreatedAt(rs.getTimestamp("created_at"));
-					booking.setExpiresAt(rs.getTimestamp("expires_at"));
-
-					return booking;
+					return mapBooking(rs);
 				}
 			}
 
@@ -79,7 +62,7 @@ public class BookingDAO {
 		return null;
 	}
 
-	// CREATE BOOKING
+	// Save a new booking.
 	public boolean createBooking(BookingBean booking) {
 
 		String sql = """
@@ -116,7 +99,7 @@ public class BookingDAO {
 		return false;
 	}
 
-	// ADD BOOKING SEAT
+	// Attach a seat to the booking.
 	public boolean addBookingSeat(BookingSeatBean seat) {
 
 		String sql = """
@@ -147,7 +130,7 @@ public class BookingDAO {
 		return false;
 	}
 
-	// CONFIRM BOOKING
+	// Confirm the booking and mark its seats as booked.
 	public boolean confirmBookingAndSeats(String bookingId) {
 
 		String bookingSql = """
@@ -189,6 +172,7 @@ public class BookingDAO {
 		return false;
 	}
 
+	// Get the price stored for this show seat.
 	public BigDecimal getSeatPrice(String showSeatId) {
 
 		String sql = """
@@ -219,6 +203,7 @@ public class BookingDAO {
 		return null;
 	}
 
+	// Get a user's bookings, including the seat labels for each one.
 	public List<BookingBean> getBookingsByUserId(String userId) {
 
 		String sql = "SELECT b.id, b.booking_reference, b.user_id, b.show_id, b.total_amount, b.booking_status, b.created_at, b.expires_at, "
@@ -239,25 +224,9 @@ public class BookingDAO {
 
 				while (rs.next()) {
 
-					BookingBean b = new BookingBean();
-
-					b.setId(rs.getString("id"));
-					b.setBookingReference(rs.getString("booking_reference"));
-					b.setUserId(rs.getString("user_id"));
-					b.setShowId(rs.getString("show_id"));
-					b.setTotalAmount(rs.getBigDecimal("total_amount"));
-					b.setBookingStatus(rs.getString("booking_status"));
-					b.setMovieTitle(rs.getString("movie_title"));
-					b.setPosterUrl(rs.getString("poster_url"));
-					b.setMallName(rs.getString("mall_name"));
-					b.setShowDate(rs.getDate("show_date"));
-					b.setStartTime(rs.getTime("start_time"));
-					b.setEndTime(rs.getTime("end_time"));
-					b.setCreatedAt(rs.getTimestamp("created_at"));
-					b.setExpiresAt(rs.getTimestamp("expires_at"));
-					b.setSeatLabels(rs.getString("seat_labels"));
-
-					list.add(b);
+					BookingBean booking = mapBooking(rs);
+					booking.setSeatLabels(rs.getString("seat_labels"));
+					list.add(booking);
 				}
 			}
 
@@ -267,5 +236,25 @@ public class BookingDAO {
 		}
 
 		return list;
+	}
+
+	// Fill in the booking details shared by both queries.
+	private BookingBean mapBooking(ResultSet rs) throws SQLException {
+		BookingBean booking = new BookingBean();
+		booking.setId(rs.getString("id"));
+		booking.setBookingReference(rs.getString("booking_reference"));
+		booking.setUserId(rs.getString("user_id"));
+		booking.setShowId(rs.getString("show_id"));
+		booking.setTotalAmount(rs.getBigDecimal("total_amount"));
+		booking.setBookingStatus(rs.getString("booking_status"));
+		booking.setMovieTitle(rs.getString("movie_title"));
+		booking.setPosterUrl(rs.getString("poster_url"));
+		booking.setMallName(rs.getString("mall_name"));
+		booking.setShowDate(rs.getDate("show_date"));
+		booking.setStartTime(rs.getTime("start_time"));
+		booking.setEndTime(rs.getTime("end_time"));
+		booking.setCreatedAt(rs.getTimestamp("created_at"));
+		booking.setExpiresAt(rs.getTimestamp("expires_at"));
+		return booking;
 	}
 }

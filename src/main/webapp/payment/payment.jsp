@@ -143,32 +143,18 @@
 
 								<h3>UPI</h3>
 
-								<p>Pay using GPay, PhonePe or Paytm</p>
+								<p>Enter your UPI ID to continue</p>
 
 							</div>
 
 						</label>
 
-
-						<!-- QR PAYMENT -->
-
-						<div class="qr-payment-card" style="display: none;">
-
-							<h3>Pay Using QR</h3>
-
-							<p>Scan this QR code using your phone</p>
-
-							<img src="data:image/png;base64,${qrImage}" alt="Payment QR Code"
-								class="payment-qr">
-
-							<p class="qr-amount">
-
-								Amount: <strong> ₹${booking.totalAmount} </strong>
-
-							</p>
-
-							<p class="qr-status" id="qrStatus">Waiting for payment...</p>
-
+						<div class="payment-inputs upi-details">
+							<label for="upiId">UPI ID</label>
+							<input type="text" id="upiId" name="upiId" placeholder="name@bank"
+								autocomplete="off" maxlength="255" autocapitalize="none"
+								aria-describedby="upiIdError">
+							<p class="field-error" id="upiIdError"></p>
 						</div>
 
 					</div>
@@ -346,10 +332,6 @@
 
 	</main>
 
-
-	<script>
-		window.contextPath = "${pageContext.request.contextPath}";
-	</script>
 
 	<script src="${pageContext.request.contextPath}/assets/js/payment.js">
 		

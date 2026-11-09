@@ -11,17 +11,13 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+/** Validates registration details and creates a user account. */
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private UserDAO userDAO;
-
-	@Override
-	public void init() {
-		userDAO = new UserDAO();
-	}
+	private final UserDAO userDAO = new UserDAO();
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)

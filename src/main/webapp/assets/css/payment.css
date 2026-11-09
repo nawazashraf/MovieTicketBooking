@@ -377,77 +377,21 @@
 }
 
 /* =========================================================
-   QR PAYMENT
-========================================================= */
-.qr-payment-card {
-	margin-top: 10px;
-	padding: 20px;
-	background: #fff;
-	border: 1px solid #ddd;
-	border-radius: 8px;
-	text-align: center;
-}
-
-.qr-payment-card h3 {
-	margin: 0 0 6px;
-	font-size: 16px;
-}
-
-.qr-payment-card>p {
-	margin: 5px 0;
-	color: #777;
-	font-size: 13px;
-	line-height: 1.4;
-}
-
-.payment-qr {
-	width: 250px;
-	height: 250px;
-	max-width: 100%;
-	object-fit: contain;
-	margin: 10px auto;
-	display: block;
-}
-
-.qr-payment-card .qr-amount {
-	color: #333;
-	font-size: 14px;
-	margin-top: 10px;
-}
-
-.qr-payment-card .qr-amount strong {
-	color: #222;
-	font-size: 16px;
-}
-
-.qr-status {
-	font-weight: 600;
-}
-
-/* =========================================================
    PAYMENT INPUTS
 ========================================================= */
 .payment-inputs {
-	display: grid;
-	grid-template-rows: 0fr;
-	opacity: 0;
+	display: none;
 	padding: 0 16px;
 	background-color: #fff;
 	border: 1px solid #ddd;
 	border-top: none;
 	border-radius: 0 0 8px 8px;
-	transition: grid-template-rows 0.3s ease, opacity 0.25s ease, padding
-		0.3s ease;
 }
 
-.payment-inputs>* {
-	overflow: hidden;
-	min-height: 0;
-}
-
-.payment-inputs.active {
-	grid-template-rows: 1fr;
-	opacity: 1;
+.payment-inputs.active,
+.payment-option-block:has(.payment-method input[value="UPI"]:checked) .upi-details,
+.payment-option-block:has(.payment-method input[value="CARD"]:checked) .card-details {
+	display: grid;
 	padding: 15px 16px;
 }
 
@@ -477,6 +421,7 @@
 	border-radius: 6px !important;
 	background-color: #fafafa !important;
 	color: #222 !important;
+	caret-color: #222;
 	font-size: 14px;
 	outline: none;
 	width: 100%;
@@ -688,92 +633,6 @@
 }
 
 /* =========================================================
-   PHONE QR PAGE
-========================================================= */
-.qr-phone-page {
-	min-height: 100vh;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	padding: 20px;
-	background-color: #f7f7f7;
-	box-sizing: border-box;
-}
-
-.qr-phone-container {
-	width: 100%;
-	max-width: 420px;
-	background: #fff;
-	padding: 30px;
-	border-radius: 16px;
-	text-align: center;
-	box-shadow: 0 5px 25px rgba(0, 0, 0, 0.12);
-	box-sizing: border-box;
-}
-
-.qr-phone-container h1 {
-	margin: 0 0 20px;
-	font-size: 26px;
-	color: #222;
-}
-
-.qr-phone-movie {
-	font-size: 20px;
-	font-weight: bold;
-	margin: 0 0 8px;
-	color: #222;
-}
-
-.qr-phone-mall {
-	margin: 0 0 25px;
-	color: #777;
-}
-
-.qr-phone-booking {
-	display: flex;
-	justify-content: space-between;
-	gap: 15px;
-	padding: 15px;
-	margin-bottom: 15px;
-	background: #f5f5f5;
-	border-radius: 8px;
-	color: #555;
-}
-
-.qr-phone-booking strong {
-	color: #222;
-}
-
-.qr-phone-amount {
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
-	margin: 25px 0;
-	color: #555;
-}
-
-.qr-phone-amount strong {
-	font-size: 32px;
-	color: #222;
-}
-
-.dummy-pay-button {
-	width: 100%;
-	background: #198754;
-	color: #fff;
-	border: none;
-	border-radius: 8px;
-	padding: 16px;
-	font-size: 20px;
-	font-weight: bold;
-	cursor: pointer;
-}
-
-.dummy-pay-button:hover {
-	opacity: 0.9;
-}
-
-/* =========================================================
    TABLET
 ========================================================= */
 @media ( max-width : 1000px) {
@@ -981,31 +840,6 @@
 	}
 
 	/* -------------------------
-       QR PAYMENT
-    ------------------------- */
-	.qr-payment-card {
-		padding: 18px 14px;
-	}
-	.qr-payment-card h3 {
-		font-size: 17px;
-	}
-	.qr-payment-card>p {
-		font-size: 13px;
-		line-height: 1.4;
-	}
-	.payment-qr {
-		width: 220px;
-		height: 220px;
-		max-width: 80vw;
-	}
-	.qr-payment-card .qr-amount {
-		font-size: 14px;
-	}
-	.qr-payment-card .qr-amount strong {
-		font-size: 17px;
-	}
-
-	/* -------------------------
        PAYMENT SUMMARY
     ------------------------- */
 	.booking-summary {
@@ -1107,10 +941,6 @@
 	}
 	.payment-inputs.active {
 		padding: 14px 12px;
-	}
-	.payment-qr {
-		width: 200px;
-		height: 200px;
 	}
 	.summary-row {
 		font-size: 13px;

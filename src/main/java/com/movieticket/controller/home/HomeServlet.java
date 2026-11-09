@@ -12,6 +12,7 @@ import java.util.List;
 import com.movieticket.dao.MovieDAO;
 import com.movieticket.model.MovieBean;
 
+/** Loads the current and upcoming movies shown on the home page. */
 @WebServlet("/home")
 public class HomeServlet extends HttpServlet {
 
@@ -19,25 +20,18 @@ public class HomeServlet extends HttpServlet {
 
 	private final MovieDAO movieDAO = new MovieDAO();
 
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+			throws ServletException, IOException {
+		try {
+			List<MovieBean> nowShowingMovies = movieDAO.getMoviesByStatus("NOW_SHOWING");
+			List<MovieBean> comingSoonMovies = movieDAO.getMoviesByStatus("COMING_SOON");
 
-        try {
-
-            List<MovieBean> nowShowingMovies =
-                    movieDAO.getMoviesByStatus("NOW_SHOWING");
-
-            List<MovieBean> comingSoonMovies =
-                    movieDAO.getMoviesByStatus("COMING_SOON");
-
-            request.setAttribute("nowShowingMovies", nowShowingMovies);
-            request.setAttribute("comingSoonMovies", comingSoonMovies);
-
-            request.getRequestDispatcher("/index.jsp").forward(request, response);
-
-        } catch (Exception e) {
-
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
-        }
-    }
+			request.setAttribute("nowShowingMovies", nowShowingMovies);
+			request.setAttribute("comingSoonMovies", comingSoonMovies);
+			request.getRequestDispatcher("/index.jsp").forward(request, response);
+		} catch (Exception e) {
+			request.getRequestDispatcher("/error.jsp").forward(request, response);
+		}
+	}
 }

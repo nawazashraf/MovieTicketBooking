@@ -187,22 +187,12 @@
 
 					<!-- FORGOT PASSWORD -->
 
-					<%
-					Boolean showForgotPassword = (Boolean) request.getAttribute("showForgotPassword");
-
-					if (Boolean.TRUE.equals(showForgotPassword)) {
-					%>
-
 					<div class="forgot-password-area">
 
 						<a href="${pageContext.request.contextPath}/forgotpassword.jsp">
 							Forgot your password? </a>
 
 					</div>
-
-					<%
-					}
-					%>
 
 				</form>
 

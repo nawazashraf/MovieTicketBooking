@@ -77,8 +77,6 @@ public class LoginServlet extends HttpServlet {
 
 			request.setAttribute("emailError", "Invalid email or password.");
 
-			request.setAttribute("showForgotPassword", true);
-
 			request.getRequestDispatcher("/login.jsp").forward(request, response);
 		}
 	}

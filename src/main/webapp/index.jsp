@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="java.util.List"%>
+<%@ page import="java.util.Map"%>
 <%@ page import="com.movieticket.model.MovieBean"%>
 <!DOCTYPE html>
 <html>
@@ -21,6 +22,8 @@
 	<%
 	List<MovieBean> nowShowingMovies = (List<MovieBean>) request.getAttribute("nowShowingMovies");
 	List<MovieBean> comingSoonMovies = (List<MovieBean>) request.getAttribute("comingSoonMovies");
+	Map<String, List<MovieBean>> moviesByGenre =
+			(Map<String, List<MovieBean>>) request.getAttribute("moviesByGenre");
 	%>
 	<div class="home-page">
 		<section class="movie-section">
@@ -80,6 +83,40 @@
 
 			</div>
 
+		</section>
+
+		<section class="movie-section">
+			<div class="section-header">
+				<h2>Browse by Genre</h2>
+			</div>
+
+			<%
+			if (moviesByGenre != null) {
+				for (Map.Entry<String, List<MovieBean>> genreEntry : moviesByGenre.entrySet()) {
+					List<MovieBean> genreMovies = genreEntry.getValue();
+					if (genreMovies == null || genreMovies.isEmpty()) {
+						continue;
+					}
+			%>
+			<div class="genre-category">
+				<div class="section-header">
+					<h2><%=genreEntry.getKey()%></h2>
+				</div>
+				<div class="movie-container">
+					<%
+					for (MovieBean movie : genreMovies) {
+						request.setAttribute("movie", movie);
+					%>
+					<jsp:include page="/components/movie-card.jsp" />
+					<%
+					}
+					%>
+				</div>
+			</div>
+			<%
+				}
+			}
+			%>
 		</section>
 
 	</div>

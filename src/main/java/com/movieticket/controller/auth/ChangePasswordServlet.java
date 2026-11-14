@@ -246,7 +246,7 @@ public class ChangePasswordServlet extends HttpServlet {
 
 			request.setAttribute("error", "Password change failed. Please try again.");
 
-			request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
+			request.getRequestDispatcher("/auth/changepassword.jsp").forward(request, response);
 		}
 	}
 }

@@ -31,7 +31,7 @@ public class BookingServlet extends HttpServlet {
 
 		if (session == null || session.getAttribute("user") == null) {
 
-			response.sendRedirect(request.getContextPath() + "/login.jsp");
+			response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
 
 			return;
 		}

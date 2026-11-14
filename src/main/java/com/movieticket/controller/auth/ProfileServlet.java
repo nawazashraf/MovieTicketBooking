@@ -29,7 +29,7 @@ public class ProfileServlet extends HttpServlet {
 
         if (session == null || session.getAttribute("userId") == null) {
             response.sendRedirect(
-                request.getContextPath() + "/login.jsp"
+                request.getContextPath() + "/auth/login.jsp"
             );
             return;
         }
@@ -45,7 +45,7 @@ public class ProfileServlet extends HttpServlet {
                    .forward(request, response);
         } else {
             response.sendRedirect(
-                request.getContextPath() + "/login.jsp"
+                request.getContextPath() + "/auth/login.jsp"
             );
         }
     }

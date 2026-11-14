@@ -30,7 +30,7 @@ public class UpdateProfileServlet extends HttpServlet {
 		HttpSession session = request.getSession(false);
 
 		if (session == null || session.getAttribute("userId") == null) {
-			response.sendRedirect(request.getContextPath() + "/login.jsp");
+			response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
 			return;
 		}
 
@@ -206,7 +206,7 @@ public class UpdateProfileServlet extends HttpServlet {
 
 				request.setAttribute("user", user);
 
-				request.getRequestDispatcher("/profile.jsp")
+				request.getRequestDispatcher("/auth/profile.jsp")
 						.forward(request, response);
 
 				return;
@@ -219,7 +219,7 @@ public class UpdateProfileServlet extends HttpServlet {
 
 				request.setAttribute("user", user);
 
-				request.getRequestDispatcher("/profile.jsp")
+				request.getRequestDispatcher("/auth/profile.jsp")
 						.forward(request, response);
 
 				return;
@@ -232,7 +232,7 @@ public class UpdateProfileServlet extends HttpServlet {
 
 				request.setAttribute("user", user);
 
-				request.getRequestDispatcher("/profile.jsp")
+				request.getRequestDispatcher("/auth/profile.jsp")
 						.forward(request, response);
 
 				return;
@@ -246,7 +246,7 @@ public class UpdateProfileServlet extends HttpServlet {
 
 				request.setAttribute("user", user);
 
-				request.getRequestDispatcher("/profile.jsp")
+				request.getRequestDispatcher("/auth/profile.jsp")
 						.forward(request, response);
 
 				return;
@@ -335,7 +335,7 @@ public class UpdateProfileServlet extends HttpServlet {
 			);
 		}
 
-		request.getRequestDispatcher("/profile.jsp")
+		request.getRequestDispatcher("/auth/profile.jsp")
 				.forward(request, response);
 	}
 }

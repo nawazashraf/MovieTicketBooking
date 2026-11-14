@@ -36,7 +36,7 @@ public class MovieServlet extends HttpServlet {
 			request.setAttribute("movies", movies);
 			request.getRequestDispatcher("/movie/movies.jsp").forward(request, response);
 		} catch (SQLException e) {
-			request.getRequestDispatcher("/error.jsp").forward(request, response);
+			request.getRequestDispatcher("/errors/error.jsp").forward(request, response);
 		}
 	}
 }

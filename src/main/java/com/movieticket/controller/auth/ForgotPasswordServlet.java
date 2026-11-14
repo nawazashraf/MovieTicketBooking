@@ -24,7 +24,7 @@ public class ForgotPasswordServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		request.getRequestDispatcher("/forgotpassword.jsp").forward(request, response);
+		request.getRequestDispatcher("/auth/forgotpassword.jsp").forward(request, response);
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class ForgotPasswordServlet extends HttpServlet {
 
 				request.setAttribute("error", "Please enter your registered email address.");
 
-				request.getRequestDispatcher("/forgotpassword.jsp").forward(request, response);
+				request.getRequestDispatcher("/auth/forgotpassword.jsp").forward(request, response);
 
 				return;
 			}
@@ -61,7 +61,7 @@ public class ForgotPasswordServlet extends HttpServlet {
 
 				request.setAttribute("securityQuestion", securityQuestion);
 
-				request.getRequestDispatcher("/forgotpassword.jsp").forward(request, response);
+				request.getRequestDispatcher("/auth/forgotpassword.jsp").forward(request, response);
 
 				return;
 			}
@@ -85,7 +85,7 @@ public class ForgotPasswordServlet extends HttpServlet {
 
 			request.setAttribute("securityQuestion", securityQuestion);
 
-			request.getRequestDispatcher("/forgotpassword.jsp").forward(request, response);
+			request.getRequestDispatcher("/auth/forgotpassword.jsp").forward(request, response);
 
 			return;
 		}
@@ -96,7 +96,7 @@ public class ForgotPasswordServlet extends HttpServlet {
 
 			request.setAttribute("error", "Email address is required.");
 
-			request.getRequestDispatcher("/forgotpassword.jsp").forward(request, response);
+			request.getRequestDispatcher("/auth/forgotpassword.jsp").forward(request, response);
 
 			return;
 		}
@@ -119,7 +119,7 @@ public class ForgotPasswordServlet extends HttpServlet {
 
 			request.setAttribute("securityQuestion", securityQuestion);
 
-			request.getRequestDispatcher("/forgotpassword.jsp").forward(request, response);
+			request.getRequestDispatcher("/auth/forgotpassword.jsp").forward(request, response);
 
 		} else {
 
@@ -127,7 +127,7 @@ public class ForgotPasswordServlet extends HttpServlet {
 
 			request.setAttribute("email", email);
 
-			request.getRequestDispatcher("/forgotpassword.jsp").forward(request, response);
+			request.getRequestDispatcher("/auth/forgotpassword.jsp").forward(request, response);
 		}
 	}
 }

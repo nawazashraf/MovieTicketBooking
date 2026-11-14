@@ -50,9 +50,9 @@ public class HomeServlet extends HttpServlet {
 			request.setAttribute("nowShowingMovies", nowShowingMovies);
 			request.setAttribute("comingSoonMovies", comingSoonMovies);
 			request.setAttribute("moviesByGenre", moviesByGenre);
-			request.getRequestDispatcher("/index.jsp").forward(request, response);
+			request.getRequestDispatcher("/home/index.jsp").forward(request, response);
 		} catch (Exception e) {
-			request.getRequestDispatcher("/error.jsp").forward(request, response);
+			request.getRequestDispatcher("/errors/error.jsp").forward(request, response);
 		}
 	}
 }

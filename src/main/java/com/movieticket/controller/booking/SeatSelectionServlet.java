@@ -46,7 +46,7 @@ public class SeatSelectionServlet extends HttpServlet {
 			request.setAttribute("show", show);
 			request.setAttribute("seats", dao.getSeatsByShowId(showId));
 			request.setAttribute("showId", showId);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/seat_selection.jsp");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/booking/seat_selection.jsp");
 			dispatcher.forward(request, response);
 		} catch (SQLException | IllegalStateException e) {
 			e.printStackTrace();

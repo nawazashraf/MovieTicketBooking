@@ -64,9 +64,10 @@ public class AccountStatusFilter implements Filter {
 		 * ACCESSIBLE PAGES ============================================================
 		 */
 
-		if (path.equals("/index.jsp") || path.equals("/movie-card.jsp") || path.equals("/booking-history.jsp")
-				|| path.equals("/profile.jsp") || path.equals("/register.jsp") || path.equals("/login.jsp")
-				|| path.equals("/ticket.jsp") || path.equals("/ticket") || path.equals("/login")
+		if (path.equals("/home/index.jsp") || path.equals("/movie-card.jsp")
+				|| path.equals("/booking/booking-history.jsp") || path.equals("/auth/profile.jsp")
+				|| path.equals("/auth/register.jsp") || path.equals("/auth/login.jsp")
+				|| path.equals("/ticket/ticket.jsp") || path.equals("/ticket") || path.equals("/login")
 				|| path.equals("/logout") || path.equals("/profile") || path.equals("/register")
 				|| path.equals("/bookings") || path.equals("/home") || path.equals("/movies/details")
 				|| path.equals("/movies") || path.equals("/movies/search") || path.equals("/shows")) {
@@ -110,7 +111,7 @@ public class AccountStatusFilter implements Filter {
 
 			session.invalidate();
 
-			res.sendRedirect(contextPath + "/login.jsp");
+			res.sendRedirect(contextPath + "/auth/login.jsp");
 			return;
 		}
 

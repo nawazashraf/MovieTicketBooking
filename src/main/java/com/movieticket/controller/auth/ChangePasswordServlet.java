@@ -32,7 +32,7 @@ public class ChangePasswordServlet extends HttpServlet {
 
 			if (Boolean.TRUE.equals(verified)) {
 
-				request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
+				request.getRequestDispatcher("/auth/changepassword.jsp").forward(request, response);
 
 				return;
 			}
@@ -44,7 +44,7 @@ public class ChangePasswordServlet extends HttpServlet {
 
 		if (session == null || session.getAttribute("userId") == null) {
 
-			response.sendRedirect(request.getContextPath() + "/login.jsp");
+			response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
 
 			return;
 		}
@@ -60,7 +60,7 @@ public class ChangePasswordServlet extends HttpServlet {
 			return;
 		}
 
-		request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
+		request.getRequestDispatcher("/auth/changepassword.jsp").forward(request, response);
 	}
 
 	@Override
@@ -104,7 +104,7 @@ public class ChangePasswordServlet extends HttpServlet {
 
 				request.setAttribute("error", "All fields are required.");
 
-				request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
+				request.getRequestDispatcher("/auth/changepassword.jsp").forward(request, response);
 
 				return;
 			}
@@ -113,7 +113,7 @@ public class ChangePasswordServlet extends HttpServlet {
 
 				request.setAttribute("error", "Password must not contain leading or trailing spaces.");
 
-				request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
+				request.getRequestDispatcher("/auth/changepassword.jsp").forward(request, response);
 
 				return;
 			}
@@ -122,7 +122,7 @@ public class ChangePasswordServlet extends HttpServlet {
 
 				request.setAttribute("error", "Password must contain at least 8 characters.");
 
-				request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
+				request.getRequestDispatcher("/auth/changepassword.jsp").forward(request, response);
 
 				return;
 			}
@@ -131,7 +131,7 @@ public class ChangePasswordServlet extends HttpServlet {
 
 				request.setAttribute("error", "Password must not exceed 128 characters.");
 
-				request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
+				request.getRequestDispatcher("/auth/changepassword.jsp").forward(request, response);
 
 				return;
 			}
@@ -140,7 +140,7 @@ public class ChangePasswordServlet extends HttpServlet {
 
 				request.setAttribute("error", "New password and confirm password do not match.");
 
-				request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
+				request.getRequestDispatcher("/auth/changepassword.jsp").forward(request, response);
 
 				return;
 			}
@@ -157,13 +157,13 @@ public class ChangePasswordServlet extends HttpServlet {
 
 				request.setAttribute("resetSuccess", "Your password has been changed successfully.");
 
-				request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
+				request.getRequestDispatcher("/auth/changepassword.jsp").forward(request, response);
 
 			} else {
 
 				request.setAttribute("error", "Password reset failed. Please try again.");
 
-				request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
+				request.getRequestDispatcher("/auth/changepassword.jsp").forward(request, response);
 			}
 
 			return;
@@ -171,7 +171,7 @@ public class ChangePasswordServlet extends HttpServlet {
 
 		if (session == null || session.getAttribute("userId") == null) {
 
-			response.sendRedirect(request.getContextPath() + "/login.jsp");
+			response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
 
 			return;
 		}
@@ -195,7 +195,7 @@ public class ChangePasswordServlet extends HttpServlet {
 
 			request.setAttribute("error", "All fields are required.");
 
-			request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
+			request.getRequestDispatcher("/auth/changepassword.jsp").forward(request, response);
 
 			return;
 		}
@@ -204,7 +204,7 @@ public class ChangePasswordServlet extends HttpServlet {
 
 			request.setAttribute("error", "Password must not contain leading or trailing spaces.");
 
-			request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
+			request.getRequestDispatcher("/auth/changepassword.jsp").forward(request, response);
 
 			return;
 		}
@@ -213,7 +213,7 @@ public class ChangePasswordServlet extends HttpServlet {
 
 			request.setAttribute("error", "Password must contain at least 8 characters.");
 
-			request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
+			request.getRequestDispatcher("/auth/changepassword.jsp").forward(request, response);
 
 			return;
 		}
@@ -222,7 +222,7 @@ public class ChangePasswordServlet extends HttpServlet {
 
 			request.setAttribute("error", "Password must not exceed 128 characters.");
 
-			request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
+			request.getRequestDispatcher("/auth/changepassword.jsp").forward(request, response);
 
 			return;
 		}
@@ -231,7 +231,7 @@ public class ChangePasswordServlet extends HttpServlet {
 
 			request.setAttribute("error", "New password and confirm password do not match.");
 
-			request.getRequestDispatcher("/changepassword.jsp").forward(request, response);
+			request.getRequestDispatcher("/auth/changepassword.jsp").forward(request, response);
 
 			return;
 		}

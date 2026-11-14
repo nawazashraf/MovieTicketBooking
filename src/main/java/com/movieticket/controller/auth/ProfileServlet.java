@@ -41,7 +41,7 @@ public class ProfileServlet extends HttpServlet {
         if (user != null) {
             request.setAttribute("user", user);
 
-            request.getRequestDispatcher("/profile.jsp")
+            request.getRequestDispatcher("/auth/profile.jsp")
                    .forward(request, response);
         } else {
             response.sendRedirect(

@@ -135,7 +135,7 @@ public class AdminServlet extends HttpServlet {
     private boolean isAdmin(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
             return false;
         }
         String role = String.valueOf(session.getAttribute("userRole"));

@@ -31,7 +31,7 @@ public class LoginServlet extends HttpServlet {
 
 			request.setAttribute("emailError", "Email address is required.");
 
-			request.getRequestDispatcher("/login.jsp").forward(request, response);
+			request.getRequestDispatcher("/auth/login.jsp").forward(request, response);
 
 			return;
 		}
@@ -44,7 +44,7 @@ public class LoginServlet extends HttpServlet {
 
 			request.setAttribute("emailError", "Please enter a valid email address.");
 
-			request.getRequestDispatcher("/login.jsp").forward(request, response);
+			request.getRequestDispatcher("/auth/login.jsp").forward(request, response);
 
 			return;
 		}
@@ -77,7 +77,7 @@ public class LoginServlet extends HttpServlet {
 
 			request.setAttribute("emailError", "Invalid email or password.");
 
-			request.getRequestDispatcher("/login.jsp").forward(request, response);
+			request.getRequestDispatcher("/auth/login.jsp").forward(request, response);
 		}
 	}
 
@@ -85,7 +85,7 @@ public class LoginServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		response.sendRedirect(request.getContextPath() + "/login.jsp");
+		response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
 	}
 
 }

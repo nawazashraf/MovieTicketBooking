@@ -63,7 +63,7 @@ public class UpdateProfileServlet extends HttpServlet {
 
 			request.setAttribute("user", user);
 
-			request.getRequestDispatcher("/profile.jsp")
+			request.getRequestDispatcher("/auth/profile.jsp")
 					.forward(request, response);
 
 			return;
@@ -82,7 +82,7 @@ public class UpdateProfileServlet extends HttpServlet {
 
 			request.setAttribute("user", user);
 
-			request.getRequestDispatcher("/profile.jsp")
+			request.getRequestDispatcher("/auth/profile.jsp")
 					.forward(request, response);
 
 			return;
@@ -95,7 +95,7 @@ public class UpdateProfileServlet extends HttpServlet {
 
 			request.setAttribute("user", user);
 
-			request.getRequestDispatcher("/profile.jsp")
+			request.getRequestDispatcher("/auth/profile.jsp")
 					.forward(request, response);
 
 			return;
@@ -130,7 +130,7 @@ public class UpdateProfileServlet extends HttpServlet {
 
 			request.setAttribute("user", user);
 
-			request.getRequestDispatcher("/profile.jsp")
+			request.getRequestDispatcher("/auth/profile.jsp")
 					.forward(request, response);
 
 			return;
@@ -143,7 +143,7 @@ public class UpdateProfileServlet extends HttpServlet {
 
 			request.setAttribute("user", user);
 
-			request.getRequestDispatcher("/profile.jsp")
+			request.getRequestDispatcher("/auth/profile.jsp")
 					.forward(request, response);
 
 			return;
@@ -157,7 +157,7 @@ public class UpdateProfileServlet extends HttpServlet {
 
 			request.setAttribute("user", user);
 
-			request.getRequestDispatcher("/profile.jsp")
+			request.getRequestDispatcher("/auth/profile.jsp")
 					.forward(request, response);
 
 			return;
@@ -173,7 +173,7 @@ public class UpdateProfileServlet extends HttpServlet {
 
 			request.setAttribute("user", user);
 
-			request.getRequestDispatcher("/profile.jsp")
+			request.getRequestDispatcher("/auth/profile.jsp")
 					.forward(request, response);
 
 			return;
@@ -188,7 +188,7 @@ public class UpdateProfileServlet extends HttpServlet {
 
 			request.setAttribute("user", user);
 
-			request.getRequestDispatcher("/profile.jsp")
+			request.getRequestDispatcher("/auth/profile.jsp")
 					.forward(request, response);
 
 			return;

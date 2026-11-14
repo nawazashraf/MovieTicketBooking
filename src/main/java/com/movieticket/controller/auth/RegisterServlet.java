@@ -33,7 +33,7 @@ public class RegisterServlet extends HttpServlet {
 
 		if (name == null || name.trim().isEmpty()) {
 			request.setAttribute("error", "Name is required.");
-			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			request.getRequestDispatcher("/auth/register.jsp").forward(request, response);
 			return;
 		}
 
@@ -41,7 +41,7 @@ public class RegisterServlet extends HttpServlet {
 
 		if (!name.matches("[A-Za-z ]+")) {
 			request.setAttribute("error", "Name can contain only letters and spaces.");
-			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			request.getRequestDispatcher("/auth/register.jsp").forward(request, response);
 			return;
 		}
 
@@ -49,7 +49,7 @@ public class RegisterServlet extends HttpServlet {
 
 		if (name.length() < 2 || name.length() > 50) {
 			request.setAttribute("error", "Name must be between 2 and 50 characters.");
-			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			request.getRequestDispatcher("/auth/register.jsp").forward(request, response);
 			return;
 		}
 
@@ -74,7 +74,7 @@ public class RegisterServlet extends HttpServlet {
 
 		if (email == null || email.trim().isEmpty()) {
 			request.setAttribute("error", "Email is required.");
-			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			request.getRequestDispatcher("/auth/register.jsp").forward(request, response);
 			return;
 		}
 
@@ -84,37 +84,37 @@ public class RegisterServlet extends HttpServlet {
 
 		if (!email.matches(emailRegex)) {
 			request.setAttribute("error", "Please enter a valid email address.");
-			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			request.getRequestDispatcher("/auth/register.jsp").forward(request, response);
 			return;
 		}
 
 		if (password == null || password.isEmpty()) {
 			request.setAttribute("error", "Password is required.");
-			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			request.getRequestDispatcher("/auth/register.jsp").forward(request, response);
 			return;
 		}
 
 		if (!password.equals(password.trim())) {
 			request.setAttribute("error", "Password must not contain leading or trailing spaces.");
-			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			request.getRequestDispatcher("/auth/register.jsp").forward(request, response);
 			return;
 		}
 
 		if (password.length() < 8) {
 			request.setAttribute("error", "Password must contain at least 8 characters.");
-			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			request.getRequestDispatcher("/auth/register.jsp").forward(request, response);
 			return;
 		}
 
 		if (password.length() > 128) {
 			request.setAttribute("error", "Password cannot exceed 128 characters.");
-			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			request.getRequestDispatcher("/auth/register.jsp").forward(request, response);
 			return;
 		}
 
 		if (phone == null || phone.trim().isEmpty()) {
 			request.setAttribute("error", "Phone number is required.");
-			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			request.getRequestDispatcher("/auth/register.jsp").forward(request, response);
 			return;
 		}
 
@@ -122,19 +122,19 @@ public class RegisterServlet extends HttpServlet {
 
 		if (!phone.matches("\\d{10}")) {
 			request.setAttribute("error", "Phone number must contain exactly 10 digits.");
-			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			request.getRequestDispatcher("/auth/register.jsp").forward(request, response);
 			return;
 		}
 
 		if (phone.startsWith("0")) {
 			request.setAttribute("error", "Please enter a valid 10-digit mobile number.");
-			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			request.getRequestDispatcher("/auth/register.jsp").forward(request, response);
 			return;
 		}
 
 		if (securityQuestion == null || securityQuestion.trim().isEmpty()) {
 			request.setAttribute("error", "Please select a security question.");
-			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			request.getRequestDispatcher("/auth/register.jsp").forward(request, response);
 			return;
 		}
 
@@ -142,7 +142,7 @@ public class RegisterServlet extends HttpServlet {
 
 		if (securityAnswer == null || securityAnswer.trim().isEmpty()) {
 			request.setAttribute("error", "Security answer is required.");
-			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			request.getRequestDispatcher("/auth/register.jsp").forward(request, response);
 			return;
 		}
 
@@ -163,13 +163,13 @@ public class RegisterServlet extends HttpServlet {
 
 		if (registered) {
 
-			response.sendRedirect(request.getContextPath() + "/register.jsp?success=1");
+			response.sendRedirect(request.getContextPath() + "/auth/register.jsp?success=1");
 
 		} else {
 
 			request.setAttribute("error", "Registration failed. Email or phone may already exist.");
 
-			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			request.getRequestDispatcher("/auth/register.jsp").forward(request, response);
 		}
 	}
 
@@ -177,6 +177,6 @@ public class RegisterServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		response.sendRedirect(request.getContextPath() + "/register.jsp");
+		response.sendRedirect(request.getContextPath() + "/auth/register.jsp");
 	}
 }

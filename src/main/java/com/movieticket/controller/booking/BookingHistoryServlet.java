@@ -30,6 +30,6 @@ public class BookingHistoryServlet extends HttpServlet {
 
         List<BookingBean> bookings = bookingDAO.getBookingsByUserId(String.valueOf(session.getAttribute("userId")));
         request.setAttribute("bookings", bookings);
-        request.getRequestDispatcher("/booking-history.jsp").forward(request, response);
+        request.getRequestDispatcher("/booking/booking-history.jsp").forward(request, response);
     }
 }

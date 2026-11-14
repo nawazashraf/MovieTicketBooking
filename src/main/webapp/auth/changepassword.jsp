@@ -42,7 +42,7 @@ Boolean forgotPassword = session.getAttribute("forgotUserId") != null;
 
 			<p>Your password has been updated successfully.</p>
 
-			<a href="${pageContext.request.contextPath}/login.jsp"
+			<a href="${pageContext.request.contextPath}/auth/login.jsp"
 				class="login-button"> Go to Login </a>
 
 		</div>
@@ -199,7 +199,7 @@ Boolean forgotPassword = session.getAttribute("forgotUserId") != null;
 
 			<div class="back-login">
 
-				<a href="${pageContext.request.contextPath}/login.jsp"> ← Back
+				<a href="${pageContext.request.contextPath}/auth/login.jsp"> ← Back
 					to Login </a>
 
 			</div>

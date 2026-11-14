@@ -346,7 +346,7 @@
 							<p class="success-message">Your account has been created
 								successfully.</p>
 
-							<a href="${pageContext.request.contextPath}/login.jsp"
+							<a href="${pageContext.request.contextPath}/auth/login.jsp"
 								class="login-success-button"> Go to Login </a>
 
 						</div>
@@ -363,7 +363,7 @@
 					<div class="login-area">
 
 						<span> Already have an account? </span> <a
-							href="${pageContext.request.contextPath}/login.jsp"> Sign in
+							href="${pageContext.request.contextPath}/auth/login.jsp"> Sign in
 						</a>
 
 					</div>

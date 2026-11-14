@@ -189,7 +189,7 @@
 
 					<div class="forgot-password-area">
 
-						<a href="${pageContext.request.contextPath}/forgotpassword.jsp">
+						<a href="${pageContext.request.contextPath}/auth/forgotpassword.jsp">
 							Forgot your password? </a>
 
 					</div>
@@ -202,7 +202,7 @@
 				<div class="register-area">
 
 					<span> Don't have an account? </span> <a
-						href="${pageContext.request.contextPath}/register.jsp"> Create
+						href="${pageContext.request.contextPath}/auth/register.jsp"> Create
 						an account </a>
 
 				</div>

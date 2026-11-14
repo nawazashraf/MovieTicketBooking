@@ -12,7 +12,8 @@
 
 <title>Forgot Password - MovieBook</title>
 
-<link rel="stylesheet" href="assets/css/forgotpassword.css">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/assets/css/forgotpassword.css">
 
 </head>
 
@@ -154,7 +155,7 @@
 
 			<div class="back-login">
 
-				<a href="login.jsp"> ← Back to Login </a>
+				<a href="${pageContext.request.contextPath}/auth/login.jsp"> ← Back to Login </a>
 
 			</div>
 
@@ -168,7 +169,7 @@
 	</div>
 
 
-	<script src="assets/js/forgotpassword.js"></script>
+	<script src="${pageContext.request.contextPath}/assets/js/forgotpassword.js"></script>
 
 
 </body>
